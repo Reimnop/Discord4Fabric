@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "discord4fabric",
+  "version": "${version}",
+  "name": "Discord4Fabric",
+  "description": "A beautiful Discord bot client for Fabric",
+  "authors": [
+    "Reimnop"
+  ],
+  "contact": {
+    "website": "reimnop.me"
+  },
+  "license": "MIT",
+  "icon": "assets/discord4fabric/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "me.reimnop.discord4fabric.Discord4Fabric"
+    ]
+  },
+  "mixins": [
+    "discord4fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "fabric": "*",
+    "minecraft": "1.19-rc.1"
+  }
+}
