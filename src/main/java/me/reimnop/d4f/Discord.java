@@ -5,13 +5,13 @@ import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import me.reimnop.d4f.exceptions.ChannelException;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.listeners.DiscordMessageListener;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.managers.channel.concrete.TextChannelManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.text.Text;
 
 import javax.security.auth.login.LoginException;
@@ -95,5 +95,22 @@ public class Discord {
         } catch (Exception e) {
             Utils.logException(e);
         }
+    }
+
+    public void setChannelTopic(Text topic) {
+        try {
+            getTextChannel()
+                    .getManager()
+                    .setTopic(topic.getString())
+                    .queue();
+        } catch (Exception e) {
+            Utils.logException(e);
+        }
+    }
+
+    public void setStatus(Text status) {
+        jda.getPresence().setActivity(
+                Activity.playing(status.getString())
+        );
     }
 }

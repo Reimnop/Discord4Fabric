@@ -22,8 +22,7 @@ public class Config {
     private String minecraftToDiscordMessage = "%d4f:message%";
     private String deathMessage = "%d4f:message%";
     private Integer updateInterval = 40;
-    private String channelDescOnline = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
-    private String channelDescOffline = "Server offline";
+    private String status = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
 
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
@@ -39,8 +38,7 @@ public class Config {
         jsonObject.addProperty("mc_to_discord", minecraftToDiscordMessage);
         jsonObject.addProperty("death", deathMessage);
         jsonObject.addProperty("update_interval", updateInterval);
-        jsonObject.addProperty("channel_desc_online", channelDescOnline);
-        jsonObject.addProperty("channel_desc_offline", channelDescOffline);
+        jsonObject.addProperty("status", status);
 
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -69,8 +67,7 @@ public class Config {
         minecraftToDiscordMessage = obj.get("mc_to_discord").getAsString();
         deathMessage = obj.get("death").getAsString();
         updateInterval = obj.get("update_interval").getAsInt();
-        channelDescOnline = obj.get("channel_desc_online").getAsString();
-        channelDescOffline = obj.get("channel_desc_offline").getAsString();
+        status = obj.get("status").getAsString();
 
         reader.close();
     }
@@ -163,27 +160,19 @@ public class Config {
         this.deathMessage = deathMessage;
     }
 
-    public String getChannelDescOnline() {
-        return channelDescOnline;
-    }
-
-    public void setChannelDescOnline(String channelDescOnline) {
-        this.channelDescOnline = channelDescOnline;
-    }
-
-    public String getChannelDescOffline() {
-        return channelDescOffline;
-    }
-
-    public void setChannelDescOffline(String channelDescOffline) {
-        this.channelDescOffline = channelDescOffline;
-    }
-
     public Integer getUpdateInterval() {
         return updateInterval;
     }
 
     public void setUpdateInterval(Integer updateInterval) {
         this.updateInterval = updateInterval;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

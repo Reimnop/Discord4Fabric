@@ -7,6 +7,7 @@ import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerDeathCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -56,6 +57,16 @@ public class Discord4Fabric implements ModInitializer {
 
     private void initDiscord() throws LoginException, InterruptedException {
         DISCORD = new Discord(CONFIG);
+
+        Timer<MinecraftServer> topicUpdateLoop = new Timer<>(CONFIG.getUpdateInterval(), server -> {
+            Text status = PlaceholderAPI.parseText(
+                    Text.literal(CONFIG.getStatus()),
+                    server
+            );
+            DISCORD.setStatus(status);
+        });
+
+        ServerTickEvents.END_SERVER_TICK.register(topicUpdateLoop::tick);
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             Text message = PlaceholderAPI.parseText(Text.literal(CONFIG.getServerStartMessage()), server);
