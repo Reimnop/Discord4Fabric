@@ -76,6 +76,8 @@ public class Discord4Fabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             Text message = PlaceholderAPI.parseText(Text.literal(CONFIG.getServerStopMessage()), server);
             DISCORD.sendPlainMessage(message);
+
+            DISCORD.close();
         });
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
