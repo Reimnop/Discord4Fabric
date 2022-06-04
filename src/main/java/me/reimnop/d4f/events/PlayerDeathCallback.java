@@ -1,4 +1,4 @@
-package me.reimnop.discord4fabric.events;
+package me.reimnop.d4f.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

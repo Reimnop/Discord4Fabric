@@ -1,4 +1,4 @@
-package me.reimnop.discord4fabric.events;
+package me.reimnop.d4f.events;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;

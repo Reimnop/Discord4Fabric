@@ -1,6 +1,6 @@
-package me.reimnop.discord4fabric.listeners;
+package me.reimnop.d4f.listeners;
 
-import me.reimnop.discord4fabric.events.DiscordMessageReceivedCallback;
+import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;

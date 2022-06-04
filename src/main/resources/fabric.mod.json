@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "discord4fabric",
+  "id": "d4f",
   "version": "${version}",
   "name": "Discord4Fabric",
   "description": "A beautiful Discord bot client for Fabric",
@@ -11,15 +11,15 @@
     "website": "reimnop.me"
   },
   "license": "MIT",
-  "icon": "assets/discord4fabric/icon.png",
+  "icon": "assets/d4f/icon.png",
   "environment": "server",
   "entrypoints": {
     "main": [
-      "me.reimnop.discord4fabric.Discord4Fabric"
+      "me.reimnop.d4f.Discord4Fabric"
     ]
   },
   "mixins": [
-    "discord4fabric.mixins.json"
+    "d4f.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.6",

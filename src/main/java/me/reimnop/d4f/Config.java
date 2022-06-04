@@ -1,4 +1,4 @@
-package me.reimnop.discord4fabric;
+package me.reimnop.d4f;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,11 +16,13 @@ public class Config {
     private Long channelId = 0L;
     private String serverStartMessage = "✅ **Server started!**";
     private String serverStopMessage = "❎ **Server stopped!**";
-    private String playerJoinMessage = "%s joined the game";
-    private String playerLeftMessage = "%s left the game";
-    private String discordMessageFormat = "[%s on Discord] %s";
+    private String playerJoinMessage = "%player:name% joined the game";
+    private String playerLeftMessage = "%player:name% left the game";
+    private String discordToMinecraftMessage = "[%d4f:nickname% on Discord] %d4f:message%";
+    private String minecraftToDiscordMessage = "%d4f:message%";
+    private String deathMessage = "%d4f:message%";
     private Integer updateInterval = 40;
-    private String channelDescOnline = "Total player: %d/%d";
+    private String channelDescOnline = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
     private String channelDescOffline = "Server offline";
 
     public void writeConfig(File file) throws IOException {
@@ -33,7 +35,9 @@ public class Config {
         jsonObject.addProperty("server_stop", serverStopMessage);
         jsonObject.addProperty("player_join", playerJoinMessage);
         jsonObject.addProperty("player_left", playerLeftMessage);
-        jsonObject.addProperty("discord_msg", discordMessageFormat);
+        jsonObject.addProperty("discord_to_mc", discordToMinecraftMessage);
+        jsonObject.addProperty("mc_to_discord", minecraftToDiscordMessage);
+        jsonObject.addProperty("death", deathMessage);
         jsonObject.addProperty("update_interval", updateInterval);
         jsonObject.addProperty("channel_desc_online", channelDescOnline);
         jsonObject.addProperty("channel_desc_offline", channelDescOffline);
@@ -61,7 +65,9 @@ public class Config {
         serverStopMessage = obj.get("server_stop").getAsString();
         playerJoinMessage = obj.get("player_join").getAsString();
         playerLeftMessage = obj.get("player_left").getAsString();
-        discordMessageFormat = obj.get("discord_msg").getAsString();
+        discordToMinecraftMessage = obj.get("discord_to_mc").getAsString();
+        minecraftToDiscordMessage = obj.get("mc_to_discord").getAsString();
+        deathMessage = obj.get("death").getAsString();
         updateInterval = obj.get("update_interval").getAsInt();
         channelDescOnline = obj.get("channel_desc_online").getAsString();
         channelDescOffline = obj.get("channel_desc_offline").getAsString();
@@ -133,12 +139,28 @@ public class Config {
         this.playerLeftMessage = playerLeftMessage;
     }
 
-    public String getDiscordMessageFormat() {
-        return discordMessageFormat;
+    public String getDiscordToMinecraftMessage() {
+        return discordToMinecraftMessage;
     }
 
-    public void setDiscordMessageFormat(String discordMessageFormat) {
-        this.discordMessageFormat = discordMessageFormat;
+    public void setDiscordToMinecraftMessage(String discordToMinecraftMessage) {
+        this.discordToMinecraftMessage = discordToMinecraftMessage;
+    }
+
+    public String getMinecraftToDiscordMessage() {
+        return minecraftToDiscordMessage;
+    }
+
+    public void setMinecraftToDiscordMessage(String minecraftToDiscordMessage) {
+        this.minecraftToDiscordMessage = minecraftToDiscordMessage;
+    }
+
+    public String getDeathMessage() {
+        return deathMessage;
+    }
+
+    public void setDeathMessage(String deathMessage) {
+        this.deathMessage = deathMessage;
     }
 
     public String getChannelDescOnline() {

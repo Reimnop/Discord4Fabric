@@ -1,5 +1,5 @@
 {
-  "package": "me.reimnop.discord4fabric.mixin",
+  "package": "me.reimnop.d4f.mixin",
   "compatibilityLevel": "JAVA_17",
   "server": [
     "ServerPlayerEntityMixin"

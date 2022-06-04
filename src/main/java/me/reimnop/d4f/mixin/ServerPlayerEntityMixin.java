@@ -1,6 +1,6 @@
-package me.reimnop.discord4fabric.mixin;
+package me.reimnop.d4f.mixin;
 
-import me.reimnop.discord4fabric.events.PlayerDeathCallback;
+import me.reimnop.d4f.events.PlayerDeathCallback;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
