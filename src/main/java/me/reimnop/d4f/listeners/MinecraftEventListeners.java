@@ -27,17 +27,7 @@ public final class MinecraftEventListeners {
 
     public static void init(Discord discord, Config config) {
         PlayerAdvancementCallback.EVENT.register((playerEntity, advancement) -> {
-            if (advancement.getDisplay() == null) {
-                return;
-            }
-
-            if (!advancement.getDisplay().shouldAnnounceToChat()) {
-                return;
-            }
-
-            if (!playerEntity.getAdvancementTracker().getProgress(advancement).isDone()) {
-                return;
-            }
+            assert advancement.getDisplay() != null;
 
             String message = config.advancementTaskMessage;
             switch (advancement.getDisplay().getFrame()) {
