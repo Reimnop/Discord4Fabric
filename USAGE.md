@@ -1,7 +1,7 @@
 ## Getting started
 Make sure you have [Fabric Loader](https://fabricmc.net/) and [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api) installed.
 
-Drop the mod jar into your mods folder on your server (Mod links not yet available).
+Drop the mod jar into your mods folder on your server (Can be found on [Modrinth](https://modrinth.com/mod/discord4fabric) and [CurseForge](https://www.curseforge.com/minecraft/mc-mods/discord4fabric)).
 
 Launch the server, wait for it to load, then stop the server.
 
