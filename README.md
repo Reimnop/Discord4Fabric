@@ -13,7 +13,7 @@
 
 ## Usage
 
-Click [here](https://github.com/Reimnop/Discord4Fabric/USAGE.md)
+Click [here](https://github.com/Reimnop/Discord4Fabric/blob/main/USAGE.md)
 
 ## Author
 
