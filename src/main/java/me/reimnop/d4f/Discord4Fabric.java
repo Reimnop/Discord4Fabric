@@ -1,5 +1,6 @@
 package me.reimnop.d4f;
 
+import me.reimnop.d4f.commands.ModCommands;
 import me.reimnop.d4f.listeners.MinecraftEventListeners;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -40,14 +41,15 @@ public class Discord4Fabric implements ModInitializer {
             }
 
             initDiscord();
+            ModCommands.init();
         } catch (LoginException e) {
             LOGGER.error("Login Failed! Please update your config and restart the server");
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             Utils.logException(e);
         }
     }
 
-    private void initDiscord() throws LoginException, InterruptedException {
+    private void initDiscord() throws LoginException {
         DISCORD = new Discord(CONFIG);
         MinecraftEventListeners.init(DISCORD, CONFIG);
     }

@@ -9,6 +9,7 @@ import me.reimnop.d4f.*;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
 import me.reimnop.d4f.events.PlayerDeathCallback;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
@@ -27,40 +28,73 @@ public final class MinecraftEventListeners {
 
     public static void init(Discord discord, Config config) {
         PlayerAdvancementCallback.EVENT.register((playerEntity, advancement) -> {
+            if (!config.announceAdvancement) {
+                return;
+            }
+
             assert advancement.getDisplay() != null;
 
-            String message = config.advancementTaskMessage;
+            String titleStr = config.advancementTaskTitle;
+            String descStr = config.advancementTaskDescription;
             switch (advancement.getDisplay().getFrame()) {
-                case GOAL -> message = config.advancementGoalMessage;
-                case TASK -> message = config.advancementTaskMessage;
-                case CHALLENGE -> message = config.advancementChallengeMessage;
+                case GOAL -> {
+                    titleStr = config.advancementGoalTitle;
+                    descStr = config.advancementGoalDescription;
+                }
+                case TASK -> {
+                    titleStr = config.advancementTaskTitle;
+                    descStr = config.advancementTaskDescription;
+                }
+                case CHALLENGE -> {
+                    titleStr = config.advancementChallengeTitle;
+                    descStr = config.advancementChallengeDescription;
+                }
             }
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getTitle())
+                    Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getTitle()),
+                    Discord4Fabric.id("description"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getDescription())
             );
 
-            Text msg = Placeholders.parseText(
-                    Text.literal(message),
+            Text title = Placeholders.parseText(
+                    Text.literal(titleStr),
                     PlaceholderContext.of(playerEntity),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.yellow, msg);
+            Text desc = Placeholders.parseText(
+                    Text.literal(descStr),
+                    PlaceholderContext.of(playerEntity),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                    .setColor(Color.yellow)
+                    .setAuthor(title.getString(), null, Utils.getAvatarUrl(playerEntity.getUuid()))
+                    .setDescription(desc.getString());
+
+            discord.sendEmbedMessage(embedBuilder);
         });
 
-        Timer<MinecraftServer> statusTimer = new Timer<>(config.updateInterval, server -> {
-            Text status = Placeholders.parseText(
-                    Text.literal(config.status),
-                    PlaceholderContext.of(server)
-            );
-            discord.setStatus(status);
-        });
+        VariableTimer<MinecraftServer> statusTimer = new VariableTimer<>(
+                () -> config.updateInterval,
+                server -> {
+                    Text status = Placeholders.parseText(
+                            Text.literal(config.status),
+                            PlaceholderContext.of(server)
+                    );
+                    discord.setStatus(status);
+                });
 
         ServerTickEvents.END_SERVER_TICK.register(statusTimer::tick);
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            if (!config.announceServerStartStop) {
+                return;
+            }
+
             Text message = Placeholders.parseText(
                     Text.literal(config.serverStartMessage),
                     PlaceholderContext.of(server)
@@ -69,6 +103,10 @@ public final class MinecraftEventListeners {
         });
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            if (!config.announceServerStartStop) {
+                return;
+            }
+
             Text message = Placeholders.parseText(
                     Text.literal(config.serverStopMessage),
                     PlaceholderContext.of(server)
@@ -110,10 +148,21 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendPlayerMessage(sender, msg);
+            Text name = Placeholders.parseText(
+                    TextNode.convert(Text.literal(config.discordName)),
+                    PlaceholderContext.of(sender),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            discord.sendPlayerMessage(sender, name, msg);
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            if (!config.announcePlayerJoinLeave) {
+                return;
+            }
+
             discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.green,
                     Placeholders.parseText(
                             Text.literal(config.playerJoinMessage),
@@ -122,6 +171,10 @@ public final class MinecraftEventListeners {
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            if (!config.announcePlayerJoinLeave) {
+                return;
+            }
+
             discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.red,
                     Placeholders.parseText(
                             Text.literal(config.playerLeftMessage),
@@ -129,9 +182,13 @@ public final class MinecraftEventListeners {
                     ));
         });
 
-        PlayerDeathCallback.EVENT.register(((playerEntity, source) -> {
+        PlayerDeathCallback.EVENT.register(((playerEntity, source, deathMessage) -> {
+            if (!config.announcePlayerDeath) {
+                return;
+            }
+
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(source.getDeathMessage(playerEntity))
+                    Discord4Fabric.id("reason"), (ctx, arg) -> PlaceholderResult.value(deathMessage)
             );
 
             Text msg = Placeholders.parseText(

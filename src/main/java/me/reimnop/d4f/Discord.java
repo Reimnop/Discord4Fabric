@@ -22,14 +22,13 @@ public class Discord {
     private final WebhookClient webhookClient;
     private final Config config;
 
-    public Discord(Config config) throws LoginException, InterruptedException {
+    public Discord(Config config) throws LoginException {
         this.config = config;
 
         // init jda
         JDABuilder builder = JDABuilder.createDefault(config.token);
         jda = builder.build();
         jda.addEventListener(new DiscordMessageListener());
-        jda.awaitReady();
 
         // init webhook
         webhookClient = WebhookClient.withUrl(config.webhookUrl);
@@ -56,10 +55,10 @@ public class Discord {
         return channel;
     }
 
-    public void sendPlayerMessage(PlayerEntity sender, Text message) {
+    public void sendPlayerMessage(PlayerEntity sender, Text name, Text message) {
         WebhookMessageBuilder wmb = new WebhookMessageBuilder()
                 .setAvatarUrl(Utils.getAvatarUrl(sender.getUuid()))
-                .setUsername(sender.getDisplayName().getString())
+                .setUsername(name.getString())
                 .setContent(message.getString());
 
         webhookClient.send(wmb.build());

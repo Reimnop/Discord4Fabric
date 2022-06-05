@@ -14,20 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerAdvancementTrackerMixin {
     @Shadow private ServerPlayerEntity owner;
 
-    @Inject(method = "grantCriterion", at = @At("RETURN"))
+    @Inject(method = "grantCriterion",
+            at = @At(
+                target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/text/Text;Lnet/minecraft/util/registry/RegistryKey;)V",
+                value = "INVOKE"
+            )
+    )
     private void grantCriterion(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) {
-        if (advancement.getDisplay() == null) {
-            return;
-        }
-
-        if (!advancement.getDisplay().shouldAnnounceToChat()) {
-            return;
-        }
-
-        if (!owner.getAdvancementTracker().getProgress(advancement).isDone()) {
-            return;
-        }
-
         PlayerAdvancementCallback.EVENT.invoker().onAdvancementGranted(owner, advancement);
     }
 }
