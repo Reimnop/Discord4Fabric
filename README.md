@@ -11,11 +11,7 @@
 
 > A beautiful Discord bot client for Fabric inspired by [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)
 
-<p align="center">
-    <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api">
-      <img height="96" src="https://i.imgur.com/Ol1Tcf8.png">
-    </a>
-</p>
+[![fabric api](https://i.imgur.com/Ol1Tcf8.png "Fabric API")](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 
 ## Usage
 
