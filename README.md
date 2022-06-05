@@ -11,6 +11,10 @@
 
 > A beautiful Discord bot client for Fabric inspired by [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)
 
+<p align="center">
+  <img height="96" src="https://i.imgur.com/Ol1Tcf8.png">
+</p>
+
 ## Usage
 
 Click [here](https://github.com/Reimnop/Discord4Fabric/blob/main/USAGE.md)
@@ -22,6 +26,9 @@ Click [here](https://github.com/Reimnop/Discord4Fabric/blob/main/USAGE.md)
 * Website: reimnop.me
 * Twitter: [@Reimnop](https://twitter.com/Reimnop)
 * Github: [@Reimnop](https://github.com/Reimnop)
+
+## Credits
+Uses [Placeholder API](https://github.com/Patbox/TextPlaceholderAPI) by Patbox
 
 ## Show your support
 
