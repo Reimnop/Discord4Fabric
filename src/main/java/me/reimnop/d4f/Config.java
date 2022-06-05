@@ -10,19 +10,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Config {
-    private String token = "";
-    private String webhookUrl = "";
-    private Long guildId = 0L;
-    private Long channelId = 0L;
-    private String serverStartMessage = "✅ **Server started!**";
-    private String serverStopMessage = "❎ **Server stopped!**";
-    private String playerJoinMessage = "%player:name% joined the game";
-    private String playerLeftMessage = "%player:name% left the game";
-    private String discordToMinecraftMessage = "[%d4f:nickname% on Discord] %d4f:message%";
-    private String minecraftToDiscordMessage = "%d4f:message%";
-    private String deathMessage = "%d4f:message%";
-    private Integer updateInterval = 40;
-    private String status = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
+    public String token = "";
+    public String webhookUrl = "";
+    public Long guildId = 0L;
+    public Long channelId = 0L;
+    public String serverStartMessage = "✅ **Server started!**";
+    public String serverStopMessage = "❎ **Server stopped!**";
+    public String playerJoinMessage = "%player:name% joined the game";
+    public String playerLeftMessage = "%player:name% left the game";
+    public String advancementGoalMessage = "%player:name% has reached the goal [%d4f:message%]";
+    public String advancementTaskMessage = "%player:name% has made the advancement [%d4f:message%]";
+    public String advancementChallengeMessage = "%player:name% has completed the challenge [%d4f:message%]";
+    public String discordToMinecraftMessage = "[%d4f:nickname% on Discord] %d4f:message%";
+    public String minecraftToDiscordMessage = "%d4f:message%";
+    public String deathMessage = "%d4f:message%";
+    public Integer updateInterval = 40;
+    public String status = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
 
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
@@ -34,6 +37,9 @@ public class Config {
         jsonObject.addProperty("server_stop", serverStopMessage);
         jsonObject.addProperty("player_join", playerJoinMessage);
         jsonObject.addProperty("player_left", playerLeftMessage);
+        jsonObject.addProperty("advancement_goal", advancementGoalMessage);
+        jsonObject.addProperty("advancement_task", advancementTaskMessage);
+        jsonObject.addProperty("advancement_challenge", advancementChallengeMessage);
         jsonObject.addProperty("discord_to_mc", discordToMinecraftMessage);
         jsonObject.addProperty("mc_to_discord", minecraftToDiscordMessage);
         jsonObject.addProperty("death", deathMessage);
@@ -63,6 +69,9 @@ public class Config {
         serverStopMessage = obj.get("server_stop").getAsString();
         playerJoinMessage = obj.get("player_join").getAsString();
         playerLeftMessage = obj.get("player_left").getAsString();
+        advancementGoalMessage = obj.get("advancement_goal").getAsString();
+        advancementTaskMessage = obj.get("advancement_task").getAsString();
+        advancementChallengeMessage = obj.get("advancement_challenge").getAsString();
         discordToMinecraftMessage = obj.get("discord_to_mc").getAsString();
         minecraftToDiscordMessage = obj.get("mc_to_discord").getAsString();
         deathMessage = obj.get("death").getAsString();
@@ -70,109 +79,5 @@ public class Config {
         status = obj.get("status").getAsString();
 
         reader.close();
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getWebhookUrl() {
-        return webhookUrl;
-    }
-
-    public void setWebhookUrl(String webhookUrl) {
-        this.webhookUrl = webhookUrl;
-    }
-
-    public Long getGuildId() {
-        return guildId;
-    }
-
-    public void setGuildId(Long guildId) {
-        this.guildId = guildId;
-    }
-
-    public Long getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getServerStartMessage() {
-        return serverStartMessage;
-    }
-
-    public void setServerStartMessage(String serverStartMessage) {
-        this.serverStartMessage = serverStartMessage;
-    }
-
-    public String getServerStopMessage() {
-        return serverStopMessage;
-    }
-
-    public void setServerStopMessage(String serverStopMessage) {
-        this.serverStopMessage = serverStopMessage;
-    }
-
-    public String getPlayerJoinMessage() {
-        return playerJoinMessage;
-    }
-
-    public void setPlayerJoinMessage(String playerJoinMessage) {
-        this.playerJoinMessage = playerJoinMessage;
-    }
-
-    public String getPlayerLeftMessage() {
-        return playerLeftMessage;
-    }
-
-    public void setPlayerLeftMessage(String playerLeftMessage) {
-        this.playerLeftMessage = playerLeftMessage;
-    }
-
-    public String getDiscordToMinecraftMessage() {
-        return discordToMinecraftMessage;
-    }
-
-    public void setDiscordToMinecraftMessage(String discordToMinecraftMessage) {
-        this.discordToMinecraftMessage = discordToMinecraftMessage;
-    }
-
-    public String getMinecraftToDiscordMessage() {
-        return minecraftToDiscordMessage;
-    }
-
-    public void setMinecraftToDiscordMessage(String minecraftToDiscordMessage) {
-        this.minecraftToDiscordMessage = minecraftToDiscordMessage;
-    }
-
-    public String getDeathMessage() {
-        return deathMessage;
-    }
-
-    public void setDeathMessage(String deathMessage) {
-        this.deathMessage = deathMessage;
-    }
-
-    public Integer getUpdateInterval() {
-        return updateInterval;
-    }
-
-    public void setUpdateInterval(Integer updateInterval) {
-        this.updateInterval = updateInterval;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

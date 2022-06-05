@@ -26,13 +26,13 @@ public class Discord {
         this.config = config;
 
         // init jda
-        JDABuilder builder = JDABuilder.createDefault(config.getToken());
+        JDABuilder builder = JDABuilder.createDefault(config.token);
         jda = builder.build();
         jda.addEventListener(new DiscordMessageListener());
         jda.awaitReady();
 
         // init webhook
-        webhookClient = WebhookClient.withUrl(config.getWebhookUrl());
+        webhookClient = WebhookClient.withUrl(config.webhookUrl);
     }
 
     public void close() {
@@ -41,19 +41,17 @@ public class Discord {
     }
 
     private Guild getGuild() throws GuildException {
-        Long id = config.getGuildId();
-        Guild guild = jda.getGuildById(id);
+        Guild guild = jda.getGuildById(config.guildId);
         if (guild == null) {
-            throw new GuildException(id);
+            throw new GuildException(config.guildId);
         }
         return guild;
     }
 
     private TextChannel getTextChannel() throws GuildException, ChannelException {
-        Long id = config.getChannelId();
-        TextChannel channel = getGuild().getChannelById(TextChannel.class, id);
+        TextChannel channel = getGuild().getChannelById(TextChannel.class, config.channelId);
         if (channel == null) {
-            throw new ChannelException(id);
+            throw new ChannelException(config.channelId);
         }
         return channel;
     }
