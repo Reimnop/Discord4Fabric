@@ -104,6 +104,9 @@ public final class MinecraftEventListeners {
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             if (!config.announceServerStartStop) {
+                // The bot should close discord regardless if it should announce start stop or not
+                // See: https://github.com/Reimnop/Discord4Fabric/issues/6
+                discord.close();
                 return;
             }
 
@@ -117,6 +120,12 @@ public final class MinecraftEventListeners {
         });
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
+            // Oversight.
+            // See: https://github.com/Reimnop/Discord4Fabric/issues/8
+            if (message.getChannel().getIdLong() != config.channelId) {
+                return;
+            }
+
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(Text.literal(user.getAsTag())),
                     Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Text.literal(user.getName())),
