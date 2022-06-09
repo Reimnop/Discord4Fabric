@@ -10,6 +10,7 @@ import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
 import me.reimnop.d4f.events.PlayerDeathCallback;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
@@ -18,13 +19,17 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class MinecraftEventListeners {
     private MinecraftEventListeners() {}
+
+    private static final Pattern DISCORD_PING_PATTERN = Pattern.compile("<@(?<id>\\d+)>");
 
     public static void init(Discord discord, Config config) {
         PlayerAdvancementCallback.EVENT.register((playerEntity, advancement) -> {
@@ -126,11 +131,29 @@ public final class MinecraftEventListeners {
                 return;
             }
 
+            // Parse Discord pings
+            Text parsedMsg = Utils.regexDynamicReplace(
+                    message.getContentRaw(),
+                    DISCORD_PING_PATTERN,
+                    match -> {
+                        String idStr = match.group("id");
+                        Long id = Long.parseLong(idStr);
+
+                        User pingedUser = discord.getUser(id);
+                        if (pingedUser != null) {
+                            return Text
+                                    .literal(String.format("@%s", pingedUser.getAsTag()))
+                                    .formatted(Formatting.BLUE);
+                        }
+                        return Text.literal(match.group());
+                    }
+            );
+
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(Text.literal(user.getAsTag())),
                     Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Text.literal(user.getName())),
                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(Text.literal(user.getDiscriminator())),
-                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(Text.literal(message.getContentRaw()))
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(parsedMsg)
             );
 
             MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();

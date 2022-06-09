@@ -4,6 +4,8 @@ import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
@@ -15,7 +17,7 @@ public final class Utils {
     private Utils() {}
 
     public interface RegexReplacer {
-        String replace(Matcher match);
+        Text replace(Matcher match);
     }
 
     public static void logException(Exception e) {
@@ -38,19 +40,19 @@ public final class Utils {
         return (ctx, arg) -> Placeholders.parsePlaceholder(id, arg, ctx);
     }
 
-    public static String regexDynamicReplace(String value, Pattern pattern, RegexReplacer replacer) {
+    public static Text regexDynamicReplace(String value, Pattern pattern, RegexReplacer replacer) {
         int lastIndex = 0;
         Matcher matcher = pattern.matcher(value);
-        StringBuilder output = new StringBuilder();
+        MutableText text = Text.empty();
         while (matcher.find()) {
-            output
-                    .append(value, lastIndex, matcher.start())
+            text
+                    .append(value.substring(lastIndex, matcher.start()))
                     .append(replacer.replace(matcher));
             lastIndex = matcher.end();
         }
         if (lastIndex < value.length()) {
-            output.append(value, lastIndex, value.length());
+            text.append(value.substring(lastIndex));
         }
-        return output.toString();
+        return text;
     }
 }

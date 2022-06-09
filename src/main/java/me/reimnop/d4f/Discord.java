@@ -9,11 +9,13 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.managers.channel.concrete.TextChannelManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.text.Text;
 
+import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 
@@ -53,6 +55,11 @@ public class Discord {
             throw new ChannelException(config.channelId);
         }
         return channel;
+    }
+
+    @Nullable
+    public User getUser(Long id) {
+        return jda.retrieveUserById(id).complete();
     }
 
     public void sendPlayerMessage(PlayerEntity sender, Text name, Text message) {
