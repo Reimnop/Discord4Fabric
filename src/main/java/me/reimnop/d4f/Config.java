@@ -15,8 +15,8 @@ public class Config {
     public Long guildId = 0L;
     public Long channelId = 0L;
     public Boolean announceServerStartStop = true;
-    public String serverStartMessage = "✅ **Server started!**";
-    public String serverStopMessage = "❎ **Server stopped!**";
+    public String serverStartMessage = ":white_check_mark: **Server started!**";
+    public String serverStopMessage = ":negative_squared_cross_mark: **Server stopped!**";
     public Boolean announcePlayerJoinLeave = true;
     public String playerJoinMessage = "%player:name% joined the game";
     public String playerLeftMessage = "%player:name% left the game";
