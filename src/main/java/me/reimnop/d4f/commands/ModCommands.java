@@ -40,6 +40,23 @@ public final class ModCommands {
                                             return 0;
                                         }
                                     }))
+                            .then(CommandManager.literal("update")
+                                    .requires(source -> source.hasPermissionLevel(4))
+                                    .executes(context -> {
+                                        try {
+                                            File configFile = new File(Utils.getConfigPath());
+                                            context.getSource().sendFeedback(
+                                                    Text.literal("Updating config!"),
+                                                    false
+                                            );
+                                            Discord4Fabric.CONFIG.writeConfig(configFile);
+                                            return 1;
+                                        } catch (Exception e) {
+                                            context.getSource().sendError(Text.literal("An unexpected error occurred! Check logs for more details"));
+                                            Utils.logException(e);
+                                            return 0;
+                                        }
+                                    }))
             );
         });
     }
