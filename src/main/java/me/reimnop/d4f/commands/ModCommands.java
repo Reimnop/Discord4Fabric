@@ -1,7 +1,7 @@
 package me.reimnop.d4f.commands;
 
 import me.reimnop.d4f.Discord4Fabric;
-import me.reimnop.d4f.Utils;
+import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;

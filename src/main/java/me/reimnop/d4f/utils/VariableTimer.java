@@ -1,4 +1,4 @@
-package me.reimnop.d4f;
+package me.reimnop.d4f.utils;
 
 public class VariableTimer<T> {
     public interface Task<T> {

@@ -5,14 +5,12 @@ import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import me.reimnop.d4f.exceptions.ChannelException;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.listeners.DiscordMessageListener;
+import me.reimnop.d4f.utils.Utils;
 import net.dv8tion.jda.api.*;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.managers.channel.concrete.TextChannelManager;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.PlayerManager;
 import net.minecraft.text.Text;
 
 import javax.annotation.Nullable;
@@ -24,16 +22,24 @@ public class Discord {
     private final WebhookClient webhookClient;
     private final Config config;
 
-    public Discord(Config config) throws LoginException {
+    public Discord(Config config) throws LoginException, InterruptedException {
         this.config = config;
 
         // init jda
-        JDABuilder builder = JDABuilder.createDefault(config.token);
+        JDABuilder builder = JDABuilder
+                .createDefault(config.token)
+                .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                .setMemberCachePolicy(MemberCachePolicy.ALL);
         jda = builder.build();
         jda.addEventListener(new DiscordMessageListener());
+        jda.awaitReady();
 
         // init webhook
         webhookClient = WebhookClient.withUrl(config.webhookUrl);
+    }
+
+    public void initCache() throws GuildException {
+        getGuild().loadMembers();
     }
 
     public void close() {
@@ -60,6 +66,12 @@ public class Discord {
     @Nullable
     public User getUser(Long id) {
         return jda.retrieveUserById(id).complete();
+    }
+
+    @Nullable
+    public User findUser(String tag) throws GuildException {
+        Member member = getGuild().getMemberByTag(tag);
+        return member != null ? member.getUser() : null;
     }
 
     public void sendPlayerMessage(PlayerEntity sender, Text name, Text message) {
