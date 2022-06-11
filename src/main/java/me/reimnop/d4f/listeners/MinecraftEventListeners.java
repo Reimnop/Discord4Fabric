@@ -1,9 +1,6 @@
 package me.reimnop.d4f.listeners;
 
-import eu.pb4.placeholders.api.PlaceholderContext;
-import eu.pb4.placeholders.api.PlaceholderHandler;
-import eu.pb4.placeholders.api.PlaceholderResult;
-import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.placeholders.api.*;
 import eu.pb4.placeholders.api.node.TextNode;
 import me.reimnop.d4f.*;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
@@ -62,14 +59,14 @@ public final class MinecraftEventListeners {
             );
 
             Text title = Placeholders.parseText(
-                    Text.literal(titleStr),
+                    TextParserUtils.formatText(titleStr),
                     PlaceholderContext.of(playerEntity),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
             Text desc = Placeholders.parseText(
-                    Text.literal(descStr),
+                    TextParserUtils.formatText(descStr),
                     PlaceholderContext.of(playerEntity),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
@@ -87,7 +84,7 @@ public final class MinecraftEventListeners {
                 () -> config.updateInterval,
                 server -> {
                     Text status = Placeholders.parseText(
-                            Text.literal(config.status),
+                            TextParserUtils.formatText(config.status),
                             PlaceholderContext.of(server)
                     );
                     discord.setStatus(status);
@@ -101,7 +98,7 @@ public final class MinecraftEventListeners {
             }
 
             Text message = Placeholders.parseText(
-                    Text.literal(config.serverStartMessage),
+                    TextParserUtils.formatText(config.serverStartMessage),
                     PlaceholderContext.of(server)
             );
             discord.sendPlainMessage(message);
@@ -116,7 +113,7 @@ public final class MinecraftEventListeners {
             }
 
             Text message = Placeholders.parseText(
-                    Text.literal(config.serverStopMessage),
+                    TextParserUtils.formatText(config.serverStopMessage),
                     PlaceholderContext.of(server)
             );
             discord.sendPlainMessage(message);
@@ -131,7 +128,11 @@ public final class MinecraftEventListeners {
                 return;
             }
 
+            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
+
             // Parse Discord pings
+            Text discordPingFormat = TextParserUtils.formatText(config.discordPingFormat);
+
             Text parsedMsg = Utils.regexDynamicReplace(
                     message.getContentRaw(),
                     DISCORD_PING_PATTERN,
@@ -140,10 +141,20 @@ public final class MinecraftEventListeners {
                         Long id = Long.parseLong(idStr);
 
                         User pingedUser = discord.getUser(id);
+
                         if (pingedUser != null) {
-                            return Text
-                                    .literal(String.format("@%s", pingedUser.getAsTag()))
-                                    .formatted(Formatting.BLUE);
+                            Map<Identifier, PlaceholderHandler> pingPlaceholders = Map.of(
+                                    Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(Text.literal(pingedUser.getAsTag())),
+                                    Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Text.literal(pingedUser.getName())),
+                                    Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(Text.literal(pingedUser.getDiscriminator()))
+                            );
+
+                            return Placeholders.parseText(
+                                    discordPingFormat,
+                                    PlaceholderContext.of(server),
+                                    Placeholders.PLACEHOLDER_PATTERN,
+                                    placeholder -> Utils.getPlaceholderHandler(placeholder, pingPlaceholders)
+                            );
                         }
                         return Text.literal(match.group());
                     }
@@ -156,10 +167,9 @@ public final class MinecraftEventListeners {
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(parsedMsg)
             );
 
-            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
             server.getPlayerManager().broadcast(
                     Placeholders.parseText(
-                            Text.literal(config.discordToMinecraftMessage),
+                            TextParserUtils.formatText(config.discordToMinecraftMessage),
                             PlaceholderContext.of(server),
                             Placeholders.PLACEHOLDER_PATTERN,
                             placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
@@ -174,14 +184,14 @@ public final class MinecraftEventListeners {
             );
 
             Text msg = Placeholders.parseText(
-                    TextNode.convert(Text.literal(config.minecraftToDiscordMessage)),
+                    TextParserUtils.formatText(config.minecraftToDiscordMessage),
                     PlaceholderContext.of(sender),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
             Text name = Placeholders.parseText(
-                    TextNode.convert(Text.literal(config.discordName)),
+                    TextParserUtils.formatText(config.discordName),
                     PlaceholderContext.of(sender),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
@@ -197,7 +207,7 @@ public final class MinecraftEventListeners {
 
             discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.green,
                     Placeholders.parseText(
-                            Text.literal(config.playerJoinMessage),
+                            TextParserUtils.formatText(config.playerJoinMessage),
                             PlaceholderContext.of(handler.player)
                     ));
         });
@@ -209,7 +219,7 @@ public final class MinecraftEventListeners {
 
             discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.red,
                     Placeholders.parseText(
-                            Text.literal(config.playerLeftMessage),
+                            TextParserUtils.formatText(config.playerLeftMessage),
                             PlaceholderContext.of(handler.player)
                     ));
         });
@@ -224,7 +234,7 @@ public final class MinecraftEventListeners {
             );
 
             Text msg = Placeholders.parseText(
-                    Text.literal(config.deathMessage),
+                    TextParserUtils.formatText(config.deathMessage),
                     PlaceholderContext.of(playerEntity),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)

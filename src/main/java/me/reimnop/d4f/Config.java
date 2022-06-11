@@ -32,6 +32,7 @@ public class Config {
     public String discordToMinecraftMessage = "[%d4f:nickname% on Discord] %d4f:message%";
     public String discordName = "%player:name%";
     public String minecraftToDiscordMessage = "%d4f:message%";
+    public String discordPingFormat = "<blue>@%d4f:fullname%</blue>";
     public Integer updateInterval = 100;
     public String status = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
 
@@ -59,6 +60,7 @@ public class Config {
         jsonObject.addProperty("discord_to_mc", discordToMinecraftMessage);
         jsonObject.addProperty("discord_name", discordName);
         jsonObject.addProperty("mc_to_discord", minecraftToDiscordMessage);
+        jsonObject.addProperty("discord_ping", discordPingFormat);
         jsonObject.addProperty("update_interval", updateInterval);
         jsonObject.addProperty("status", status);
 
@@ -77,31 +79,48 @@ public class Config {
         Gson gson = new Gson();
         JsonObject obj = gson.fromJson(reader, JsonObject.class);
 
-        token = obj.get("token").getAsString();
-        webhookUrl = obj.get("webhook_url").getAsString();
-        guildId = obj.get("guild_id").getAsLong();
-        channelId = obj.get("channel_id").getAsLong();
-        announceServerStartStop = obj.get("announce_server_start_stop").getAsBoolean();
-        serverStartMessage = obj.get("server_start").getAsString();
-        serverStopMessage = obj.get("server_stop").getAsString();
-        announcePlayerJoinLeave = obj.get("announce_player_join_leave").getAsBoolean();
-        playerJoinMessage = obj.get("player_join").getAsString();
-        playerLeftMessage = obj.get("player_left").getAsString();
-        announcePlayerDeath = obj.get("announce_player_death").getAsBoolean();
-        deathMessage = obj.get("death").getAsString();
-        announceAdvancement = obj.get("announce_advancement").getAsBoolean();
-        advancementGoalTitle = obj.get("advancement_goal").getAsString();
-        advancementGoalDescription = obj.get("advancement_goal_desc").getAsString();
-        advancementTaskTitle = obj.get("advancement_task").getAsString();
-        advancementTaskDescription = obj.get("advancement_task_desc").getAsString();
-        advancementChallengeTitle = obj.get("advancement_challenge").getAsString();
-        advancementChallengeDescription = obj.get("advancement_challenge_desc").getAsString();
-        discordToMinecraftMessage = obj.get("discord_to_mc").getAsString();
-        discordName = obj.get("discord_name").getAsString();
-        minecraftToDiscordMessage = obj.get("mc_to_discord").getAsString();
-        updateInterval = obj.get("update_interval").getAsInt();
-        status = obj.get("status").getAsString();
+        token = getStringOrDefault(obj, "token", token);
+        webhookUrl = getStringOrDefault(obj, "webhook_url", webhookUrl);
+        guildId = getLongOrDefault(obj, "guild_id", guildId);
+        channelId = getLongOrDefault(obj, "channel_id", channelId);
+        announceServerStartStop = getBooleanOrDefault(obj, "announce_server_start_stop", announceServerStartStop);
+        serverStartMessage = getStringOrDefault(obj, "server_start", serverStartMessage);
+        serverStopMessage = getStringOrDefault(obj, "server_stop", serverStopMessage);
+        announcePlayerJoinLeave = getBooleanOrDefault(obj, "announce_player_join_leave", announcePlayerJoinLeave);
+        playerJoinMessage = getStringOrDefault(obj, "player_join", playerJoinMessage);
+        playerLeftMessage = getStringOrDefault(obj, "player_left", playerLeftMessage);
+        announcePlayerDeath = getBooleanOrDefault(obj, "announce_player_death", announcePlayerDeath);
+        deathMessage = getStringOrDefault(obj, "death", deathMessage);
+        announceAdvancement = getBooleanOrDefault(obj, "announce_advancement", announceAdvancement);
+        advancementGoalTitle = getStringOrDefault(obj, "advancement_goal", advancementGoalTitle);
+        advancementGoalDescription = getStringOrDefault(obj, "advancement_goal_desc", advancementGoalDescription);
+        advancementTaskTitle = getStringOrDefault(obj, "advancement_task", advancementTaskTitle);
+        advancementTaskDescription = getStringOrDefault(obj, "advancement_task_desc", advancementTaskDescription);
+        advancementChallengeTitle = getStringOrDefault(obj, "advancement_challenge", advancementChallengeTitle);
+        advancementChallengeDescription = getStringOrDefault(obj, "advancement_challenge_desc", advancementChallengeDescription);
+        discordToMinecraftMessage = getStringOrDefault(obj, "discord_to_mc", discordToMinecraftMessage);
+        discordName = getStringOrDefault(obj, "discord_name", discordName);
+        minecraftToDiscordMessage = getStringOrDefault(obj, "mc_to_discord", minecraftToDiscordMessage);
+        discordPingFormat = getStringOrDefault(obj, "discord_ping", discordPingFormat);
+        updateInterval = getIntOrDefault(obj, "update_interval", updateInterval);
+        status = getStringOrDefault(obj, "status", status);
 
         reader.close();
+    }
+
+    private Boolean getBooleanOrDefault(JsonObject obj, String name, Boolean def) {
+        return obj.has(name) ? obj.get(name).getAsBoolean() : def;
+    }
+
+    private String getStringOrDefault(JsonObject obj, String name, String def) {
+        return obj.has(name) ? obj.get(name).getAsString() : def;
+    }
+
+    private Integer getIntOrDefault(JsonObject obj, String name, Integer def) {
+        return obj.has(name) ? obj.get(name).getAsInt() : def;
+    }
+
+    private Long getLongOrDefault(JsonObject obj, String name, Long def) {
+        return obj.has(name) ? obj.get(name).getAsLong() : def;
     }
 }
