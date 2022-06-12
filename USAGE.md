@@ -15,6 +15,13 @@ Change `guild_id` to your server ID.
 
 Change `channel_id` to your text channel ID (where you want users to interact with the bot).
 
+## Commands
+All commands require permission level 4 (OP).
+
+`/discord4fabric reload`: Reload config from disk (will generate config if config file doesn't exist).
+
+`/discord4fabric update`: Update config to latest version.
+
 ## Placeholders
 Placeholders are a way to insert variables into customizable text messages
 
@@ -59,6 +66,13 @@ For more info: https://placeholders.pb4.eu/user/default-placeholders/#player
 
 ## Discord name
 See here: https://placeholders.pb4.eu/user/default-placeholders/#player
+
+## Discord ping
+`%d4f:fullname%`: Full name of user. Example: `Reimnop#3147`
+
+`%d4f:nickname%`: Nickname of user. Example: `Reimnop`
+
+`%d4f:discriminator%`: The 4-digit tag of the user. Example: `3147`
 
 ## Status
 See here: https://placeholders.pb4.eu/user/default-placeholders/#server
