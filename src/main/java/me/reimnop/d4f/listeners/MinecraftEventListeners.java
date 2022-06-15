@@ -224,11 +224,19 @@ public final class MinecraftEventListeners {
                 return;
             }
 
+            // Requested by https://github.com/Reimnop/Discord4Fabric/issues/15
+            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+                    Discord4Fabric.id("post_online"), (ctx, arg) -> PlaceholderResult.value(String.valueOf(server.getCurrentPlayerCount() + 1))
+            );
+
             discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.green,
                     Placeholders.parseText(
                             TextParserUtils.formatText(config.playerJoinMessage),
-                            PlaceholderContext.of(handler.player)
-                    ));
+                            PlaceholderContext.of(handler.player),
+                            Placeholders.PLACEHOLDER_PATTERN,
+                            placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+                    )
+            );
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -236,11 +244,19 @@ public final class MinecraftEventListeners {
                 return;
             }
 
+            // Requested by https://github.com/Reimnop/Discord4Fabric/issues/15
+            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+                    Discord4Fabric.id("post_online"), (ctx, arg) -> PlaceholderResult.value(String.valueOf(server.getCurrentPlayerCount() - 1))
+            );
+
             discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.red,
                     Placeholders.parseText(
                             TextParserUtils.formatText(config.playerLeftMessage),
-                            PlaceholderContext.of(handler.player)
-                    ));
+                            PlaceholderContext.of(handler.player),
+                            Placeholders.PLACEHOLDER_PATTERN,
+                            placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+                    )
+            );
         });
 
         PlayerDeathCallback.EVENT.register(((playerEntity, source, deathMessage) -> {
