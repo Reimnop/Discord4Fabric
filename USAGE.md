@@ -28,6 +28,8 @@ Placeholders are a way to insert variables into customizable text messages
 Syntax: `%category:name%`
 
 ## Player join/leave
+`%df4:post_online%`: The amount of players online after the player has joined/left. Example: `42`
+
 See here: https://placeholders.pb4.eu/user/default-placeholders/#player
 
 ## Player death
