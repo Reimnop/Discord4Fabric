@@ -19,7 +19,9 @@ public class Config {
     public String serverStopMessage = ":negative_squared_cross_mark: **Server stopped!**";
     public Boolean announcePlayerJoinLeave = true;
     public String playerJoinMessage = "%player:name% joined the game";
+    public String playerJoinDescription = "Welcome to the server :wave:";
     public String playerLeftMessage = "%player:name% left the game";
+    public String playerLeftDescription = "See you again :wave:";
     public Boolean announcePlayerDeath = true;
     public String deathMessage = "%d4f:reason%";
     public Boolean announceAdvancement = true;
@@ -47,7 +49,9 @@ public class Config {
         jsonObject.addProperty("server_stop", serverStopMessage);
         jsonObject.addProperty("announce_player_join_leave", announcePlayerJoinLeave);
         jsonObject.addProperty("player_join", playerJoinMessage);
+        jsonObject.addProperty("player_join_description", playerJoinDescription);
         jsonObject.addProperty("player_left", playerLeftMessage);
+        jsonObject.addProperty("player_left_description", playerLeftDescription);
         jsonObject.addProperty("announce_player_death", announcePlayerDeath);
         jsonObject.addProperty("death", deathMessage);
         jsonObject.addProperty("announce_advancement", announceAdvancement);
@@ -88,7 +92,9 @@ public class Config {
         serverStopMessage = getStringOrDefault(obj, "server_stop", serverStopMessage);
         announcePlayerJoinLeave = getBooleanOrDefault(obj, "announce_player_join_leave", announcePlayerJoinLeave);
         playerJoinMessage = getStringOrDefault(obj, "player_join", playerJoinMessage);
+        playerJoinDescription = getStringOrDefault(obj, "player_join_description", playerJoinDescription);
         playerLeftMessage = getStringOrDefault(obj, "player_left", playerLeftMessage);
+        playerLeftDescription = getStringOrDefault(obj, "player_left_description", playerLeftDescription);
         announcePlayerDeath = getBooleanOrDefault(obj, "announce_player_death", announcePlayerDeath);
         deathMessage = getStringOrDefault(obj, "death", deathMessage);
         announceAdvancement = getBooleanOrDefault(obj, "announce_advancement", announceAdvancement);

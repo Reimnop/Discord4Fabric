@@ -83,9 +83,10 @@ public class Discord {
         webhookClient.send(wmb.build());
     }
 
-    public void sendEmbedMessageUsingPlayerAvatar(PlayerEntity sender, Color color, Text message) {
+    public void sendEmbedMessageUsingPlayerAvatar(PlayerEntity sender, Color color, String message, String description) {
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setAuthor(message.getString(), null, Utils.getAvatarUrl(sender.getUuid()))
+                .setAuthor(message, null, Utils.getAvatarUrl(sender.getUuid()))
+                .setDescription(description)
                 .setColor(color);
 
         sendEmbedMessage(embedBuilder);

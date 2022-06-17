@@ -74,12 +74,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setColor(Color.yellow)
-                    .setAuthor(title.getString(), null, Utils.getAvatarUrl(playerEntity.getUuid()))
-                    .setDescription(desc.getString());
-
-            discord.sendEmbedMessage(embedBuilder);
+            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.yellow, title.getString(), desc.getString());
         });
 
         VariableTimer<MinecraftServer> statusTimer = new VariableTimer<>(
@@ -229,14 +224,21 @@ public final class MinecraftEventListeners {
                     Discord4Fabric.id("post_online"), (ctx, arg) -> PlaceholderResult.value(String.valueOf(server.getCurrentPlayerCount() + 1))
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.green,
-                    Placeholders.parseText(
-                            TextParserUtils.formatText(config.playerJoinMessage),
-                            PlaceholderContext.of(handler.player),
-                            Placeholders.PLACEHOLDER_PATTERN,
-                            placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
-                    )
+            Text msg = Placeholders.parseText(
+                    TextParserUtils.formatText(config.playerJoinMessage),
+                    PlaceholderContext.of(handler.player),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
+
+            Text desc = Placeholders.parseText(
+                    TextParserUtils.formatText(config.playerJoinDescription),
+                    PlaceholderContext.of(handler.player),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.green, msg.getString(), desc.getString());
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -249,14 +251,21 @@ public final class MinecraftEventListeners {
                     Discord4Fabric.id("post_online"), (ctx, arg) -> PlaceholderResult.value(String.valueOf(server.getCurrentPlayerCount() - 1))
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.red,
-                    Placeholders.parseText(
-                            TextParserUtils.formatText(config.playerLeftMessage),
-                            PlaceholderContext.of(handler.player),
-                            Placeholders.PLACEHOLDER_PATTERN,
-                            placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
-                    )
+            Text msg = Placeholders.parseText(
+                    TextParserUtils.formatText(config.playerLeftMessage),
+                    PlaceholderContext.of(handler.player),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
+
+            Text desc = Placeholders.parseText(
+                    TextParserUtils.formatText(config.playerLeftDescription),
+                    PlaceholderContext.of(handler.player),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.red, msg.getString(), desc.getString());
         });
 
         PlayerDeathCallback.EVENT.register(((playerEntity, source, deathMessage) -> {
@@ -275,7 +284,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.black, msg);
+            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.black, msg.getString(), null);
         }));
     }
 }
