@@ -284,7 +284,14 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.black, msg.getString(), null);
+            Text desc = Placeholders.parseText(
+                    TextParserUtils.formatText(config.deathDescription),
+                    PlaceholderContext.of(playerEntity),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.black, msg.getString(), desc.getString());
         }));
     }
 }

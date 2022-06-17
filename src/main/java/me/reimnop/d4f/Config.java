@@ -24,6 +24,7 @@ public class Config {
     public String playerLeftDescription = "See you again :wave:";
     public Boolean announcePlayerDeath = true;
     public String deathMessage = "%d4f:reason%";
+    public String deathDescription = "Better luck next time!";
     public Boolean announceAdvancement = true;
     public String advancementGoalTitle = "%player:name% has reached the goal [%d4f:title%]";
     public String advancementGoalDescription = "%d4f:description%";
@@ -54,6 +55,7 @@ public class Config {
         jsonObject.addProperty("player_left_description", playerLeftDescription);
         jsonObject.addProperty("announce_player_death", announcePlayerDeath);
         jsonObject.addProperty("death", deathMessage);
+        jsonObject.addProperty("death_description", deathDescription);
         jsonObject.addProperty("announce_advancement", announceAdvancement);
         jsonObject.addProperty("advancement_goal", advancementGoalTitle);
         jsonObject.addProperty("advancement_goal_desc", advancementGoalDescription);
@@ -97,6 +99,7 @@ public class Config {
         playerLeftDescription = getStringOrDefault(obj, "player_left_description", playerLeftDescription);
         announcePlayerDeath = getBooleanOrDefault(obj, "announce_player_death", announcePlayerDeath);
         deathMessage = getStringOrDefault(obj, "death", deathMessage);
+        deathDescription = getStringOrDefault(obj, "death_description", deathDescription);
         announceAdvancement = getBooleanOrDefault(obj, "announce_advancement", announceAdvancement);
         advancementGoalTitle = getStringOrDefault(obj, "advancement_goal", advancementGoalTitle);
         advancementGoalDescription = getStringOrDefault(obj, "advancement_goal_desc", advancementGoalDescription);
