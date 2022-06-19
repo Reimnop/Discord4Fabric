@@ -8,6 +8,8 @@ import me.reimnop.d4f.events.PlayerDeathCallback;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.utils.Utils;
 import me.reimnop.d4f.utils.VariableTimer;
+import me.reimnop.d4f.utils.text.LiteralTextSequence;
+import me.reimnop.d4f.utils.text.TextUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -130,7 +132,7 @@ public final class MinecraftEventListeners {
             // Parse Discord pings
             Text discordPingFormat = TextParserUtils.formatText(config.discordPingFormat);
 
-            Text parsedMsg = Utils.regexDynamicReplaceText(
+            Text parsedMsg = TextUtils.regexDynamicReplaceText(
                     message.getContentRaw(),
                     DISCORD_PING_PATTERN,
                     match -> {
@@ -175,7 +177,7 @@ public final class MinecraftEventListeners {
         });
 
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {
-            String content = Utils.regexDynamicReplaceString(
+            String content = TextUtils.regexDynamicReplaceString(
                     message.filtered().getContent().getString(),
                     MINECRAFT_PING_PATTERN,
                     match -> {
