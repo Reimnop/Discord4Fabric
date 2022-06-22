@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.io.IOException;
 
 public class Discord4Fabric implements ModInitializer {
     public static final String MODID = "d4f";

@@ -130,9 +130,7 @@ public final class MinecraftEventListeners {
             MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 
             // Parse Discord pings
-            Text discordPingFormat = TextParserUtils.formatText(config.discordPingFormat);
-
-            Text parsedMsg = TextUtils.regexDynamicReplaceText(
+            String parsedString = TextUtils.regexDynamicReplaceString(
                     message.getContentRaw(),
                     DISCORD_PING_PATTERN,
                     match -> {
@@ -148,16 +146,21 @@ public final class MinecraftEventListeners {
                                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(pingedUser.getDiscriminator())
                             );
 
-                            return Placeholders.parseText(
-                                    discordPingFormat,
-                                    PlaceholderContext.of(server),
-                                    Placeholders.PLACEHOLDER_PATTERN,
-                                    placeholder -> Utils.getPlaceholderHandler(placeholder, pingPlaceholders)
-                            );
+                            return Placeholders
+                                    .parseText(
+                                        Text.literal(config.discordPingFormat), // We'll format this later
+                                        PlaceholderContext.of(server),
+                                        Placeholders.PLACEHOLDER_PATTERN,
+                                        placeholder -> Utils.getPlaceholderHandler(placeholder, pingPlaceholders)
+                                    )
+                                    .getString();
                         }
-                        return Text.literal(match.group());
+                        return match.group();
                     }
             );
+
+            parsedString = TextUtils.parseMarkdownToPAPI(parsedString);
+            Text parsedMsg = TextParserUtils.formatText(parsedString);
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(user.getAsTag()),
