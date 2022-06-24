@@ -16,11 +16,14 @@ import net.minecraft.text.Text;
 import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Discord {
     private final JDA jda;
     private final WebhookClient webhookClient;
     private final Config config;
+    private final Map<String, Emote> emotes = new HashMap<>();
 
     public Discord(Config config) throws LoginException, InterruptedException {
         this.config = config;
@@ -40,6 +43,11 @@ public class Discord {
 
     public void initCache() throws GuildException {
         getGuild().loadMembers();
+
+        emotes.clear();
+        for (Emote emote : getGuild().getEmotes()) {
+            emotes.put(emote.getName(), emote);
+        }
     }
 
     public void close() {
@@ -72,6 +80,11 @@ public class Discord {
     public User findUser(String tag) throws GuildException {
         Member member = getGuild().getMemberByTag(tag);
         return member != null ? member.getUser() : null;
+    }
+
+    @Nullable
+    public Emote findEmote(String name) {
+        return emotes.getOrDefault(name, null);
     }
 
     public void sendPlayerMessage(PlayerEntity sender, Text name, Text message) {

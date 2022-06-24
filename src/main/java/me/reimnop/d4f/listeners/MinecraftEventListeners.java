@@ -11,6 +11,7 @@ import me.reimnop.d4f.utils.VariableTimer;
 import me.reimnop.d4f.utils.text.LiteralTextSequence;
 import me.reimnop.d4f.utils.text.TextUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -31,6 +32,7 @@ public final class MinecraftEventListeners {
 
     private static final Pattern DISCORD_PING_PATTERN = Pattern.compile("<@(?<id>\\d+)>");
     private static final Pattern MINECRAFT_PING_PATTERN = Pattern.compile("@(?<tag>.+?#\\d{4})");
+    private static final Pattern EMOTE_PATTERN = Pattern.compile(":(?<name>[^\\n ]+?):");
 
     public static void init(Discord discord, Config config) {
         PlayerAdvancementCallback.EVENT.register((playerEntity, advancement) -> {
@@ -198,8 +200,23 @@ public final class MinecraftEventListeners {
                     }
             );
 
+            // Parse emojis
+            content = TextUtils.regexDynamicReplaceString(
+                    content,
+                    EMOTE_PATTERN,
+                    match -> {
+                        String emoteName = match.group("name");
+                        Emote emote = discord.findEmote(emoteName);
+                        if (emote != null) {
+                            return emote.getAsMention();
+                        }
+                        return match.group();
+                    }
+            );
+
+            String finalContent = content;
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(content)
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(finalContent)
             );
 
             Text msg = Placeholders.parseText(
