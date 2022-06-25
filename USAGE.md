@@ -15,6 +15,8 @@ Change `guild_id` to your server ID.
 
 Change `channel_id` to your text channel ID (where you want users to interact with the bot).
 
+Note: This mod requires the `GUILD_MEMBERS` intent. Please make sure you have it enabled.
+
 ## Commands
 All commands require permission level 4 (OP).
 
