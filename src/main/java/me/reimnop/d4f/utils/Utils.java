@@ -29,6 +29,10 @@ public final class Utils {
         return FabricLoader.getInstance().getConfigDir() + "/discord4fabric.json";
     }
 
+    public static String getUserdataPath() {
+        return FabricLoader.getInstance().getConfigDir() + "/d4f_userdata.json";
+    }
+
     public static PlaceholderHandler getPlaceholderHandler(String placeholder, Map<Identifier, PlaceholderHandler> handlers) {
         Identifier id = Identifier.tryParse(placeholder);
         if (handlers.containsKey(id)) {

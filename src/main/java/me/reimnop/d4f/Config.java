@@ -38,6 +38,7 @@ public class Config {
     public String discordPingFormat = "<blue>@%d4f:fullname%</blue>";
     public Integer updateInterval = 100;
     public String status = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
+    public Boolean requiresLinkedAccount = false;
 
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
@@ -69,6 +70,7 @@ public class Config {
         jsonObject.addProperty("discord_ping", discordPingFormat);
         jsonObject.addProperty("update_interval", updateInterval);
         jsonObject.addProperty("status", status);
+        jsonObject.addProperty("requires_linked_account", requiresLinkedAccount);
 
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -113,6 +115,7 @@ public class Config {
         discordPingFormat = getStringOrDefault(obj, "discord_ping", discordPingFormat);
         updateInterval = getIntOrDefault(obj, "update_interval", updateInterval);
         status = getStringOrDefault(obj, "status", status);
+        requiresLinkedAccount = getBooleanOrDefault(obj, "requires_linked_account", requiresLinkedAccount);
 
         reader.close();
     }

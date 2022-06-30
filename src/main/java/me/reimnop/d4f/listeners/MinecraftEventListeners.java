@@ -8,10 +8,10 @@ import me.reimnop.d4f.events.PlayerDeathCallback;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.utils.Utils;
 import me.reimnop.d4f.utils.VariableTimer;
-import me.reimnop.d4f.utils.text.LiteralTextSequence;
 import me.reimnop.d4f.utils.text.TextUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -20,11 +20,18 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import javax.swing.text.html.Option;
 import java.awt.*;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public final class MinecraftEventListeners {
@@ -34,7 +41,7 @@ public final class MinecraftEventListeners {
     private static final Pattern MINECRAFT_PING_PATTERN = Pattern.compile("@(?<tag>.+?#\\d{4})");
     private static final Pattern EMOTE_PATTERN = Pattern.compile(":(?<name>[^\\n ]+?):");
 
-    public static void init(Discord discord, Config config) {
+    public static void init(Discord discord, AccountLinking accountLinking, Config config) {
         PlayerAdvancementCallback.EVENT.register((playerEntity, advancement) -> {
             if (!config.announceAdvancement) {
                 return;
@@ -123,6 +130,17 @@ public final class MinecraftEventListeners {
         });
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
+            if (message.getChannel() instanceof PrivateChannel channel) {
+                String code = message.getContentRaw();
+                AccountLinking.LinkingResult result = accountLinking.tryLinkAccount(code, user.getIdLong());
+                switch (result) {
+                    case INVALID_CODE -> channel.sendMessage(new MessageBuilder().append("Invalid linking code!").build()).queue();
+                    case ACCOUNT_LINKED -> channel.sendMessage(new MessageBuilder().append("Your account was already linked!").build()).queue();
+                    case SUCCESS -> channel.sendMessage(new MessageBuilder().append("Your account was successfully linked!").build()).queue();
+                }
+                return;
+            }
+
             // Oversight.
             // See: https://github.com/Reimnop/Discord4Fabric/issues/8
             if (message.getChannel().getIdLong() != config.channelId) {
@@ -142,6 +160,15 @@ public final class MinecraftEventListeners {
                         User pingedUser = discord.getUser(id);
 
                         if (pingedUser != null) {
+                            // Play ping sound to pinged user if they have an account linked
+                            Optional<UUID> pingedPlayerUuid = accountLinking.getLinkedAccount(pingedUser.getIdLong());
+                            if (pingedPlayerUuid.isPresent()) {
+                                ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
+                                if (player != null) {
+                                    player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                }
+                            }
+
                             Map<Identifier, PlaceholderHandler> pingPlaceholders = Map.of(
                                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(pingedUser.getAsTag()),
                                     Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(pingedUser.getName()),
@@ -237,6 +264,11 @@ public final class MinecraftEventListeners {
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            if (config.requiresLinkedAccount && accountLinking.getLinkedAccount(handler.player.getUuid()).isEmpty()) {
+                Discord4Fabric.kickForUnlinkedAccount(handler.player);
+                return;
+            }
+
             if (!config.announcePlayerJoinLeave) {
                 return;
             }

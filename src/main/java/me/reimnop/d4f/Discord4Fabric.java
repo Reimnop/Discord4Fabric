@@ -5,12 +5,19 @@ import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.listeners.MinecraftEventListeners;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 public class Discord4Fabric implements ModInitializer {
     public static final String MODID = "d4f";
@@ -18,9 +25,25 @@ public class Discord4Fabric implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     public static final Config CONFIG = new Config();
     public static Discord DISCORD;
+    public static AccountLinking ACCOUNT_LINKING;
 
     public static Identifier id(String path) {
         return new Identifier(MODID, path);
+    }
+
+    public static void kickForUnlinkedAccount(ServerPlayerEntity player) {
+        UUID uuid = player.getUuid();
+        ACCOUNT_LINKING.tryQueueForLinking(uuid);
+        String code = ACCOUNT_LINKING.getCode(uuid);
+
+        MutableText reason = Text.empty()
+                        .append(Text.literal("This server requires a linked Discord account!\n"))
+                        .append(Text.literal("Your linking code is "))
+                        .append(Text.literal(code)
+                                .formatted(Formatting.BLUE, Formatting.UNDERLINE))
+                        .append(Text.literal("\nPlease DM the bot this linking code to link your account"));
+
+        player.networkHandler.disconnect(reason);
     }
 
     @Override
@@ -50,10 +73,17 @@ public class Discord4Fabric implements ModInitializer {
         }
     }
 
-    private void initDiscord() throws LoginException, GuildException, InterruptedException {
+    private void initDiscord() throws LoginException, GuildException, InterruptedException, IOException {
+        ACCOUNT_LINKING = new AccountLinking();
+
+        File file = new File(Utils.getUserdataPath());
+        if (file.exists()) {
+            ACCOUNT_LINKING.read(file);
+        }
+
         DISCORD = new Discord(CONFIG);
         DISCORD.initCache();
 
-        MinecraftEventListeners.init(DISCORD, CONFIG);
+        MinecraftEventListeners.init(DISCORD, ACCOUNT_LINKING, CONFIG);
     }
 }
