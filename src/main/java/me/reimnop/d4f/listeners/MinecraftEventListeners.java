@@ -209,6 +209,8 @@ public final class MinecraftEventListeners {
         });
 
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {
+            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
+
             String content = TextUtils.regexDynamicReplaceString(
                     message.filtered().getContent().getString(),
                     MINECRAFT_PING_PATTERN,
@@ -218,6 +220,15 @@ public final class MinecraftEventListeners {
                         try {
                             User user = discord.findUser(tag);
                             if (user != null) {
+                                // Play ping sound to pinged user if they have an account linked
+                                Optional<UUID> pingedPlayerUuid = accountLinking.getLinkedAccount(user.getIdLong());
+                                if (pingedPlayerUuid.isPresent()) {
+                                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
+                                    if (player != null) {
+                                        player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                    }
+                                }
+
                                 return user.getAsMention();
                             }
                         } catch (GuildException e) {
