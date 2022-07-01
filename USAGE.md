@@ -18,11 +18,13 @@ Change `channel_id` to your text channel ID (where you want users to interact wi
 Note: This mod requires the `GUILD_MEMBERS` intent. Please make sure you have it enabled.
 
 ## Commands
-All commands require permission level 4 (OP).
+(Require permission level 4/OP) `/discord4fabric reload`: Reload config from disk (will generate config if config file doesn't exist).
 
-`/discord4fabric reload`: Reload config from disk (will generate config if config file doesn't exist).
+(Require permission level 4/OP) `/discord4fabric update`: Update config to latest version.
 
-`/discord4fabric update`: Update config to latest version.
+`/discord4fabric link`: Link account.
+
+`/discord4fabric unlink`: Unlink an already linked account.
 
 ## Placeholders
 Placeholders are a way to insert variables into customizable text messages
