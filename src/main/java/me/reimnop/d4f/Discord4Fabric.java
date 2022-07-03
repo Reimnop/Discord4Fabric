@@ -1,5 +1,7 @@
 package me.reimnop.d4f;
 
+import me.reimnop.d4f.actions.ModActions;
+import me.reimnop.d4f.actions.RunCommandAction;
 import me.reimnop.d4f.commands.ModCommands;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.listeners.MinecraftEventListeners;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -26,6 +29,7 @@ public class Discord4Fabric implements ModInitializer {
     public static final Config CONFIG = new Config();
     public static Discord DISCORD;
     public static AccountLinking ACCOUNT_LINKING;
+    public static CustomEvents CUSTOM_EVENTS;
 
     public static Identifier id(String path) {
         return new Identifier(MODID, path);
@@ -49,28 +53,35 @@ public class Discord4Fabric implements ModInitializer {
     @Override
     public void onInitialize() {
         try {
-            File file = new File(Utils.getConfigPath());
-            if (!file.exists()) {
-                CONFIG.writeConfig(file);
-                LOGGER.error(
-                        String.format(
-                                "Config not found! Generated template at %s",
-                                file.getAbsolutePath()
-                        )
-                );
-                LOGGER.error("Please update your config and restart the server");
-                return;
-            } else {
-                CONFIG.readConfig(file);
+            if (tryInitConfig()) {
+                initDiscord();
+                initActions();
+                initCustomEvents();
+                ModCommands.init();
             }
-
-            initDiscord();
-            ModCommands.init();
         } catch (LoginException e) {
             LOGGER.error("Login Failed! Please update your config and restart the server");
         } catch (Exception e) {
             Utils.logException(e);
         }
+    }
+
+    private boolean tryInitConfig() throws IOException {
+        File file = new File(Utils.getConfigPath());
+        if (!file.exists()) {
+            CONFIG.writeConfig(file);
+            LOGGER.error(
+                    String.format(
+                            "Config not found! Generated template at %s",
+                            file.getAbsolutePath()
+                    )
+            );
+            LOGGER.error("Please update your config and restart the server");
+            return false;
+        }
+
+        CONFIG.readConfig(file);
+        return true;
     }
 
     private void initDiscord() throws LoginException, GuildException, InterruptedException, IOException {
@@ -85,5 +96,31 @@ public class Discord4Fabric implements ModInitializer {
         DISCORD.initCache();
 
         MinecraftEventListeners.init(DISCORD, ACCOUNT_LINKING, CONFIG);
+    }
+
+    private void initActions() {
+        ModActions.put("run_command", new RunCommandAction());
+    }
+
+    private void initCustomEvents() {
+        try {
+            File file = new File(Utils.getCustomEventsPath());
+            if (file.exists()) {
+                CUSTOM_EVENTS = new CustomEvents(file);
+                CustomEventsHandler.init(CUSTOM_EVENTS);
+            } else {
+                // Generate empty events file for the user
+                if (file.createNewFile()) {
+                    try (FileWriter fileWriter = new FileWriter(file)) {
+                        fileWriter.write("{}");
+                    }
+                }
+                LOGGER.warn("No events file! Generated template");
+
+                CUSTOM_EVENTS = new CustomEvents();
+            }
+        } catch (IOException e) {
+            Utils.logException(e);
+        }
     }
 }
