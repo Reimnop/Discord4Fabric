@@ -55,7 +55,7 @@ public class Discord {
         webhookClient.close();
     }
 
-    private Guild getGuild() throws GuildException {
+    public Guild getGuild() throws GuildException {
         Guild guild = jda.getGuildById(config.guildId);
         if (guild == null) {
             throw new GuildException(config.guildId);
@@ -117,14 +117,18 @@ public class Discord {
         }
     }
 
-    public void sendPlainMessage(Text message) {
+    public void sendPlainMessage(String message) {
         try {
             getTextChannel()
-                    .sendMessage(message.getString())
+                    .sendMessage(message)
                     .queue();
         } catch (Exception e) {
             Utils.logException(e);
         }
+    }
+
+    public void sendPlainMessage(Text message) {
+        sendPlainMessage(message.getString());
     }
 
     public void setChannelTopic(Text topic) {

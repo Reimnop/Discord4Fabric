@@ -103,6 +103,30 @@ public final class ModCommands {
                                             return 0;
                                         }
                                     }))
+                            .then(CommandManager.literal("reload_custom_events")
+                                    .requires(source -> source.hasPermissionLevel(4))
+                                    .executes(context -> {
+                                        try {
+                                            File file = new File(Utils.getCustomEventsPath());
+                                            if (file.exists()) {
+                                                context.getSource().sendFeedback(
+                                                        Text.literal("Reloading custom events!"),
+                                                        false
+                                                );
+                                                Discord4Fabric.CUSTOM_EVENTS.read(file);
+                                            } else {
+                                                context.getSource().sendFeedback(
+                                                        Text.literal("Custom events file not found!"),
+                                                        false
+                                                );
+                                            }
+                                            return 1;
+                                        } catch (Exception e) {
+                                            context.getSource().sendError(Text.literal("An unexpected error occurred! Check logs for more details"));
+                                            Utils.logException(e);
+                                            return 0;
+                                        }
+                                    }))
                             .then(CommandManager.literal("update")
                                     .requires(source -> source.hasPermissionLevel(4))
                                     .executes(context -> {

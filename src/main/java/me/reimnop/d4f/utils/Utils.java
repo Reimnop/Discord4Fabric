@@ -33,6 +33,10 @@ public final class Utils {
         return FabricLoader.getInstance().getConfigDir() + "/d4f_userdata.json";
     }
 
+    public static String getCustomEventsPath() {
+        return FabricLoader.getInstance().getConfigDir() + "/d4f_custom_events.json";
+    }
+
     public static PlaceholderHandler getPlaceholderHandler(String placeholder, Map<Identifier, PlaceholderHandler> handlers) {
         Identifier id = Identifier.tryParse(placeholder);
         if (handlers.containsKey(id)) {
@@ -40,6 +44,4 @@ public final class Utils {
         }
         return (ctx, arg) -> Placeholders.parsePlaceholder(id, arg, ctx);
     }
-
-
 }

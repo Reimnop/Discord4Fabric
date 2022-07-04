@@ -112,7 +112,7 @@ public final class MinecraftEventListeners {
             discord.sendPlainMessage(message);
         });
 
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             if (!config.announceServerStartStop) {
                 // The bot should close discord regardless if it should announce start stop or not
                 // See: https://github.com/Reimnop/Discord4Fabric/issues/6
@@ -205,7 +205,7 @@ public final class MinecraftEventListeners {
                             Placeholders.PLACEHOLDER_PATTERN,
                             placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
                     ),
-                    MessageType.TELLRAW_COMMAND);
+                    MessageType.SYSTEM);
         });
 
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {
