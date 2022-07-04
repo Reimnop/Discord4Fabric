@@ -13,6 +13,7 @@ import me.reimnop.d4f.customevents.constraints.Constraint;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,6 +38,11 @@ public class CustomEvents {
 
     public static final String PLAYER_JOIN = "player_join";
     public static final String PLAYER_LEAVE = "player_leave";
+    public static final String SERVER_START = "server_start";
+    public static final String SERVER_STOP = "server_stop";
+    public static final String DISCORD_MESSAGE = "discord_message";
+    public static final String MINECRAFT_MESSAGE = "minecraft_message";
+    public static final String ADVANCEMENT = "advancement";
 
     private final Map<String, ConstraintActionListPair> constraintActionListPairs = new HashMap<>();
 
@@ -54,7 +60,11 @@ public class CustomEvents {
         }
     }
 
-    public void raiseEvent(String id, PlaceholderContext placeholderContext, Map<String, Constraint> supportedConstraints) {
+    public void raiseEvent(
+            String id,
+            PlaceholderContext placeholderContext,
+            @Nullable Map<String, Constraint> supportedConstraints,
+            @Nullable Map<Identifier, PlaceholderHandler> externalHandlers) {
         if (!constraintActionListPairs.containsKey(id)) {
             return;
         }
@@ -66,22 +76,32 @@ public class CustomEvents {
                 Discord4Fabric.id("pig"), (ctx, arg) -> PlaceholderResult.value(TechnobladeQuoteFactory.getRandomQuote())
         );
 
+        if (externalHandlers != null) {
+            placeholderHandlers.putAll(externalHandlers);
+        }
+
         ConstraintActionListPair constraintActionListPair = constraintActionListPairs.get(id);
-        for (String constraintId : constraintActionListPair.contraintIds) {
-            if (!supportedConstraints.containsKey(constraintId)) {
-                continue;
-            }
+        if (supportedConstraints != null) {
+            for (String constraintId : constraintActionListPair.contraintIds) {
+                if (!supportedConstraints.containsKey(constraintId)) {
+                    continue;
+                }
 
-            Constraint constraint = supportedConstraints.get(constraintId);
-            if (!constraint.satisfied()) {
-                return;
-            }
+                Constraint constraint = supportedConstraints.get(constraintId);
+                if (!constraint.satisfied()) {
+                    return;
+                }
 
-            Map<Identifier, PlaceholderHandler> constraintProvidedHandlers = constraint.getHandlers();
-            placeholderHandlers.putAll(constraintProvidedHandlers);
+                Map<Identifier, PlaceholderHandler> constraintProvidedHandlers = constraint.getHandlers();
+                placeholderHandlers.putAll(constraintProvidedHandlers);
+            }
         }
 
         ActionContext context = new ActionContext(placeholderContext, placeholderHandlers);
         constraintActionListPair.actionList.runActions(context);
+    }
+
+    public void raiseEvent(String id, PlaceholderContext placeholderContext, @Nullable Map<String, Constraint> supportedConstraints) {
+        raiseEvent(id, placeholderContext, supportedConstraints, null);
     }
 }

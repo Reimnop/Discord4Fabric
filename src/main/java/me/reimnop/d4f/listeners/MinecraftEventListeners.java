@@ -112,7 +112,7 @@ public final class MinecraftEventListeners {
             discord.sendPlainMessage(message);
         });
 
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             if (!config.announceServerStartStop) {
                 // The bot should close discord regardless if it should announce start stop or not
                 // See: https://github.com/Reimnop/Discord4Fabric/issues/6
