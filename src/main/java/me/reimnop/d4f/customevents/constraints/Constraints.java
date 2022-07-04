@@ -4,4 +4,5 @@ public final class Constraints {
     private Constraints() {}
 
     public final static String LINKED_ACCOUNT = "linked_account";
+    public final static String OPERATOR = "operator";
 }

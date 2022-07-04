@@ -24,13 +24,28 @@ import java.util.Set;
 
 public class CustomEvents {
     private static class ConstraintActionListPair {
-        public final Set<String> contraintIds;
+        private static class ConstraintId {
+            public final String id;
+            public final boolean negated;
+
+            public ConstraintId(String str) {
+                if (str.startsWith("!")) {
+                    id = str.substring(1);
+                    negated = true;
+                } else {
+                    id = str;
+                    negated = false;
+                }
+            }
+        }
+
+        public final Set<ConstraintId> contraintIds;
         public final ActionList actionList;
 
         public ConstraintActionListPair(JsonObject jsonObject) {
             contraintIds = new HashSet<>();
             for (JsonElement jsonElement : jsonObject.get("requires").getAsJsonArray()) {
-                contraintIds.add(jsonElement.getAsString());
+                contraintIds.add(new ConstraintId(jsonElement.getAsString()));
             }
             actionList = new ActionList(jsonObject.get("actions").getAsJsonArray());
         }
@@ -49,12 +64,13 @@ public class CustomEvents {
     public CustomEvents() {
     }
 
-    public CustomEvents(File file) throws IOException {
+    public void read(File file) throws IOException {
         FileReader reader = new FileReader(file);
 
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
+        constraintActionListPairs.clear();
         for (String key : jsonObject.keySet()) {
             constraintActionListPairs.put(key, new ConstraintActionListPair(jsonObject.get(key).getAsJsonObject()));
         }
@@ -82,18 +98,22 @@ public class CustomEvents {
 
         ConstraintActionListPair constraintActionListPair = constraintActionListPairs.get(id);
         if (supportedConstraints != null) {
-            for (String constraintId : constraintActionListPair.contraintIds) {
-                if (!supportedConstraints.containsKey(constraintId)) {
+            for (ConstraintActionListPair.ConstraintId constraintId : constraintActionListPair.contraintIds) {
+                if (!supportedConstraints.containsKey(constraintId.id)) {
                     continue;
                 }
 
-                Constraint constraint = supportedConstraints.get(constraintId);
-                if (!constraint.satisfied()) {
+                Constraint constraint = supportedConstraints.get(constraintId.id);
+                if (constraintId.negated == constraint.satisfied()) {
                     return;
                 }
 
-                Map<Identifier, PlaceholderHandler> constraintProvidedHandlers = constraint.getHandlers();
-                placeholderHandlers.putAll(constraintProvidedHandlers);
+                if (!constraintId.negated) {
+                    Map<Identifier, PlaceholderHandler> constraintProvidedHandlers = constraint.getHandlers();
+                    if (constraintProvidedHandlers != null) {
+                        placeholderHandlers.putAll(constraintProvidedHandlers);
+                    }
+                }
             }
         }
 

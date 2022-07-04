@@ -99,11 +99,13 @@ public class Discord4Fabric implements ModInitializer {
     }
 
     private void initCustomEvents() {
+        CUSTOM_EVENTS = new CustomEvents();
+        CustomEventsHandler.init(CUSTOM_EVENTS);
+
         try {
             File file = new File(Utils.getCustomEventsPath());
             if (file.exists()) {
-                CUSTOM_EVENTS = new CustomEvents(file);
-                CustomEventsHandler.init(CUSTOM_EVENTS);
+                CUSTOM_EVENTS.read(file);
             } else {
                 // Generate empty events file for the user
                 if (file.createNewFile()) {
@@ -112,8 +114,6 @@ public class Discord4Fabric implements ModInitializer {
                     }
                 }
                 LOGGER.warn("No events file! Generated template");
-
-                CUSTOM_EVENTS = new CustomEvents();
             }
         } catch (IOException e) {
             Utils.logException(e);

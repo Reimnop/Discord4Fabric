@@ -6,6 +6,7 @@ import me.reimnop.d4f.Discord4Fabric;
 import net.dv8tion.jda.api.entities.User;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,6 +47,7 @@ public class LinkedAccountConstraint implements Constraint {
     }
 
     @Override
+    @Nullable
     public Map<Identifier, PlaceholderHandler> getHandlers() {
         assert discordProfile.isPresent();
         DiscordProfile profile = discordProfile.get();

@@ -8,6 +8,7 @@ import me.reimnop.d4f.customevents.CustomEvents;
 import me.reimnop.d4f.customevents.constraints.Constraint;
 import me.reimnop.d4f.customevents.constraints.Constraints;
 import me.reimnop.d4f.customevents.constraints.LinkedAccountConstraint;
+import me.reimnop.d4f.customevents.constraints.OperatorConstraint;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -26,7 +27,8 @@ public final class CustomEventsHandler {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(handler.player);
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid())
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(handler.player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, placeholderContext, supportedConstraints);
         });
@@ -34,7 +36,8 @@ public final class CustomEventsHandler {
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(handler.player);
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid())
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(handler.player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, placeholderContext, supportedConstraints);
         });
@@ -67,7 +70,8 @@ public final class CustomEventsHandler {
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message.filtered().getContent())
             );
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(sender.getUuid())
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(sender.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(sender)
             );
             customEvents.raiseEvent(CustomEvents.MINECRAFT_MESSAGE, placeholderContext, supportedConstraints, placeholders);
         });
@@ -78,7 +82,8 @@ public final class CustomEventsHandler {
                     Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getTitle())
             );
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(playerEntity.getUuid())
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(playerEntity.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(playerEntity)
             );
             customEvents.raiseEvent(CustomEvents.ADVANCEMENT, placeholderContext, supportedConstraints, placeholders);
         });
