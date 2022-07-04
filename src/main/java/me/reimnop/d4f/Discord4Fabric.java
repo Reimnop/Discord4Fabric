@@ -100,7 +100,7 @@ public class Discord4Fabric implements ModInitializer {
 
     private void initCustomEvents() {
         CUSTOM_EVENTS = new CustomEvents();
-        CustomEventsHandler.init(CUSTOM_EVENTS);
+        CustomEventsHandler.init(CONFIG, CUSTOM_EVENTS);
 
         try {
             File file = new File(Utils.getCustomEventsPath());

@@ -3,6 +3,7 @@ package me.reimnop.d4f.listeners;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
+import me.reimnop.d4f.Config;
 import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.CustomEvents;
 import me.reimnop.d4f.customevents.constraints.Constraint;
@@ -23,7 +24,7 @@ import java.util.Map;
 public final class CustomEventsHandler {
     private CustomEventsHandler() {}
 
-    public static void init(CustomEvents customEvents) {
+    public static void init(Config config, CustomEvents customEvents) {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(handler.player);
             Map<String, Constraint> supportedConstraints = Map.of(
@@ -53,6 +54,10 @@ public final class CustomEventsHandler {
         });
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
+            if (message.getChannel().getIdLong() != config.channelId) {
+                return;
+            }
+
             MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
             PlaceholderContext placeholderContext = PlaceholderContext.of(server);
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
