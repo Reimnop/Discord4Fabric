@@ -1,5 +1,6 @@
-package me.reimnop.d4f;
+package me.reimnop.d4f.events;
 
+import me.reimnop.d4f.CustomEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
 public final class CustomEventsHandler {
