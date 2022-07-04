@@ -15,7 +15,7 @@
 
 ## Usage
 
-Click [here](https://github.com/Reimnop/Discord4Fabric/blob/main/USAGE.md)
+Click [here](USAGE.md)
 
 ## Author
 
