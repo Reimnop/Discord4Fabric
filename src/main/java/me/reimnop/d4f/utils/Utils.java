@@ -44,6 +44,4 @@ public final class Utils {
         }
         return (ctx, arg) -> Placeholders.parsePlaceholder(id, arg, ctx);
     }
-
-
 }

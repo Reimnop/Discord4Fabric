@@ -205,7 +205,7 @@ public final class MinecraftEventListeners {
                             Placeholders.PLACEHOLDER_PATTERN,
                             placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
                     ),
-                    MessageType.TELLRAW_COMMAND);
+                    MessageType.SYSTEM);
         });
 
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {

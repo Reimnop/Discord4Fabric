@@ -1,4 +1,6 @@
-package me.reimnop.d4f.actions;
+package me.reimnop.d4f.customevents;
+
+import me.reimnop.d4f.customevents.actions.Action;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,9 @@
-package me.reimnop.d4f.actions;
+package me.reimnop.d4f.customevents;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import me.reimnop.d4f.customevents.actions.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,9 @@ public class ActionList {
         }
     }
 
-    public void runActions() {
+    public void runActions(ActionContext context) {
         for (ActionValuePair pair : actions) {
-            pair.action.runAction(pair.value);
+            pair.action.runAction(pair.value, context);
         }
     }
 }

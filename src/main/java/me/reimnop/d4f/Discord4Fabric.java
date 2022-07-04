@@ -1,7 +1,8 @@
 package me.reimnop.d4f;
 
-import me.reimnop.d4f.actions.ModActions;
-import me.reimnop.d4f.actions.RunCommandAction;
+import me.reimnop.d4f.customevents.CustomEvents;
+import me.reimnop.d4f.customevents.ModActions;
+import me.reimnop.d4f.customevents.actions.RunCommandAction;
 import me.reimnop.d4f.commands.ModCommands;
 import me.reimnop.d4f.listeners.CustomEventsHandler;
 import me.reimnop.d4f.exceptions.GuildException;
