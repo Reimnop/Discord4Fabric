@@ -3,7 +3,9 @@ package me.reimnop.d4f.customevents;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.actions.Action;
+import me.reimnop.d4f.customevents.actions.ModActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,14 @@ public class ActionList {
     public ActionList(JsonArray jsonArray) {
         for (JsonElement jsonElement : jsonArray) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
-            actions.add(new ActionValuePair(ModActions.get(jsonObject.get("id").getAsString()), jsonObject.get("value")));
+
+            String id = jsonObject.get("id").getAsString();
+            Action action = ModActions.get(id);
+            if (action == null) {
+                Discord4Fabric.LOGGER.warn(String.format("Unknown action id '%s', skipping", id));
+                continue;
+            }
+            actions.add(new ActionValuePair(action, jsonObject.get("value")));
         }
     }
 

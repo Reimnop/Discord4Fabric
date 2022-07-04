@@ -1,7 +1,7 @@
 package me.reimnop.d4f;
 
 import me.reimnop.d4f.customevents.CustomEvents;
-import me.reimnop.d4f.customevents.ModActions;
+import me.reimnop.d4f.customevents.actions.ModActions;
 import me.reimnop.d4f.customevents.actions.RunCommandAction;
 import me.reimnop.d4f.commands.ModCommands;
 import me.reimnop.d4f.listeners.CustomEventsHandler;
@@ -55,7 +55,7 @@ public class Discord4Fabric implements ModInitializer {
         try {
             if (tryInitConfig()) {
                 initDiscord();
-                initActions();
+                ModActions.init();
                 initCustomEvents();
                 ModCommands.init();
             }
@@ -96,10 +96,6 @@ public class Discord4Fabric implements ModInitializer {
         DISCORD.initCache();
 
         MinecraftEventListeners.init(DISCORD, ACCOUNT_LINKING, CONFIG);
-    }
-
-    private void initActions() {
-        ModActions.put("run_command", new RunCommandAction());
     }
 
     private void initCustomEvents() {
