@@ -1,5 +1,6 @@
 package me.reimnop.d4f.utils.text;
 
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
@@ -19,7 +20,7 @@ public final class TextUtils {
     public static Text regexDynamicReplaceText(String value, Pattern pattern, TextRegexReplacer replacer) {
         int lastIndex = 0;
         Matcher matcher = pattern.matcher(value);
-        MutableText text = Text.empty();
+        MutableText text = new LiteralText("");
         while (matcher.find()) {
             text
                     .append(value.substring(lastIndex, matcher.start()))

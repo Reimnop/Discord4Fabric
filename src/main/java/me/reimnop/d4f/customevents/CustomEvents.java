@@ -3,14 +3,11 @@ package me.reimnop.d4f.customevents;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import eu.pb4.placeholders.api.PlaceholderContext;
-import eu.pb4.placeholders.api.PlaceholderHandler;
-import eu.pb4.placeholders.api.PlaceholderResult;
+import eu.pb4.placeholders.PlaceholderContext;
+import eu.pb4.placeholders.PlaceholderHandler;
+import eu.pb4.placeholders.PlaceholderResult;
 import me.reimnop.d4f.Discord4Fabric;
-import me.reimnop.d4f.customevents.ActionContext;
-import me.reimnop.d4f.customevents.ActionList;
 import me.reimnop.d4f.customevents.constraints.Constraint;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
@@ -78,7 +75,7 @@ public class CustomEvents {
 
     public void raiseEvent(
             String id,
-            PlaceholderContext placeholderContext,
+            Object object,
             @Nullable Map<String, Constraint> supportedConstraints,
             @Nullable Map<Identifier, PlaceholderHandler> externalHandlers) {
         if (!constraintActionListPairs.containsKey(id)) {
@@ -89,7 +86,7 @@ public class CustomEvents {
 
         // Technoblade easter egg
         placeholderHandlers.put(
-                Discord4Fabric.id("pig"), (ctx, arg) -> PlaceholderResult.value(TechnobladeQuoteFactory.getRandomQuote())
+                Discord4Fabric.id("pig"), ctx -> PlaceholderResult.value(TechnobladeQuoteFactory.getRandomQuote())
         );
 
         if (externalHandlers != null) {
@@ -117,11 +114,11 @@ public class CustomEvents {
             }
         }
 
-        ActionContext context = new ActionContext(placeholderContext, placeholderHandlers);
+        ActionContext context = new ActionContext(object, placeholderHandlers);
         constraintActionListPair.actionList.runActions(context);
     }
 
-    public void raiseEvent(String id, PlaceholderContext placeholderContext, @Nullable Map<String, Constraint> supportedConstraints) {
-        raiseEvent(id, placeholderContext, supportedConstraints, null);
+    public void raiseEvent(String id, Object object, @Nullable Map<String, Constraint> supportedConstraints) {
+        raiseEvent(id, object, supportedConstraints, null);
     }
 }

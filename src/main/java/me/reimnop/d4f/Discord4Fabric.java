@@ -40,12 +40,12 @@ public class Discord4Fabric implements ModInitializer {
         ACCOUNT_LINKING.tryQueueForLinking(uuid);
         String code = ACCOUNT_LINKING.getCode(uuid);
 
-        MutableText reason = Text.empty()
-                        .append(Text.literal("This server requires a linked Discord account!\n"))
-                        .append(Text.literal("Your linking code is "))
-                        .append(Text.literal(code)
-                                .formatted(Formatting.BLUE, Formatting.UNDERLINE))
-                        .append(Text.literal("\nPlease DM the bot this linking code to link your account"));
+        MutableText reason = new LiteralText("");
+        reason.append(new LiteralText("This server requires a linked Discord account!\n"));
+        reason.append(new LiteralText("Your linking code is "));
+        reason.append(new LiteralText(code)
+                .formatted(Formatting.BLUE, Formatting.UNDERLINE));
+        reason.append(new LiteralText("\nPlease DM the bot this linking code to link your account"));
 
         player.networkHandler.disconnect(reason);
     }
