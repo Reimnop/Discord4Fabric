@@ -103,7 +103,10 @@ public class Discord {
                 .setAvatarUrl(Utils.getAvatarUrl(sender.getUuid()))
                 .setUsername(name.getString())
                 .setContent(message.getString())
-                .setAllowedMentions(AllowedMentions.none());
+                .setAllowedMentions(new AllowedMentions()
+                        .withParseEveryone(false)
+                        .withParseRoles(false)
+                        .withParseUsers(true));
 
         webhookClient.send(wmb.build());
     }
