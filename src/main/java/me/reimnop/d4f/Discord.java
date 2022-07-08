@@ -1,6 +1,7 @@
 package me.reimnop.d4f;
 
 import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.send.AllowedMentions;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import me.reimnop.d4f.exceptions.ChannelException;
 import me.reimnop.d4f.exceptions.GuildException;
@@ -91,7 +92,8 @@ public class Discord {
         WebhookMessageBuilder wmb = new WebhookMessageBuilder()
                 .setAvatarUrl(Utils.getAvatarUrl(sender.getUuid()))
                 .setUsername(name.getString())
-                .setContent(message.getString());
+                .setContent(message.getString())
+                .setAllowedMentions(AllowedMentions.none());
 
         webhookClient.send(wmb.build());
     }
