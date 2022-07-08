@@ -28,6 +28,8 @@ Click [here](USAGE.md)
 ## Credits
 Uses [Placeholder API](https://github.com/Patbox/TextPlaceholderAPI) by Patbox
 
+Thank you to [Crafatar](https://crafatar.com/) for providing avatars
+
 ## Show your support
 
 Give a ⭐️ if this project helped you!
