@@ -33,6 +33,7 @@ public class Config {
     public String advancementChallengeTitle = "%player:name% has completed the challenge [%d4f:title%]";
     public String advancementChallengeDescription = "%d4f:description%";
     public String discordToMinecraftMessage = "[%d4f:nickname% on Discord] %d4f:message%";
+    public String discordToMinecraftWithReplyMessage = "[%d4f:nickname% on Discord (replying to %d4f:reply_nickname%)] %d4f:message%";
     public String discordName = "%player:name%";
     public String minecraftToDiscordMessage = "%d4f:message%";
     public String discordPingFormat = "<blue>@%d4f:fullname%</blue>";
@@ -65,6 +66,7 @@ public class Config {
         jsonObject.addProperty("advancement_challenge", advancementChallengeTitle);
         jsonObject.addProperty("advancement_challenge_desc", advancementChallengeDescription);
         jsonObject.addProperty("discord_to_mc", discordToMinecraftMessage);
+        jsonObject.addProperty("discord_to_mc_reply", discordToMinecraftWithReplyMessage);
         jsonObject.addProperty("discord_name", discordName);
         jsonObject.addProperty("mc_to_discord", minecraftToDiscordMessage);
         jsonObject.addProperty("discord_ping", discordPingFormat);
@@ -110,6 +112,7 @@ public class Config {
         advancementChallengeTitle = getStringOrDefault(obj, "advancement_challenge", advancementChallengeTitle);
         advancementChallengeDescription = getStringOrDefault(obj, "advancement_challenge_desc", advancementChallengeDescription);
         discordToMinecraftMessage = getStringOrDefault(obj, "discord_to_mc", discordToMinecraftMessage);
+        discordToMinecraftWithReplyMessage = getStringOrDefault(obj, "discord_to_mc_reply", discordToMinecraftWithReplyMessage);
         discordName = getStringOrDefault(obj, "discord_name", discordName);
         minecraftToDiscordMessage = getStringOrDefault(obj, "mc_to_discord", minecraftToDiscordMessage);
         discordPingFormat = getStringOrDefault(obj, "discord_ping", discordPingFormat);

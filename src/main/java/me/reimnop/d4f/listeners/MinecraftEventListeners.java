@@ -11,6 +11,7 @@ import me.reimnop.d4f.utils.VariableTimer;
 import me.reimnop.d4f.utils.text.TextUtils;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -27,6 +28,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -189,16 +191,26 @@ public final class MinecraftEventListeners {
             parsedString = TextUtils.parseMarkdownToPAPI(parsedString);
             Text parsedMsg = TextParserUtils.formatText(parsedString);
 
-            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+            Map<Identifier, PlaceholderHandler> placeholders = new HashMap<>(Map.of(
                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(user.getAsTag()),
                     Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(user)),
                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(user.getDiscriminator()),
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(parsedMsg)
-            );
+            ));
+
+            Message repliedMessage = message.getReferencedMessage();
+            if (repliedMessage != null) {
+                User repliedUser = repliedMessage.getAuthor();
+                placeholders.putAll(Map.of(
+                        Discord4Fabric.id("reply_fullname"), (ctx, arg) -> PlaceholderResult.value(repliedUser.getAsTag()),
+                        Discord4Fabric.id("reply_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(repliedUser)),
+                        Discord4Fabric.id("reply_discriminator"), (ctx, arg) -> PlaceholderResult.value(repliedUser.getDiscriminator())
+                ));
+            }
 
             server.getPlayerManager().broadcast(
                     Placeholders.parseText(
-                            TextParserUtils.formatText(config.discordToMinecraftMessage),
+                            TextParserUtils.formatText(repliedMessage == null ? config.discordToMinecraftMessage : config.discordToMinecraftWithReplyMessage),
                             PlaceholderContext.of(server),
                             Placeholders.PLACEHOLDER_PATTERN,
                             placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
