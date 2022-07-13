@@ -12,6 +12,7 @@ import me.reimnop.d4f.customevents.constraints.LinkedAccountConstraint;
 import me.reimnop.d4f.customevents.constraints.OperatorConstraint;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
+import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -62,7 +63,7 @@ public final class CustomEventsHandler {
             PlaceholderContext placeholderContext = PlaceholderContext.of(server);
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(user.getAsTag()),
-                    Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(user.getName()),
+                    Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(user)),
                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(user.getDiscriminator()),
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message.getContentRaw())
             );

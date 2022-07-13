@@ -4,6 +4,8 @@ import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.Placeholders;
 import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.utils.text.TextRegexReplacer;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -43,5 +45,13 @@ public final class Utils {
             return handlers.get(id);
         }
         return (ctx, arg) -> Placeholders.parsePlaceholder(id, arg, ctx);
+    }
+
+    public static String getNicknameFromUser(User user) {
+        Member member = Discord4Fabric.DISCORD.getMember(user);
+        if (member == null) {
+            return user.getName();
+        }
+        return member.getEffectiveName();
     }
 }
