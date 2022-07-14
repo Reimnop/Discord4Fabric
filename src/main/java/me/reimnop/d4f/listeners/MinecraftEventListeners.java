@@ -26,6 +26,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public final class MinecraftEventListeners {
     private MinecraftEventListeners() {}
 
     private static final Pattern DISCORD_PING_PATTERN = Pattern.compile("<@(?<id>\\d+)>");
-    private static final Pattern MINECRAFT_PING_PATTERN = Pattern.compile("@(?<tag>.+?#\\d{4})");
+    private static final Pattern MINECRAFT_PING_PATTERN = Pattern.compile("@(?<name>\\w+)");
     private static final Pattern EMOTE_PATTERN = Pattern.compile(":(?<name>[^\\n ]+?):");
 
     public static void init(Discord discord, AccountLinking accountLinking, Config config) {
@@ -235,10 +236,19 @@ public final class MinecraftEventListeners {
                     message.filtered().getContent().getString(),
                     MINECRAFT_PING_PATTERN,
                     match -> {
-                        String tag = match.group("tag");
+                        String name = match.group("name");
 
                         try {
-                            User user = discord.findUser(tag);
+                            User user = discord.findUserByName(name);
+
+                            if (user == null) {
+                                ServerPlayerEntity pingedPlayer = server.getPlayerManager().getPlayer(name);
+                                if (pingedPlayer != null) {
+                                    Optional<Long> linkedId = accountLinking.getLinkedAccount(pingedPlayer.getUuid());
+                                    user = linkedId.map(discord::getUser).orElse(null);
+                                }
+                            }
+
                             if (user != null) {
                                 // Play ping sound to pinged user if they have an account linked
                                 Optional<UUID> pingedPlayerUuid = accountLinking.getLinkedAccount(user.getIdLong());
