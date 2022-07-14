@@ -6,6 +6,7 @@ import me.reimnop.d4f.customevents.actions.RunCommandAction;
 import me.reimnop.d4f.commands.ModCommands;
 import me.reimnop.d4f.listeners.CustomEventsHandler;
 import me.reimnop.d4f.exceptions.GuildException;
+import me.reimnop.d4f.listeners.EventRedirect;
 import me.reimnop.d4f.listeners.MinecraftEventListeners;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.api.ModInitializer;
@@ -55,6 +56,7 @@ public class Discord4Fabric implements ModInitializer {
         try {
             if (tryInitConfig()) {
                 initDiscord();
+                EventRedirect.init();
                 ModActions.init();
                 initCustomEvents();
                 ModCommands.init();

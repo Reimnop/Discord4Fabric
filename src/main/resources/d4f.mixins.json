@@ -2,7 +2,8 @@
   "package": "me.reimnop.d4f.mixin",
   "compatibilityLevel": "JAVA_17",
   "server": [
+    "PlayerAdvancementTrackerMixin",
     "ServerPlayerEntityMixin",
-    "PlayerAdvancementTrackerMixin"
+    "VanishCommandMixin"
   ]
 }

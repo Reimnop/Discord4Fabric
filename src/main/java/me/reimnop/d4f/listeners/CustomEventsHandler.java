@@ -3,6 +3,10 @@ package me.reimnop.d4f.listeners;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
+import eu.vanish.Vanish;
+import me.reimnop.d4f.events.PlayerConnectedCallback;
+import me.reimnop.d4f.events.PlayerDisconnectedCallback;
+import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.Config;
 import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.CustomEvents;
@@ -26,20 +30,30 @@ public final class CustomEventsHandler {
     private CustomEventsHandler() {}
 
     public static void init(Config config, CustomEvents customEvents) {
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            PlaceholderContext placeholderContext = PlaceholderContext.of(handler.player);
+        PlayerConnectedCallback.EVENT.register((player, server, fromVanish) -> {
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
+                return;
+            }
+
+            PlaceholderContext placeholderContext = PlaceholderContext.of(player);
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(handler.player)
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, placeholderContext, supportedConstraints);
         });
 
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            PlaceholderContext placeholderContext = PlaceholderContext.of(handler.player);
+        PlayerDisconnectedCallback.EVENT.register((player, server, fromVanish) -> {
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
+                return;
+            }
+
+            PlaceholderContext placeholderContext = PlaceholderContext.of(player);
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(handler.player)
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, placeholderContext, supportedConstraints);
         });

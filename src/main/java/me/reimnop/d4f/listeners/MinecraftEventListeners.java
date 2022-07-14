@@ -1,11 +1,11 @@
 package me.reimnop.d4f.listeners;
 
 import eu.pb4.placeholders.api.*;
+import eu.vanish.Vanish;
 import me.reimnop.d4f.*;
-import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
-import me.reimnop.d4f.events.PlayerAdvancementCallback;
-import me.reimnop.d4f.events.PlayerDeathCallback;
+import me.reimnop.d4f.events.*;
 import me.reimnop.d4f.exceptions.GuildException;
+import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.utils.Utils;
 import me.reimnop.d4f.utils.VariableTimer;
 import me.reimnop.d4f.utils.text.TextUtils;
@@ -294,13 +294,18 @@ public final class MinecraftEventListeners {
             discord.sendPlayerMessage(sender, name, msg);
         });
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            if (config.requiresLinkedAccount && accountLinking.getLinkedAccount(handler.player.getUuid()).isEmpty()) {
-                Discord4Fabric.kickForUnlinkedAccount(handler.player);
+        PlayerConnectedCallback.EVENT.register((player, server, fromVanish) -> {
+            if (config.requiresLinkedAccount && accountLinking.getLinkedAccount(player.getUuid()).isEmpty()) {
+                Discord4Fabric.kickForUnlinkedAccount(player);
                 return;
             }
 
             if (!config.announcePlayerJoinLeave) {
+                return;
+            }
+
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
                 return;
             }
 
@@ -311,23 +316,28 @@ public final class MinecraftEventListeners {
 
             Text msg = Placeholders.parseText(
                     TextParserUtils.formatText(config.playerJoinMessage),
-                    PlaceholderContext.of(handler.player),
+                    PlaceholderContext.of(player),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
             Text desc = Placeholders.parseText(
                     TextParserUtils.formatText(config.playerJoinDescription),
-                    PlaceholderContext.of(handler.player),
+                    PlaceholderContext.of(player),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.green, msg.getString(), desc.getString());
+            discord.sendEmbedMessageUsingPlayerAvatar(player, Color.green, msg.getString(), desc.getString());
         });
 
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+        PlayerDisconnectedCallback.EVENT.register((player, server, fromVanish) -> {
             if (!config.announcePlayerJoinLeave) {
+                return;
+            }
+
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
                 return;
             }
 
@@ -338,19 +348,19 @@ public final class MinecraftEventListeners {
 
             Text msg = Placeholders.parseText(
                     TextParserUtils.formatText(config.playerLeftMessage),
-                    PlaceholderContext.of(handler.player),
+                    PlaceholderContext.of(player),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
             Text desc = Placeholders.parseText(
                     TextParserUtils.formatText(config.playerLeftDescription),
-                    PlaceholderContext.of(handler.player),
+                    PlaceholderContext.of(player),
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(handler.player, Color.red, msg.getString(), desc.getString());
+            discord.sendEmbedMessageUsingPlayerAvatar(player, Color.red, msg.getString(), desc.getString());
         });
 
         PlayerDeathCallback.EVENT.register(((playerEntity, source, deathMessage) -> {
