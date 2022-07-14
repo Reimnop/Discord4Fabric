@@ -97,8 +97,18 @@ public final class MinecraftEventListeners {
                     );
                     discord.setStatus(status);
                 });
-
         ServerTickEvents.END_SERVER_TICK.register(statusTimer::tick);
+
+        VariableTimer<MinecraftServer> topicTimer = new VariableTimer<>(
+                () -> config.topicUpdateInterval,
+                server -> {
+                    Text status = Placeholders.parseText(
+                            TextParserUtils.formatText(config.topic),
+                            PlaceholderContext.of(server)
+                    );
+                    discord.setChannelTopic(status);
+                });
+        ServerTickEvents.END_SERVER_TICK.register(topicTimer::tick);
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             if (!config.announceServerStartStop) {
