@@ -90,5 +90,11 @@ See here: https://placeholders.pb4.eu/user/default-placeholders/#player
 ## Status
 See here: https://placeholders.pb4.eu/user/default-placeholders/#server
 
+## Topic
+See here: https://placeholders.pb4.eu/user/default-placeholders/#server
+
+### Note
+Channel topic update rate limit is absurdly high, please try not to set topic update interval to below 6000
+
 ## Custom events
 Custom events is an extremely flexible and extensible feature of this mod. It allows for custom behavior defined in JSON (sending a message when a player join, run commands when someone gets an advancement, etc). However it is quite complicated and hard to understand. You can find more information about it [here](CUSTOM_EVENTS.md)
