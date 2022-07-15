@@ -3,24 +3,20 @@ package me.reimnop.d4f.utils;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.Placeholders;
 import me.reimnop.d4f.Discord4Fabric;
-import me.reimnop.d4f.utils.text.TextRegexReplacer;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class Utils {
     private Utils() {}
 
     public static void logException(Exception e) {
-        Discord4Fabric.LOGGER.error(e.getMessage());
+        e.printStackTrace();
     }
 
     public static String getAvatarUrl(UUID uuid) {

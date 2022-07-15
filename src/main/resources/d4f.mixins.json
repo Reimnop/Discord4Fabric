@@ -4,6 +4,7 @@
   "server": [
     "PlayerAdvancementTrackerMixin",
     "ServerPlayerEntityMixin",
-    "VanishCommandMixin"
+    "VanishCommandMixin",
+    "LanguageMixin"
   ]
 }
