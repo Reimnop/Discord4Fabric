@@ -14,6 +14,12 @@ repositories {
     // for more information about repositories.
 
     maven { url "https://maven.nucleoid.xyz/" }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -23,17 +29,22 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-gametest-api-v1"
+    }
 
     include modImplementation("eu.pb4:placeholder-api:${project.placeholder_version}")
 
     include implementation("net.dv8tion:JDA:${project.jda_version}") {
-        exclude module: 'opus-java'
+        exclude module: "opus-java"
     }
     include implementation("club.minnced:discord-webhooks:${project.webhook_version}")
 
+    // compat
+    modImplementation "curse.maven:vanish-424123:${project.vanish_version}"
+
     // extra deps
-    include group: 'org.json', name: 'json', version: '20160212'
+    include "org.json:json:20160212"
     include "com.squareup.okio:okio:1.17.2"
     include "com.squareup.okhttp3:okhttp:3.13.0"
     include "org.apache.commons:commons-collections4:4.4"

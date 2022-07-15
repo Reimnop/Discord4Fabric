@@ -3,6 +3,7 @@ package me.reimnop.d4f.customevents.constraints;
 import eu.pb4.placeholders.PlaceholderHandler;
 import eu.pb4.placeholders.PlaceholderResult;
 import me.reimnop.d4f.Discord4Fabric;
+import me.reimnop.d4f.utils.Utils;
 import net.dv8tion.jda.api.entities.User;
 import net.minecraft.util.Identifier;
 
@@ -26,7 +27,7 @@ public class LinkedAccountConstraint implements Constraint {
             User user = Discord4Fabric.DISCORD.getUser(id);
             if (user != null) {
                 fullname = user.getAsTag();
-                nickname = user.getName();
+                nickname = Utils.getNicknameFromUser(user);
                 discriminator = user.getDiscriminator();
             } else {
                 fullname = "null";

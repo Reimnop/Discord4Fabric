@@ -4,8 +4,8 @@
   "server": [
     "PlayerAdvancementTrackerMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin"
-  ],
-  "mixins": [
+    "ServerPlayNetworkHandlerMixin",
+    "VanishCommandMixin",
+    "LanguageMixin"
   ]
 }

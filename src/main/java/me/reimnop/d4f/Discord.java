@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Discord {
@@ -91,6 +92,12 @@ public class Discord {
     public User findUser(String tag) throws GuildException {
         Member member = getGuild().getMemberByTag(tag);
         return member != null ? member.getUser() : null;
+    }
+
+    @Nullable
+    public User findUserByName(String name) throws GuildException {
+        List<Member> members = getGuild().findMembers(x -> x.getEffectiveName().equals(name)).get();
+        return members.size() == 0 ? null : members.get(0).getUser();
     }
 
     @Nullable

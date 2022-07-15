@@ -57,6 +57,13 @@ For more info: https://placeholders.pb4.eu/user/default-placeholders/#player
 
 `%d4f:message%`: The message that the user sent. Example: `Why did you take the worm from the soup sock?`
 
+### With reply
+`%d4f:reply_fullname%`: Full name of user being replied to. Example: `Reimnop#3147`
+
+`%d4f:reply_nickname%`: Nickname of user being replied to. Example: `Reimnop`
+
+`%d4f:reply_discriminator%`: The 4-digit tag of the user being replied to. Example: `3147`
+
 ### Credits
 ![Image](https://cdn.discordapp.com/attachments/959467102962610177/983032671229870100/unknown.png)
 
@@ -82,6 +89,12 @@ See here: https://placeholders.pb4.eu/user/default-placeholders/#player
 
 ## Status
 See here: https://placeholders.pb4.eu/user/default-placeholders/#server
+
+## Topic
+See here: https://placeholders.pb4.eu/user/default-placeholders/#server
+
+### Note
+Channel topic update rate limit is absurdly high, please try not to set topic update interval to below 6000
 
 ## Custom events
 Custom events is an extremely flexible and extensible feature of this mod. It allows for custom behavior defined in JSON (sending a message when a player join, run commands when someone gets an advancement, etc). However it is quite complicated and hard to understand. You can find more information about it [here](CUSTOM_EVENTS.md)

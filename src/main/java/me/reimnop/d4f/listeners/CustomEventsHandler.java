@@ -2,6 +2,9 @@ package me.reimnop.d4f.listeners;
 
 import eu.pb4.placeholders.PlaceholderHandler;
 import eu.pb4.placeholders.PlaceholderResult;
+import me.reimnop.d4f.events.PlayerConnectedCallback;
+import me.reimnop.d4f.events.PlayerDisconnectedCallback;
+import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.Config;
 import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.CustomEvents;
@@ -13,7 +16,6 @@ import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
 import me.reimnop.d4f.events.PlayerChatReceivedCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
@@ -24,20 +26,30 @@ public final class CustomEventsHandler {
     private CustomEventsHandler() {}
 
     public static void init(Config config, CustomEvents customEvents) {
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+        PlayerConnectedCallback.EVENT.register((player, server, fromVanish) -> {
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
+                return;
+            }
+
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(handler.player)
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(player)
             );
-            customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, handler.player, supportedConstraints);
+            customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, player, supportedConstraints);
         });
 
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+        PlayerDisconnectedCallback.EVENT.register((player, server, fromVanish) -> {
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
+                return;
+            }
+
             Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(handler.player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(handler.player)
+                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
+                    Constraints.OPERATOR, new OperatorConstraint(player)
             );
-            customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, handler.player, supportedConstraints);
+            customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, player, supportedConstraints);
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {

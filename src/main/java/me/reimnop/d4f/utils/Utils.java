@@ -3,6 +3,8 @@ package me.reimnop.d4f.utils;
 import eu.pb4.placeholders.PlaceholderAPI;
 import eu.pb4.placeholders.PlaceholderHandler;
 import me.reimnop.d4f.Discord4Fabric;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 
@@ -14,7 +16,7 @@ public final class Utils {
     private Utils() {}
 
     public static void logException(Exception e) {
-        Discord4Fabric.LOGGER.error(e.getMessage());
+        e.printStackTrace();
     }
 
     public static String getAvatarUrl(UUID uuid) {
@@ -38,5 +40,17 @@ public final class Utils {
         newHandlers.putAll(handlers);
         newHandlers.putAll(PlaceholderAPI.getPlaceholders());
         return newHandlers;
+    }
+
+    public static String getNicknameFromUser(User user) {
+        Member member = Discord4Fabric.DISCORD.getMember(user);
+        if (member == null) {
+            return user.getName();
+        }
+        return member.getEffectiveName();
+    }
+
+    public static boolean isModLoaded(String modid) {
+        return FabricLoader.getInstance().isModLoaded(modid);
     }
 }
