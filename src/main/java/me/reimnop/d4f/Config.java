@@ -41,6 +41,7 @@ public class Config {
     public String status = "Minecraft";
     public Integer topicUpdateInterval = 6000; // 5 minutes, topic set rate limit is absurd (why discord, why?)
     public String topic = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
+    public Boolean forceOnlineUuid = false;
     public Boolean requiresLinkedAccount = false;
 
     public void writeConfig(File file) throws IOException {
@@ -76,6 +77,7 @@ public class Config {
         jsonObject.addProperty("status", status);
         jsonObject.addProperty("topic_update_interval", topicUpdateInterval);
         jsonObject.addProperty("topic", topic);
+        jsonObject.addProperty("force_online_uuid", forceOnlineUuid);
         jsonObject.addProperty("requires_linked_account", requiresLinkedAccount);
 
         GsonBuilder builder = new GsonBuilder();
@@ -124,6 +126,7 @@ public class Config {
         status = getStringOrDefault(obj, "status", status);
         topicUpdateInterval = getIntOrDefault(obj, "topic_update_interval", topicUpdateInterval);
         topic = getStringOrDefault(obj, "topic", topic);
+        forceOnlineUuid = getBooleanOrDefault(obj, "force_online_uuid", forceOnlineUuid);
         requiresLinkedAccount = getBooleanOrDefault(obj, "requires_linked_account", requiresLinkedAccount);
 
         reader.close();

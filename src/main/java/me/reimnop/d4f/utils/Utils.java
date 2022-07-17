@@ -43,6 +43,10 @@ public final class Utils {
         return (ctx, arg) -> Placeholders.parsePlaceholder(id, arg, ctx);
     }
 
+    public static String getNameCachePath() {
+        return FabricLoader.getInstance().getConfigDir() + "/d4f_name_cache.json";
+    }
+
     public static String getNicknameFromUser(User user) {
         Member member = Discord4Fabric.DISCORD.getMember(user);
         if (member == null) {
