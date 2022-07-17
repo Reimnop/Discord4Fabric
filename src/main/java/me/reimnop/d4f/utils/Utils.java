@@ -35,6 +35,10 @@ public final class Utils {
         return FabricLoader.getInstance().getConfigDir() + "/d4f_custom_events.json";
     }
 
+    public static String getNameCachePath() {
+        return FabricLoader.getInstance().getConfigDir() + "/d4f_name_cache.json";
+    }
+
     public static Map<Identifier, PlaceholderHandler> getPlaceholderHandlerMap(Map<Identifier, PlaceholderHandler> handlers) {
         Map<Identifier, PlaceholderHandler> newHandlers = new HashMap<>();
         newHandlers.putAll(handlers);
