@@ -201,12 +201,22 @@ public final class MinecraftEventListeners {
             parsedString = TextUtils.parseMarkdownToPAPI(parsedString);
             Text parsedMsg = TextParser.parse(parsedString);
 
-            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+            Map<Identifier, PlaceholderHandler> placeholders = new HashMap<>(Map.of(
                     Discord4Fabric.id("fullname"), ctx -> PlaceholderResult.value(user.getAsTag()),
                     Discord4Fabric.id("nickname"), ctx -> PlaceholderResult.value(Utils.getNicknameFromUser(user)),
                     Discord4Fabric.id("discriminator"), ctx -> PlaceholderResult.value(user.getDiscriminator()),
                     Discord4Fabric.id("message"), ctx -> PlaceholderResult.value(parsedMsg)
-            );
+            ));
+
+            Message repliedMessage = message.getReferencedMessage();
+            if (repliedMessage != null) {
+                User repliedUser = repliedMessage.getAuthor();
+                placeholders.putAll(Map.of(
+                        Discord4Fabric.id("reply_fullname"), ctx -> PlaceholderResult.value(repliedUser.getAsTag()),
+                        Discord4Fabric.id("reply_nickname"), ctx -> PlaceholderResult.value(Utils.getNicknameFromUser(repliedUser)),
+                        Discord4Fabric.id("reply_discriminator"), ctx -> PlaceholderResult.value(repliedUser.getDiscriminator())
+                ));
+            }
 
             server.getPlayerManager().broadcast(
                     PlaceholderAPI.parseTextCustom(
