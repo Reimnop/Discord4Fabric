@@ -21,7 +21,12 @@ public class VariableTimer<T> {
     }
 
     public void tick(T arg) {
-        if (t < intervalGetter.getInterval()) {
+        int interval = intervalGetter.getInterval();
+        if (interval < 0) {
+            return;
+        }
+
+        if (t < interval) {
             t++;
             return;
         }
