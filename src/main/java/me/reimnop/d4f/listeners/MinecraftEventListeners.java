@@ -40,6 +40,7 @@ public final class MinecraftEventListeners {
     private static final Pattern DISCORD_PING_PATTERN = Pattern.compile("<@(?<id>\\d+)>");
     private static final Pattern MINECRAFT_PING_PATTERN = Pattern.compile("@(?<name>\\w+)");
     private static final Pattern EMOTE_PATTERN = Pattern.compile(":(?<name>[^\\n ]+?):");
+    private static final Pattern RAW_EMOTE_PATTERN = Pattern.compile("<a?:(?<name>.+?):\\d+>");
 
     public static void init(Discord discord, AccountLinking accountLinking, Config config) {
         PlayerAdvancementCallback.EVENT.register((playerEntity, advancement) -> {
@@ -196,6 +197,13 @@ public final class MinecraftEventListeners {
                         }
                         return match.group();
                     }
+            );
+
+            // Parse raw emotes
+            parsedString = TextUtils.regexDynamicReplaceString(
+                    parsedString,
+                    RAW_EMOTE_PATTERN,
+                    match -> match.group("name")
             );
 
             parsedString = TextUtils.parseMarkdownToPAPI(parsedString);
