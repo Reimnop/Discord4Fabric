@@ -125,9 +125,6 @@ public final class MinecraftEventListeners {
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             if (!config.announceServerStartStop) {
-                // The bot should close discord regardless if it should announce start stop or not
-                // See: https://github.com/Reimnop/Discord4Fabric/issues/6
-                discord.close();
                 return;
             }
 
@@ -136,9 +133,9 @@ public final class MinecraftEventListeners {
                     server
             );
             discord.sendPlainMessage(message);
-
-            discord.close();
         });
+
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> discord.close());
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
             if (message.getChannel() instanceof PrivateChannel channel) {
