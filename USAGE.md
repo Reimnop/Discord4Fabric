@@ -9,7 +9,7 @@ A file named `discord4fabric.json` should now appear in your `config` folder ins
 
 Change `token` to your bot token. More information [here](https://discord.com/developers/docs/topics/oauth2#bots).
 
-Change `webhook` to your webhook URL. More information [here](https://discord.com/developers/docs/resources/webhook#create-webhook).
+Change `webhook` to your webhook URL (Optional). More information [here](https://discord.com/developers/docs/resources/webhook#create-webhook).
 
 Change `guild_id` to your server ID.
 
@@ -71,6 +71,14 @@ For more info: https://placeholders.pb4.eu/user/default-placeholders/#server
 
 ## Minecraft to Discord messages
 `%d4f:message%`: The player's message. Example: `MS-DOS wasnt actually coded my Microsoft, but was actually bought`<sub>yes I know there's a typo</sub>
+
+### If there's no webhook
+### Webhook to plain messages
+`d4f:message`: The message after being processed by former config option.
+
+`d4f:name`: The name after being processed by former config option.
+
+For more info: https://placeholders.pb4.eu/user/default-placeholders/#player
 
 ### Credits
 ![Image](https://cdn.discordapp.com/attachments/959467102962610177/983033944733777920/unknown.png)
