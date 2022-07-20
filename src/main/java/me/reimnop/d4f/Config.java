@@ -36,10 +36,12 @@ public class Config {
     public String discordToMinecraftWithReplyMessage = "[%d4f:nickname% on Discord (replying to %d4f:reply_nickname%)] %d4f:message%";
     public String discordName = "%player:name%";
     public String minecraftToDiscordMessage = "%d4f:message%";
+    // only used when webhook is unavailable, will attempt to convert webhook messages to plain messages using this config option
+    public String webhookToPlainMessage = "`%d4f:name%` %d4f:message%";
     public String discordPingFormat = "<blue>@%d4f:fullname%</blue>";
     public Integer updateInterval = 100; // 5 seconds
     public String status = "Minecraft";
-    public Integer topicUpdateInterval = 6000; // 5 minutes, topic set rate limit is absurd (why discord, why?)
+    public Integer topicUpdateInterval = -1; // disabled by default due to huge rate limit
     public String topic = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
     public Boolean forceOnlineUuid = false;
     public Boolean requiresLinkedAccount = false;
@@ -72,6 +74,7 @@ public class Config {
         jsonObject.addProperty("discord_to_mc_reply", discordToMinecraftWithReplyMessage);
         jsonObject.addProperty("discord_name", discordName);
         jsonObject.addProperty("mc_to_discord", minecraftToDiscordMessage);
+        jsonObject.addProperty("webhook_to_plain", webhookToPlainMessage);
         jsonObject.addProperty("discord_ping", discordPingFormat);
         jsonObject.addProperty("update_interval", updateInterval);
         jsonObject.addProperty("status", status);
@@ -121,6 +124,7 @@ public class Config {
         discordToMinecraftWithReplyMessage = getStringOrDefault(obj, "discord_to_mc_reply", discordToMinecraftWithReplyMessage);
         discordName = getStringOrDefault(obj, "discord_name", discordName);
         minecraftToDiscordMessage = getStringOrDefault(obj, "mc_to_discord", minecraftToDiscordMessage);
+        webhookToPlainMessage = getStringOrDefault(obj, "webhook_to_plain", webhookToPlainMessage);
         discordPingFormat = getStringOrDefault(obj, "discord_ping", discordPingFormat);
         updateInterval = getIntOrDefault(obj, "update_interval", updateInterval);
         status = getStringOrDefault(obj, "status", status);

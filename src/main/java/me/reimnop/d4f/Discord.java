@@ -3,6 +3,7 @@ package me.reimnop.d4f;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.AllowedMentions;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import eu.pb4.placeholders.api.*;
 import me.reimnop.d4f.exceptions.ChannelException;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.listeners.DiscordMessageListener;
@@ -16,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
@@ -29,7 +31,10 @@ import java.util.UUID;
 
 public class Discord {
     private final JDA jda;
+
+    @Nullable
     private final WebhookClient webhookClient;
+
     private final Config config;
     private final Map<String, Emote> emotes = new HashMap<>();
 
@@ -60,9 +65,10 @@ public class Discord {
         jda.awaitReady();
 
         // init webhook
-        webhookClient = WebhookClient.withUrl(config.webhookUrl);
+        webhookClient = "".equals(config.webhookUrl) ? null : WebhookClient.withUrl(config.webhookUrl);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void initCache() throws GuildException {
         getGuild().loadMembers();
 
@@ -74,7 +80,10 @@ public class Discord {
 
     public void close() {
         jda.shutdown();
-        webhookClient.close();
+
+        if (webhookClient != null) {
+            webhookClient.close();
+        }
     }
 
     public Guild getGuild() throws GuildException {
@@ -131,16 +140,30 @@ public class Discord {
             uuid = nameToUUIDConverter.getUuid(sender);
         }
 
-        WebhookMessageBuilder wmb = new WebhookMessageBuilder()
-                .setAvatarUrl(Utils.getAvatarUrl(uuid))
-                .setUsername(name.getString())
-                .setContent(message.getString())
-                .setAllowedMentions(new AllowedMentions()
-                        .withParseEveryone(false)
-                        .withParseRoles(false)
-                        .withParseUsers(true));
+        if (webhookClient != null) {
+            WebhookMessageBuilder wmb = new WebhookMessageBuilder()
+                    .setAvatarUrl(Utils.getAvatarUrl(uuid))
+                    .setUsername(name.getString())
+                    .setContent(message.getString())
+                    .setAllowedMentions(new AllowedMentions()
+                            .withParseEveryone(false)
+                            .withParseRoles(false)
+                            .withParseUsers(true));
 
-        webhookClient.send(wmb.build());
+            webhookClient.send(wmb.build());
+        } else {
+            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+                    Discord4Fabric.id("name"), (ctx, arg) -> PlaceholderResult.value(name),
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message)
+            );
+            Text msg = Placeholders.parseText(
+                    TextParserUtils.formatText(config.webhookToPlainMessage),
+                    PlaceholderContext.of(sender),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+            sendPlainMessage(msg);
+        }
     }
 
     public void sendEmbedMessageUsingPlayerAvatar(ServerPlayerEntity sender, Color color, String message, String description) {

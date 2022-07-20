@@ -17,16 +17,15 @@ import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -224,13 +223,25 @@ public final class MinecraftEventListeners {
                 ));
             }
 
+            MutableText msg = (MutableText) Placeholders.parseText(
+                    TextParserUtils.formatText(repliedMessage == null ? config.discordToMinecraftMessage : config.discordToMinecraftWithReplyMessage),
+                    PlaceholderContext.of(server),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            for (Message.Attachment attachment : message.getAttachments()) {
+                msg.append(Text.literal(" "));
+                msg.append(Text.literal("[att]")
+                        .setStyle(Style.EMPTY
+                                .withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.getUrl()))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Open URL"))))
+                );
+            }
+
             server.getPlayerManager().broadcast(
-                    Placeholders.parseText(
-                            TextParserUtils.formatText(repliedMessage == null ? config.discordToMinecraftMessage : config.discordToMinecraftWithReplyMessage),
-                            PlaceholderContext.of(server),
-                            Placeholders.PLACEHOLDER_PATTERN,
-                            placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
-                    ),
+                    msg,
                     MessageType.SYSTEM);
         });
 
