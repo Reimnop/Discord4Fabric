@@ -22,8 +22,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -223,13 +223,25 @@ public final class MinecraftEventListeners {
                 ));
             }
 
+            MutableText msg = (MutableText) PlaceholderAPI.parseTextCustom(
+                    TextParser.parse(config.discordToMinecraftMessage),
+                    server,
+                    Utils.getPlaceholderHandlerMap(placeholders),
+                    PlaceholderAPI.PLACEHOLDER_PATTERN
+            );
+
+            for (Message.Attachment attachment : message.getAttachments()) {
+                msg.append(new LiteralText(" "));
+                msg.append(new LiteralText("[att]")
+                        .setStyle(Style.EMPTY
+                                .withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.getUrl()))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open URL"))))
+                );
+            }
+
             server.getPlayerManager().broadcast(
-                    PlaceholderAPI.parseTextCustom(
-                            TextParser.parse(config.discordToMinecraftMessage),
-                            server,
-                            Utils.getPlaceholderHandlerMap(placeholders),
-                            PlaceholderAPI.PLACEHOLDER_PATTERN
-                    ),
+                    msg,
                     MessageType.SYSTEM,
                     Util.NIL_UUID);
         });
