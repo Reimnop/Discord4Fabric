@@ -224,7 +224,7 @@ public final class MinecraftEventListeners {
             }
 
             MutableText msg = (MutableText) PlaceholderAPI.parseTextCustom(
-                    TextParser.parse(config.discordToMinecraftMessage),
+                    TextParser.parse(repliedMessage == null ? config.discordToMinecraftMessage : config.discordToMinecraftWithReplyMessage),
                     server,
                     Utils.getPlaceholderHandlerMap(placeholders),
                     PlaceholderAPI.PLACEHOLDER_PATTERN
