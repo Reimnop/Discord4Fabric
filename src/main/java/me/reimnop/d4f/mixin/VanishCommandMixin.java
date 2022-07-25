@@ -19,6 +19,7 @@ public class VanishCommandMixin {
 
     @Inject(
             method = "vanish",
+            remap = true,
             at = @At(
                     target = "Leu/vanish/commands/VanishCommand;logVanish(Lnet/minecraft/server/network/ServerPlayerEntity;)V",
                     value = "INVOKE"
@@ -32,6 +33,7 @@ public class VanishCommandMixin {
 
     @Inject(
             method = "unvanish",
+            remap = true,
             at = @At(
                     target = "Leu/vanish/commands/VanishCommand;logUnvanish(Lnet/minecraft/server/network/ServerPlayerEntity;)V",
                     value = "INVOKE"
