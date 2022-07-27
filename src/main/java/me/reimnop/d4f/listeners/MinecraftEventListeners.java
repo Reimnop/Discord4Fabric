@@ -1,5 +1,6 @@
 package me.reimnop.d4f.listeners;
 
+import com.vdurmont.emoji.EmojiParser;
 import eu.pb4.placeholders.*;
 import me.reimnop.d4f.*;
 import me.reimnop.d4f.events.*;
@@ -204,6 +205,8 @@ public final class MinecraftEventListeners {
             );
 
             parsedString = TextUtils.parseMarkdownToPAPI(parsedString);
+            parsedString = EmojiParser.parseToAliases(parsedString);
+
             Text parsedMsg = TextParser.parse(parsedString);
 
             Map<Identifier, PlaceholderHandler> placeholders = new HashMap<>(Map.of(

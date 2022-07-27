@@ -41,6 +41,8 @@ dependencies {
     }
     include implementation("club.minnced:discord-webhooks:${project.webhook_version}")
 
+    include implementation("com.vdurmont:emoji-java:5.1.1")
+
     // compat
     modImplementation "curse.maven:vanish-424123:${project.vanish_version}"
 
