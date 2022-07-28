@@ -10,6 +10,6 @@ public class SendMinecraftMessageAction implements Action {
     @Override
     public void runAction(JsonElement value, ActionContext context) {
         MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
-        server.getPlayerManager().broadcast(context.parsePlaceholder(value.getAsString()), MessageType.SYSTEM);
+        server.getPlayerManager().broadcast(context.parsePlaceholder(value.getAsString()), false);
     }
 }

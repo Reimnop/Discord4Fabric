@@ -87,7 +87,7 @@ public final class CustomEventsHandler {
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(sender);
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message.filtered().getContent())
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message.getContent())
             );
             Map<String, Constraint> supportedConstraints = Map.of(
                     Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(sender.getUuid()),

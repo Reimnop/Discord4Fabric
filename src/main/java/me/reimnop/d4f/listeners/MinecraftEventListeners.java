@@ -242,16 +242,14 @@ public final class MinecraftEventListeners {
                 );
             }
 
-            server.getPlayerManager().broadcast(
-                    msg,
-                    MessageType.SYSTEM);
+            server.getPlayerManager().broadcast(msg, false);
         });
 
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {
             MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 
             String content = TextUtils.regexDynamicReplaceString(
-                    message.filtered().getContent().getString(),
+                    message.getContent().getString(),
                     MINECRAFT_PING_PATTERN,
                     match -> {
                         String name = match.group("name");
