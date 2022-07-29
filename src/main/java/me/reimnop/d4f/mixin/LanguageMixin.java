@@ -6,10 +6,6 @@ import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
-import net.fabricmc.loader.impl.metadata.EntrypointMetadata;
-import net.fabricmc.loader.impl.metadata.LoaderModMetadata;
 import net.minecraft.util.Language;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,8 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Mixin(Language.class)
@@ -41,28 +38,17 @@ public class LanguageMixin {
         Discord4Fabric.LOGGER.info("Attempting to load modded language files");
 
         Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
-        mods.forEach(mod -> {
-            ModMetadata metadata = mod.getMetadata();
-            if (metadata instanceof LoaderModMetadata loaderModMetadata) {
-                Optional<? extends EntrypointMetadata> optional = loaderModMetadata.getEntrypoints("main").stream().findFirst();
-                if (optional.isPresent()) {
-                    EntrypointMetadata entrypointMetadata = optional.get();
-                    try {
-                        InputStream inputStream = FabricLauncherBase
-                                .getClass(entrypointMetadata.getValue())
-                                .getResourceAsStream("/assets/" + metadata.getId() + "/lang/en_us.json");
+        mods.forEach(container -> {
+            Path path = container.getPath("assets/" + container.getMetadata().getId() + "/lang/en_us.json");
 
-                        if (inputStream == null) {
-                            return;
-                        }
+            if (!Files.exists(path)) {
+                return;
+            }
 
-                        Language.load(inputStream, biConsumer);
-
-                        inputStream.close();
-                    } catch (JsonParseException | IOException | ClassNotFoundException e) {
-                        Utils.logException(e);
-                    }
-                }
+            try (InputStream inputStream = Files.newInputStream(path)) {
+                Language.load(inputStream, biConsumer);
+            } catch (JsonParseException | IOException e) {
+                Utils.logException(e);
             }
         });
     }
