@@ -32,3 +32,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build
       run: ./gradlew clean build
+    - name: Upload build result
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build/libs
