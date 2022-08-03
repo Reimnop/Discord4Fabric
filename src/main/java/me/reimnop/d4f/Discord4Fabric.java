@@ -6,6 +6,7 @@ import me.reimnop.d4f.customevents.actions.RunCommandAction;
 import me.reimnop.d4f.commands.ModCommands;
 import me.reimnop.d4f.listeners.CustomEventsHandler;
 import me.reimnop.d4f.exceptions.GuildException;
+import me.reimnop.d4f.listeners.DiscordCommandProcessor;
 import me.reimnop.d4f.listeners.EventRedirect;
 import me.reimnop.d4f.listeners.MinecraftEventListeners;
 import me.reimnop.d4f.utils.Utils;
@@ -98,6 +99,7 @@ public class Discord4Fabric implements ModInitializer {
         DISCORD.initCache();
 
         MinecraftEventListeners.init(DISCORD, ACCOUNT_LINKING, CONFIG);
+        DiscordCommandProcessor.init(CONFIG);
     }
 
     private void initCustomEvents() {

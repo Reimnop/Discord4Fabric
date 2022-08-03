@@ -39,11 +39,17 @@ public class LanguageMixin {
 
         Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
         mods.forEach(container -> {
+            if (container.getMetadata().getId().equals("minecraft")) {
+                return;
+            }
+
             Path path = container.getPath("assets/" + container.getMetadata().getId() + "/lang/en_us.json");
 
             if (!Files.exists(path)) {
                 return;
             }
+
+            Discord4Fabric.LOGGER.info("Loading language file: " + path);
 
             try (InputStream inputStream = Files.newInputStream(path)) {
                 Language.load(inputStream, biConsumer);
