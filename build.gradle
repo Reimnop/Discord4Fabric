@@ -15,6 +15,7 @@ repositories {
     // for more information about repositories.
 
     maven { url "https://maven.nucleoid.xyz/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven {
         url "https://cursemaven.com"
         content {
@@ -40,8 +41,9 @@ dependencies {
         exclude module: "opus-java"
     }
     include implementation("club.minnced:discord-webhooks:${project.webhook_version}")
-
     include implementation("com.vdurmont:emoji-java:5.1.1")
+
+    include implementation("me.lucko:spark-api:0.1-SNAPSHOT")
 
     // compat
     modCompileOnly "curse.maven:vanish-424123:${project.vanish_version}"
