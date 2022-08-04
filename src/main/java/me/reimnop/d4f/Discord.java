@@ -105,8 +105,16 @@ public class Discord {
         return channel;
     }
 
+    private Guild getConsoleGuild() throws GuildException {
+        Guild guild = jda.getGuildById(config.consoleGuildId);
+        if (guild == null) {
+            throw new GuildException(config.consoleGuildId);
+        }
+        return guild;
+    }
+
     public TextChannel getConsoleChannel() throws GuildException, ChannelException {
-        TextChannel channel = getGuild().getChannelById(TextChannel.class, config.consoleChannelId);
+        TextChannel channel = getConsoleGuild().getChannelById(TextChannel.class, config.consoleChannelId);
         if (channel == null) {
             throw new ChannelException(config.consoleChannelId);
         }
