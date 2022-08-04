@@ -3,6 +3,7 @@ package me.reimnop.d4f.listeners;
 import com.vdurmont.emoji.EmojiParser;
 import eu.pb4.placeholders.*;
 import me.reimnop.d4f.*;
+import me.reimnop.d4f.console.ConsoleChannelHandler;
 import me.reimnop.d4f.events.*;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.utils.Compatibility;
@@ -136,7 +137,10 @@ public final class MinecraftEventListeners {
             discord.sendPlainMessage(message);
         });
 
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> discord.close());
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            ConsoleChannelHandler.stop();
+            discord.close();
+        });
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
             if (message.getChannel() instanceof PrivateChannel channel) {

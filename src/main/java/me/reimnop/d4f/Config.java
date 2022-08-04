@@ -14,6 +14,7 @@ public class Config {
     public String webhookUrl = "";
     public Long guildId = 0L;
     public Long channelId = 0L;
+    public Long consoleChannelId = 0L;
     public Boolean announceServerStartStop = true;
     public String serverStartMessage = ":white_check_mark: **Server started!**";
     public String serverStopMessage = ":negative_squared_cross_mark: **Server stopped!**";
@@ -52,6 +53,7 @@ public class Config {
         jsonObject.addProperty("webhook_url", webhookUrl);
         jsonObject.addProperty("guild_id", guildId);
         jsonObject.addProperty("channel_id", channelId);
+        jsonObject.addProperty("console_channel_id", consoleChannelId);
         jsonObject.addProperty("announce_server_start_stop", announceServerStartStop);
         jsonObject.addProperty("server_start", serverStartMessage);
         jsonObject.addProperty("server_stop", serverStopMessage);
@@ -102,6 +104,7 @@ public class Config {
         webhookUrl = getStringOrDefault(obj, "webhook_url", webhookUrl);
         guildId = getLongOrDefault(obj, "guild_id", guildId);
         channelId = getLongOrDefault(obj, "channel_id", channelId);
+        consoleChannelId = getLongOrDefault(obj, "console_channel_id", consoleChannelId);
         announceServerStartStop = getBooleanOrDefault(obj, "announce_server_start_stop", announceServerStartStop);
         serverStartMessage = getStringOrDefault(obj, "server_start", serverStartMessage);
         serverStopMessage = getStringOrDefault(obj, "server_stop", serverStopMessage);

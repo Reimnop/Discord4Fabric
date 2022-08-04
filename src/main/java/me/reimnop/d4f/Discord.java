@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Discord {
-    private final JDA jda;
+    public final JDA jda;
 
     @Nullable
     private final WebhookClient webhookClient;
@@ -101,6 +101,14 @@ public class Discord {
         TextChannel channel = getGuild().getChannelById(TextChannel.class, config.channelId);
         if (channel == null) {
             throw new ChannelException(config.channelId);
+        }
+        return channel;
+    }
+
+    public TextChannel getConsoleChannel() throws GuildException, ChannelException {
+        TextChannel channel = getGuild().getChannelById(TextChannel.class, config.consoleChannelId);
+        if (channel == null) {
+            throw new ChannelException(config.consoleChannelId);
         }
         return channel;
     }
