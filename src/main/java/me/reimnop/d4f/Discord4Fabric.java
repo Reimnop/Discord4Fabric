@@ -1,20 +1,19 @@
 package me.reimnop.d4f;
 
+import me.reimnop.d4f.console.ConsoleChannelHandler;
 import me.reimnop.d4f.customevents.CustomEvents;
 import me.reimnop.d4f.customevents.actions.ModActions;
-import me.reimnop.d4f.customevents.actions.RunCommandAction;
 import me.reimnop.d4f.commands.ModCommands;
-import me.reimnop.d4f.listeners.CustomEventsHandler;
+import me.reimnop.d4f.listeners.*;
 import me.reimnop.d4f.exceptions.GuildException;
-import me.reimnop.d4f.listeners.DiscordCommandProcessor;
-import me.reimnop.d4f.listeners.EventRedirect;
-import me.reimnop.d4f.listeners.MinecraftEventListeners;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,8 +97,16 @@ public class Discord4Fabric implements ModInitializer {
         DISCORD = new Discord(CONFIG);
         DISCORD.initCache();
 
+        // init console
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        ConsoleMessageListener consoleMessageListener = new ConsoleMessageListener();
+        consoleMessageListener.start();
+        ctx.getRootLogger().addAppender(consoleMessageListener);
+        ctx.updateLoggers();
+
         MinecraftEventListeners.init(DISCORD, ACCOUNT_LINKING, CONFIG);
         DiscordCommandProcessor.init(CONFIG);
+        ConsoleChannelHandler.init(CONFIG, DISCORD);
     }
 
     private void initCustomEvents() {
