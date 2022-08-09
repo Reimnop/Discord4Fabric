@@ -18,6 +18,10 @@ public class DiscordConsoleBuffer {
     }
 
     public void flush() {
+        if (Discord4Fabric.CONFIG.consoleChannelId == 0) {
+            return;
+        }
+
         try {
             Discord4Fabric.DISCORD
                     .getConsoleChannel()
@@ -30,6 +34,10 @@ public class DiscordConsoleBuffer {
     }
 
     public void flushAndDestroy() {
+        if (Discord4Fabric.CONFIG.consoleChannelId == 0) {
+            return;
+        }
+
         try {
             Discord4Fabric.DISCORD
                     .getConsoleChannel()
