@@ -7,6 +7,7 @@ import me.lucko.spark.api.SparkProvider;
 import me.lucko.spark.api.statistic.StatisticWindow;
 import me.lucko.spark.api.statistic.types.DoubleStatistic;
 import me.reimnop.d4f.Discord4Fabric;
+import me.reimnop.d4f.Config;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,7 +25,7 @@ public final class Utils {
     }
 
     public static String getAvatarUrl(UUID uuid) {
-        return "https://crafatar.com/avatars/" + uuid.toString() + "?overlay";
+        return Config.AvatarUrl + uuid.toString() + "?overlay";
     }
 
     public static String getConfigPath() {
