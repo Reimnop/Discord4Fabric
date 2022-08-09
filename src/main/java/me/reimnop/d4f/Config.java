@@ -47,7 +47,7 @@ public class Config {
     public String topic = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
     public Boolean forceOnlineUuid = false;
     public Boolean requiresLinkedAccount = false;
-    public static String AvatarUrl = "https://crafatar.com/avatars/";
+    public String avatarUrl = "https://crafatar.com/avatars/%s?overlay";
 
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
@@ -87,7 +87,7 @@ public class Config {
         jsonObject.addProperty("topic", topic);
         jsonObject.addProperty("force_online_uuid", forceOnlineUuid);
         jsonObject.addProperty("requires_linked_account", requiresLinkedAccount);
-        jsonObject.addProperty("avatar_url", AvatarUrl);
+        jsonObject.addProperty("avatar_url", avatarUrl);
 
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -140,7 +140,7 @@ public class Config {
         topic = getStringOrDefault(obj, "topic", topic);
         forceOnlineUuid = getBooleanOrDefault(obj, "force_online_uuid", forceOnlineUuid);
         requiresLinkedAccount = getBooleanOrDefault(obj, "requires_linked_account", requiresLinkedAccount);
-        AvatarUrl = getStringOrDefault(obj, "avatar_url", AvatarUrl);
+        avatarUrl = getStringOrDefault(obj, "avatar_url", avatarUrl);
 
         reader.close();
     }

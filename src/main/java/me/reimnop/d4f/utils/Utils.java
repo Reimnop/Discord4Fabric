@@ -25,7 +25,7 @@ public final class Utils {
     }
 
     public static String getAvatarUrl(UUID uuid) {
-        return Config.AvatarUrl + uuid.toString() + "?overlay";
+        return String.format(Discord4Fabric.CONFIG.avatarUrl, uuid.toString());
     }
 
     public static String getConfigPath() {
