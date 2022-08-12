@@ -1,6 +1,7 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
-    id 'maven-publish'
+    id "fabric-loom" version "0.12-SNAPSHOT"
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 archivesBaseName = "${project.jar_name}-${project.minecraft_version}"
@@ -99,19 +100,40 @@ jar {
     }
 }
 
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+curseforge {
+    apiKey = System.getenv("CURSEFORGE_TOKEN")
+    project {
+        id = "630956"
+        releaseType = "release"
+        changelogType = "markdown"
+        changelog = file("CHANGELOG.md")
+
+        addGameVersion project.minecraft_version
+
+        mainArtifact(remapJar) {
+            relations {
+                requiredDependency "fabric-api"
+            }
         }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+    options {
+        forgeGradleIntegration = false // We're using Loom
+    }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "discord4fabric"
+    versionNumber = "${project.mod_version}-${project.minecraft_version}"
+    versionType = "release"
+    uploadFile = remapJar
+    gameVersions = [project.minecraft_version]
+    changelog = file("CHANGELOG.md").text
+    dependencies {
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "fabric-api"
     }
 }

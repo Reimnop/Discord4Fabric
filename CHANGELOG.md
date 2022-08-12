@@ -1,0 +1,4 @@
+- Added support for console channel
+- Added support for custom avatar services
+- Added support for !tps, !ping and !playerlist commands on Discord
+- Fixed Quilt compatibility
