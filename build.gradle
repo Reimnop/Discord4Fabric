@@ -102,6 +102,10 @@ jar {
 
 curseforge {
     apiKey = System.getenv("CURSEFORGE_TOKEN")
+    if (apiKey == null) {
+        return
+    }
+
     project {
         id = "630956"
         releaseType = "release"
@@ -124,6 +128,10 @@ curseforge {
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
+    if (token == null) {
+        return
+    }
+
     projectId = "discord4fabric"
     versionNumber = "${project.mod_version}-${project.minecraft_version}"
     versionType = "release"
