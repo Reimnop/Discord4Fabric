@@ -1,6 +1,5 @@
-<h1 align="center">Welcome to Discord4Fabric 👋</h1>
+<h1>Discord4Fabric</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.8.0-blue.svg?cacheSeconds=2592000" />
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
@@ -10,6 +9,8 @@
 </p>
 
 > A beautiful Discord bot client for Fabric inspired by [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)
+> 
+> All the features you love are now with you on your Fabric server!
 
 [![fabric api](https://i.imgur.com/Ol1Tcf8.png "Fabric API")](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 
@@ -19,20 +20,13 @@ Click [here](USAGE.md)
 
 ## Author
 
-👤 **Reimnop**
+### 👤 Reimnop
 
-* Website: reimnop.me
+* Website: https://reimnop.me
 * Twitter: [@Reimnop](https://twitter.com/Reimnop)
-* Github: [@Reimnop](https://github.com/Reimnop)
+* GitHub: [@Reimnop](https://github.com/Reimnop)
 
 ## Credits
 Uses [Placeholder API](https://github.com/Patbox/TextPlaceholderAPI) by Patbox
 
 Thank you to [Crafatar](https://crafatar.com/) for providing avatars
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
