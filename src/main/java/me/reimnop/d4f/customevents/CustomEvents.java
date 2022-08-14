@@ -1,6 +1,7 @@
 package me.reimnop.d4f.customevents;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import eu.pb4.placeholders.PlaceholderContext;
@@ -15,10 +16,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CustomEvents {
     private static class ExecutableEvent {
@@ -57,7 +55,7 @@ public class CustomEvents {
     public static final String MINECRAFT_MESSAGE = "minecraft_message";
     public static final String ADVANCEMENT = "advancement";
 
-    private final Map<String, JsonObject> eventNameToEventJson = new HashMap<>();
+    private final Map<String, List<JsonObject>> eventNameToEventJsons = new HashMap<>();
 
     public CustomEvents() {
     }
@@ -68,9 +66,26 @@ public class CustomEvents {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
-        eventNameToEventJson.clear();
+        eventNameToEventJsons.clear();
+
         for (String key : jsonObject.keySet()) {
-            eventNameToEventJson.put(key, jsonObject.get(key).getAsJsonObject());
+            JsonElement element = jsonObject.get(key);
+
+            if (element.isJsonObject()) {
+                eventNameToEventJsons.put(key, List.of(element.getAsJsonObject()));
+            } else if (element.isJsonArray()) {
+                List<JsonObject> jsonObjects = new ArrayList<>();
+                for (JsonElement jsonElement : element.getAsJsonArray()) {
+                    if (!jsonElement.isJsonObject()) {
+                        Discord4Fabric.LOGGER.warn("Invalid custom event!");
+                        return;
+                    }
+                    jsonObjects.add(jsonObject.getAsJsonObject());
+                }
+                eventNameToEventJsons.put(key, jsonObjects);
+            } else {
+                Discord4Fabric.LOGGER.warn("Invalid custom event!");
+            }
         }
     }
 
@@ -80,7 +95,7 @@ public class CustomEvents {
             @Nullable Map<String, ConstraintProcessorFactory> supportedConstraints,
             @Nullable Map<Identifier, PlaceholderHandler> externalHandlers) {
 
-        if (!eventNameToEventJson.containsKey(id)) {
+        if (!eventNameToEventJsons.containsKey(id)) {
             return;
         }
 
@@ -95,8 +110,10 @@ public class CustomEvents {
             placeholderHandlers.putAll(externalHandlers);
         }
 
-        ExecutableEvent executableEvent = new ExecutableEvent(supportedConstraints, eventNameToEventJson.get(id));
-        executableEvent.execute(object, placeholderHandlers);
+        for (JsonObject eventJson : eventNameToEventJsons.get(id)) {
+            ExecutableEvent executableEvent = new ExecutableEvent(supportedConstraints, eventJson);
+            executableEvent.execute(object, placeholderHandlers);
+        }
     }
 
     public void raiseEvent(String id, Object object, @Nullable Map<String, ConstraintProcessorFactory> supportedConstraints) {
