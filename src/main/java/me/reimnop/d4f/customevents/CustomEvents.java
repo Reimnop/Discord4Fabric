@@ -7,10 +7,8 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import me.reimnop.d4f.Discord4Fabric;
-import me.reimnop.d4f.customevents.ActionContext;
-import me.reimnop.d4f.customevents.ActionList;
-import me.reimnop.d4f.customevents.constraints.Constraint;
-import net.minecraft.server.MinecraftServer;
+import me.reimnop.d4f.customevents.constraints.ConstraintProcessor;
+import me.reimnop.d4f.customevents.constraints.ConstraintProcessorFactory;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
@@ -23,31 +21,31 @@ import java.util.Map;
 import java.util.Set;
 
 public class CustomEvents {
-    private static class ConstraintActionListPair {
-        private static class ConstraintId {
-            public final String id;
-            public final boolean negated;
+    private static class ExecutableEvent {
+        private final ConstraintList constraints;
+        private final ActionList actions;
 
-            public ConstraintId(String str) {
-                if (str.startsWith("!")) {
-                    id = str.substring(1);
-                    negated = true;
-                } else {
-                    id = str;
-                    negated = false;
-                }
-            }
+        public ExecutableEvent(Map<String, ConstraintProcessorFactory> supportedConstraints, JsonObject jsonObject) {
+            constraints = new ConstraintList(supportedConstraints, jsonObject.get("requires").getAsJsonArray());
+            actions = new ActionList(jsonObject.get("actions").getAsJsonArray());
         }
 
-        public final Set<ConstraintId> contraintIds;
-        public final ActionList actionList;
+        public void execute(PlaceholderContext placeholderContext, Map<Identifier, PlaceholderHandler> placeholderHandlers) {
+            // check constraints
+            for (Constraint constraint : constraints.constraints) {
+                if (!constraint.satisfied()) {
+                    return;
+                }
 
-        public ConstraintActionListPair(JsonObject jsonObject) {
-            contraintIds = new HashSet<>();
-            for (JsonElement jsonElement : jsonObject.get("requires").getAsJsonArray()) {
-                contraintIds.add(new ConstraintId(jsonElement.getAsString()));
+                Map<Identifier, PlaceholderHandler> constraintPlaceholders = constraint.getHandlers();
+
+                if (constraintPlaceholders != null && !constraint.negated) {
+                    placeholderHandlers.putAll(constraintPlaceholders);
+                }
             }
-            actionList = new ActionList(jsonObject.get("actions").getAsJsonArray());
+
+            ActionContext context = new ActionContext(placeholderContext, placeholderHandlers);
+            actions.runActions(context);
         }
     }
 
@@ -59,7 +57,7 @@ public class CustomEvents {
     public static final String MINECRAFT_MESSAGE = "minecraft_message";
     public static final String ADVANCEMENT = "advancement";
 
-    private final Map<String, ConstraintActionListPair> constraintActionListPairs = new HashMap<>();
+    private final Map<String, JsonObject> eventNameToEventJson = new HashMap<>();
 
     public CustomEvents() {
     }
@@ -70,18 +68,19 @@ public class CustomEvents {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
-        constraintActionListPairs.clear();
+        eventNameToEventJson.clear();
         for (String key : jsonObject.keySet()) {
-            constraintActionListPairs.put(key, new ConstraintActionListPair(jsonObject.get(key).getAsJsonObject()));
+            eventNameToEventJson.put(key, jsonObject.get(key).getAsJsonObject());
         }
     }
 
     public void raiseEvent(
             String id,
             PlaceholderContext placeholderContext,
-            @Nullable Map<String, Constraint> supportedConstraints,
+            @Nullable Map<String, ConstraintProcessorFactory> supportedConstraints,
             @Nullable Map<Identifier, PlaceholderHandler> externalHandlers) {
-        if (!constraintActionListPairs.containsKey(id)) {
+
+        if (!eventNameToEventJson.containsKey(id)) {
             return;
         }
 
@@ -96,32 +95,11 @@ public class CustomEvents {
             placeholderHandlers.putAll(externalHandlers);
         }
 
-        ConstraintActionListPair constraintActionListPair = constraintActionListPairs.get(id);
-        if (supportedConstraints != null) {
-            for (ConstraintActionListPair.ConstraintId constraintId : constraintActionListPair.contraintIds) {
-                if (!supportedConstraints.containsKey(constraintId.id)) {
-                    continue;
-                }
-
-                Constraint constraint = supportedConstraints.get(constraintId.id);
-                if (constraintId.negated == constraint.satisfied()) {
-                    return;
-                }
-
-                if (!constraintId.negated) {
-                    Map<Identifier, PlaceholderHandler> constraintProvidedHandlers = constraint.getHandlers();
-                    if (constraintProvidedHandlers != null) {
-                        placeholderHandlers.putAll(constraintProvidedHandlers);
-                    }
-                }
-            }
-        }
-
-        ActionContext context = new ActionContext(placeholderContext, placeholderHandlers);
-        constraintActionListPair.actionList.runActions(context);
+        ExecutableEvent executableEvent = new ExecutableEvent(supportedConstraints, eventNameToEventJson.get(id));
+        executableEvent.execute(placeholderContext, placeholderHandlers);
     }
 
-    public void raiseEvent(String id, PlaceholderContext placeholderContext, @Nullable Map<String, Constraint> supportedConstraints) {
+    public void raiseEvent(String id, PlaceholderContext placeholderContext, @Nullable Map<String, ConstraintProcessorFactory> supportedConstraints) {
         raiseEvent(id, placeholderContext, supportedConstraints, null);
     }
 }

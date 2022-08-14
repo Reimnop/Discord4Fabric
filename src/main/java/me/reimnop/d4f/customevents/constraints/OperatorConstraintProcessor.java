@@ -5,14 +5,19 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
-public class OperatorConstraint implements Constraint {
+public class OperatorConstraintProcessor implements ConstraintProcessor {
 
     private final boolean isOp;
 
-    public OperatorConstraint(ServerPlayerEntity playerEntity) {
+    public OperatorConstraintProcessor(ServerPlayerEntity playerEntity) {
         isOp = playerEntity.hasPermissionLevel(4);
+    }
+
+    @Override
+    public void loadArguments(List<String> arguments) {
     }
 
     @Override

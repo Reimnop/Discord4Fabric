@@ -8,11 +8,12 @@ import net.dv8tion.jda.api.entities.User;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class LinkedAccountConstraint implements Constraint {
+public class LinkedAccountConstraintProcessor implements ConstraintProcessor {
     private static class DiscordProfile {
         public final Long id;
         public final String fullname;
@@ -37,9 +38,13 @@ public class LinkedAccountConstraint implements Constraint {
 
     private final Optional<DiscordProfile> discordProfile;
 
-    public LinkedAccountConstraint(UUID uuid) {
+    public LinkedAccountConstraintProcessor(UUID uuid) {
         Optional<Long> discordId = Discord4Fabric.ACCOUNT_LINKING.getLinkedAccount(uuid);
         discordProfile = discordId.map(DiscordProfile::new);
+    }
+
+    @Override
+    public void loadArguments(List<String> arguments) {
     }
 
     @Override
@@ -61,6 +66,6 @@ public class LinkedAccountConstraint implements Constraint {
     }
 
     private static Identifier id(String path) {
-        return new Identifier(Constraints.LINKED_ACCOUNT, path);
+        return new Identifier(ConstraintProcessors.LINKED_ACCOUNT, path);
     }
 }

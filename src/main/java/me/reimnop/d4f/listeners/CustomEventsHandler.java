@@ -3,23 +3,18 @@ package me.reimnop.d4f.listeners;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
-import eu.vanish.Vanish;
+import me.reimnop.d4f.customevents.constraints.*;
 import me.reimnop.d4f.events.PlayerConnectedCallback;
 import me.reimnop.d4f.events.PlayerDisconnectedCallback;
 import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.Config;
 import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.CustomEvents;
-import me.reimnop.d4f.customevents.constraints.Constraint;
-import me.reimnop.d4f.customevents.constraints.Constraints;
-import me.reimnop.d4f.customevents.constraints.LinkedAccountConstraint;
-import me.reimnop.d4f.customevents.constraints.OperatorConstraint;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
@@ -37,9 +32,9 @@ public final class CustomEventsHandler {
             }
 
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(player)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, placeholderContext, supportedConstraints);
         });
@@ -51,9 +46,9 @@ public final class CustomEventsHandler {
             }
 
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(player)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, placeholderContext, supportedConstraints);
         });
@@ -89,9 +84,9 @@ public final class CustomEventsHandler {
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message.getContent())
             );
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(sender.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(sender)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(sender.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(sender)
             );
             customEvents.raiseEvent(CustomEvents.MINECRAFT_MESSAGE, placeholderContext, supportedConstraints, placeholders);
         });
@@ -101,9 +96,9 @@ public final class CustomEventsHandler {
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getTitle())
             );
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(playerEntity.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(playerEntity)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(playerEntity.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(playerEntity)
             );
             customEvents.raiseEvent(CustomEvents.ADVANCEMENT, placeholderContext, supportedConstraints, placeholders);
         });
