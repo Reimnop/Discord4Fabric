@@ -254,6 +254,10 @@ public final class MinecraftEventListeners {
         });
 
         PlayerChatReceivedCallback.EVENT.register((sender, message) -> {
+            if (!config.sendMessagesToDiscord) {
+                return;
+            }
+
             MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 
             String content = TextUtils.regexDynamicReplaceString(
