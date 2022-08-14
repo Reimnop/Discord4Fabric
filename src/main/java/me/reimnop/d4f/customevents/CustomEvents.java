@@ -80,7 +80,7 @@ public class CustomEvents {
                         Discord4Fabric.LOGGER.warn("Invalid custom event!");
                         return;
                     }
-                    jsonObjects.add(jsonObject.getAsJsonObject());
+                    jsonObjects.add(jsonElement.getAsJsonObject());
                 }
                 eventNameToEventJsons.put(key, jsonObjects);
             } else {
