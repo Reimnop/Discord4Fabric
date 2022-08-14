@@ -30,7 +30,9 @@ public final class CustomEventsHandler {
             }
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
                     ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, player, supportedConstraints);
         });
@@ -42,7 +44,9 @@ public final class CustomEventsHandler {
             }
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
                     ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, player, supportedConstraints);
         });
@@ -76,7 +80,11 @@ public final class CustomEventsHandler {
             );
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
                     ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString()),
+                    ConstraintProcessors.MC_MESSAGE, () -> new StringEqualsConstraintProcessor(message),
+                    ConstraintProcessors.MC_MESSAGE_CONTAINS, () -> new StringContainsConstraintProcessor(message)
             );
             customEvents.raiseEvent(CustomEvents.MINECRAFT_MESSAGE, player, supportedConstraints, placeholders);
         });
@@ -87,7 +95,9 @@ public final class CustomEventsHandler {
             );
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
                     ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(playerEntity.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(playerEntity)
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(playerEntity),
+                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(playerEntity.getName().getString()),
+                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(playerEntity.getName().getString())
             );
             customEvents.raiseEvent(CustomEvents.ADVANCEMENT, playerEntity, supportedConstraints, placeholders);
         });
