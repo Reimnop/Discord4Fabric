@@ -68,7 +68,7 @@ public class ConstraintParser {
                     return true;
                 }
 
-                if (currentChar == '"') {
+                if (currentChar == '\'') {
                     currentToken = getValue();
                     return true;
                 }
@@ -92,7 +92,7 @@ public class ConstraintParser {
         private Token getValue() {
             StringBuilder stringBuilder = new StringBuilder();
 
-            if (value.charAt(index) != '"') {
+            if (value.charAt(index) != '\'') {
                 return null; // This should never happen
             }
             index++;
@@ -113,7 +113,7 @@ public class ConstraintParser {
                 return false;
             }
 
-            return currentChar == '"';
+            return currentChar == '\'';
         }
 
         public void consume(TokenType tokenType) throws SyntaxException {
