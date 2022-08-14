@@ -2,16 +2,13 @@ package me.reimnop.d4f.listeners;
 
 import eu.pb4.placeholders.PlaceholderHandler;
 import eu.pb4.placeholders.PlaceholderResult;
+import me.reimnop.d4f.customevents.constraints.*;
 import me.reimnop.d4f.events.PlayerConnectedCallback;
 import me.reimnop.d4f.events.PlayerDisconnectedCallback;
 import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.Config;
 import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.CustomEvents;
-import me.reimnop.d4f.customevents.constraints.Constraint;
-import me.reimnop.d4f.customevents.constraints.Constraints;
-import me.reimnop.d4f.customevents.constraints.LinkedAccountConstraint;
-import me.reimnop.d4f.customevents.constraints.OperatorConstraint;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
 import me.reimnop.d4f.events.PlayerChatReceivedCallback;
@@ -31,10 +28,9 @@ public final class CustomEventsHandler {
             if (Compatibility.isPlayerVanished(player) && !fromVanish) {
                 return;
             }
-
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(player)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, player, supportedConstraints);
         });
@@ -44,10 +40,9 @@ public final class CustomEventsHandler {
             if (Compatibility.isPlayerVanished(player) && !fromVanish) {
                 return;
             }
-
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(player)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, player, supportedConstraints);
         });
@@ -79,9 +74,9 @@ public final class CustomEventsHandler {
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("message"), ctx -> PlaceholderResult.value(message)
             );
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(player.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(player)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player)
             );
             customEvents.raiseEvent(CustomEvents.MINECRAFT_MESSAGE, player, supportedConstraints, placeholders);
         });
@@ -90,9 +85,9 @@ public final class CustomEventsHandler {
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("title"), ctx -> PlaceholderResult.value(advancement.getDisplay().getTitle())
             );
-            Map<String, Constraint> supportedConstraints = Map.of(
-                    Constraints.LINKED_ACCOUNT, new LinkedAccountConstraint(playerEntity.getUuid()),
-                    Constraints.OPERATOR, new OperatorConstraint(playerEntity)
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(playerEntity.getUuid()),
+                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(playerEntity)
             );
             customEvents.raiseEvent(CustomEvents.ADVANCEMENT, playerEntity, supportedConstraints, placeholders);
         });
