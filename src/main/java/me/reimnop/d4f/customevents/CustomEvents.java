@@ -1,14 +1,11 @@
 package me.reimnop.d4f.customevents;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import eu.pb4.placeholders.PlaceholderContext;
 import eu.pb4.placeholders.PlaceholderHandler;
 import eu.pb4.placeholders.PlaceholderResult;
 import me.reimnop.d4f.Discord4Fabric;
-import me.reimnop.d4f.customevents.constraints.ConstraintProcessor;
 import me.reimnop.d4f.customevents.constraints.ConstraintProcessorFactory;
 import net.minecraft.util.Identifier;
 
