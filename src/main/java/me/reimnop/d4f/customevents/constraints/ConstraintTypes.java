@@ -1,7 +1,7 @@
 package me.reimnop.d4f.customevents.constraints;
 
-public final class ConstraintProcessors {
-    private ConstraintProcessors() {}
+public final class ConstraintTypes {
+    private ConstraintTypes() {}
 
     public final static String LINKED_ACCOUNT = "linked_account";
     public final static String LINKED_ACCOUNT_NICK = "linked_account_nick";
@@ -18,4 +18,6 @@ public final class ConstraintProcessors {
     public final static String DISCORD_NAME_CONTAINS = "discord_name_contains";
     public final static String DISCORD_MESSAGE = "discord_message";
     public final static String DISCORD_MESSAGE_CONTAINS = "discord_message_contains";
+    public final static String ADVANCEMENT_NAME = "advancement_name";
+    public final static String ADVANCEMENT_NAME_CONTAINS = "advancement_name_contains";
 }

@@ -69,6 +69,6 @@ public class LinkedAccountConstraintProcessor implements ConstraintProcessor {
     }
 
     private static Identifier id(String path) {
-        return new Identifier(ConstraintProcessors.LINKED_ACCOUNT, path);
+        return new Identifier(ConstraintTypes.LINKED_ACCOUNT, path);
     }
 }
