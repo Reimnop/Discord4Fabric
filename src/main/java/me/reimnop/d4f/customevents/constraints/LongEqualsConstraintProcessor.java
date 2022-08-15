@@ -1,18 +1,20 @@
 package me.reimnop.d4f.customevents.constraints;
 
-import eu.pb4.placeholders.PlaceholderHandler;
+import eu.pb4.placeholders.api.PlaceholderHandler;
 import me.reimnop.d4f.Discord4Fabric;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class StringEqualsConstraintProcessor implements ConstraintProcessor {
-    private final String valueA;
-    private String valueB = null;
+public class LongEqualsConstraintProcessor implements ConstraintProcessor {
+    private final Long valueA;
+    private Long valueB = null;
 
-    public StringEqualsConstraintProcessor(String valueA) {
+    public LongEqualsConstraintProcessor(Long valueA) {
         this.valueA = valueA;
     }
 
@@ -26,12 +28,16 @@ public class StringEqualsConstraintProcessor implements ConstraintProcessor {
             Discord4Fabric.LOGGER.warn("Too many arguments for string comparison constraint!");
             return;
         }
-        valueB = arguments.get(0);
+        if (!NumberUtils.isParsable(arguments.get(0))) {
+            Discord4Fabric.LOGGER.warn("Argument is not a number!");
+            return;
+        }
+        valueB = Long.parseLong(arguments.get(0));
     }
 
     @Override
     public boolean satisfied() {
-        return valueA.equalsIgnoreCase(valueB);
+        return Objects.equals(valueA, valueB);
     }
 
     @Nullable

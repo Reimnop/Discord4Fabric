@@ -21,8 +21,11 @@ public class StringContainsConstraintProcessor implements ConstraintProcessor {
     public void loadArguments(List<String> arguments) {
         if (arguments.size() == 0) {
             Discord4Fabric.LOGGER.warn("Too few arguments for string contains constraint!");
-        } else if (arguments.size() > 1) {
+            return;
+        }
+        if (arguments.size() > 1) {
             Discord4Fabric.LOGGER.warn("Too many arguments for string contains constraint!");
+            return;
         }
         valueB = arguments.get(0);
     }

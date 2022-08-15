@@ -35,7 +35,12 @@ public class CustomEvents {
                 Map<Identifier, PlaceholderHandler> constraintPlaceholders = constraint.getHandlers();
 
                 if (constraintPlaceholders != null && !constraint.negated) {
-                    placeholderHandlers.putAll(constraintPlaceholders);
+                    for (Identifier identifier : constraintPlaceholders.keySet()) {
+                        if (placeholderHandlers.containsKey(identifier)) {
+                            continue;
+                        }
+                        placeholderHandlers.put(identifier, constraintPlaceholders.get(identifier));
+                    }
                 }
             }
 

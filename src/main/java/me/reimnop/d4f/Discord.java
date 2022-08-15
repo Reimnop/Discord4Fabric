@@ -137,6 +137,16 @@ public class Discord {
     }
 
     @Nullable
+    public Member getMember(Long id) {
+        try {
+            return getGuild().getMemberById(id);
+        } catch (GuildException e) {
+            Utils.logException(e);
+        }
+        return null;
+    }
+
+    @Nullable
     public User findUser(String tag) throws GuildException {
         Member member = getGuild().getMemberByTag(tag);
         return member != null ? member.getUser() : null;
