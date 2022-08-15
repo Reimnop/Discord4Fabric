@@ -34,14 +34,14 @@ public final class CustomEventsHandler {
 
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
-                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player),
-                    ConstraintProcessors.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
-                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
+                    ConstraintTypes.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintTypes.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_JOIN, placeholderContext, supportedConstraints);
         });
@@ -54,14 +54,14 @@ public final class CustomEventsHandler {
 
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
-                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player),
-                    ConstraintProcessors.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
-                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
+                    ConstraintTypes.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintTypes.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, placeholderContext, supportedConstraints);
         });
@@ -85,11 +85,11 @@ public final class CustomEventsHandler {
             String username = member == null ? user.getName() : member.getEffectiveName();
 
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
-                    ConstraintProcessors.DISCORD_ID, () -> new LongEqualsConstraintProcessor(user.getIdLong()),
-                    ConstraintProcessors.DISCORD_NAME, () -> new StringEqualsConstraintProcessor(username),
-                    ConstraintProcessors.DISCORD_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(username),
-                    ConstraintProcessors.DISCORD_MESSAGE, () -> new StringEqualsConstraintProcessor(message.getContentRaw()),
-                    ConstraintProcessors.DISCORD_MESSAGE_CONTAINS, () -> new StringContainsConstraintProcessor(message.getContentRaw())
+                    ConstraintTypes.DISCORD_ID, () -> new LongEqualsConstraintProcessor(user.getIdLong()),
+                    ConstraintTypes.DISCORD_NAME, () -> new StringEqualsConstraintProcessor(username),
+                    ConstraintTypes.DISCORD_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(username),
+                    ConstraintTypes.DISCORD_MESSAGE, () -> new StringEqualsConstraintProcessor(message.getContentRaw()),
+                    ConstraintTypes.DISCORD_MESSAGE_CONTAINS, () -> new StringContainsConstraintProcessor(message.getContentRaw())
             );
 
             MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
@@ -109,34 +109,38 @@ public final class CustomEventsHandler {
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message.getContent())
             );
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
-                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(sender.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(sender.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(sender.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(sender.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(sender),
-                    ConstraintProcessors.MC_UUID, () -> new MinecraftUuidConstraintProcessor(sender.getUuid()),
-                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(sender.getName().getString()),
-                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(sender.getName().getString()),
-                    ConstraintProcessors.MC_MESSAGE, () -> new StringEqualsConstraintProcessor(message.getContent().getString()),
-                    ConstraintProcessors.MC_MESSAGE_CONTAINS, () -> new StringContainsConstraintProcessor(message.getContent().getString())
+                    ConstraintTypes.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(sender.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(sender.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(sender.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(sender.getUuid()),
+                    ConstraintTypes.OPERATOR, () -> new OperatorConstraintProcessor(sender),
+                    ConstraintTypes.MC_UUID, () -> new MinecraftUuidConstraintProcessor(sender.getUuid()),
+                    ConstraintTypes.MC_NAME, () -> new StringEqualsConstraintProcessor(sender.getName().getString()),
+                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(sender.getName().getString()),
+                    ConstraintTypes.MC_MESSAGE, () -> new StringEqualsConstraintProcessor(message.getContent().getString()),
+                    ConstraintTypes.MC_MESSAGE_CONTAINS, () -> new StringContainsConstraintProcessor(message.getContent().getString())
             );
             customEvents.raiseEvent(CustomEvents.MINECRAFT_MESSAGE, placeholderContext, supportedConstraints, placeholders);
         });
 
         PlayerAdvancementCallback.EVENT.register((player, advancement) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
+            String advancementTitle = advancement.getDisplay().getTitle().getString();
+
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                    Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getTitle())
+                    Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancementTitle)
             );
             Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
-                    ConstraintProcessors.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.OPERATOR, () -> new OperatorConstraintProcessor(player),
-                    ConstraintProcessors.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
-                    ConstraintProcessors.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
-                    ConstraintProcessors.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
+                    ConstraintTypes.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintTypes.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString()),
+                    ConstraintTypes.ADVANCEMENT_NAME, () -> new StringEqualsConstraintProcessor(advancementTitle),
+                    ConstraintTypes.ADVANCEMENT_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(advancementTitle)
             );
             customEvents.raiseEvent(CustomEvents.ADVANCEMENT, placeholderContext, supportedConstraints, placeholders);
         });
