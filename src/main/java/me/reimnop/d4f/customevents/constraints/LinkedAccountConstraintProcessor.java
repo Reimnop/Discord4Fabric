@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class LinkedAccountConstraintProcessor implements ConstraintProcessor {
-    private static class DiscordProfile {
+    public static class DiscordProfile {
         public final Long id;
         public final String fullname;
         public final String nickname;
@@ -41,6 +41,10 @@ public class LinkedAccountConstraintProcessor implements ConstraintProcessor {
     public LinkedAccountConstraintProcessor(UUID uuid) {
         Optional<Long> discordId = Discord4Fabric.ACCOUNT_LINKING.getLinkedAccount(uuid);
         discordProfile = discordId.map(DiscordProfile::new);
+    }
+
+    public Optional<DiscordProfile> getDiscordProfile() {
+        return discordProfile;
     }
 
     @Override

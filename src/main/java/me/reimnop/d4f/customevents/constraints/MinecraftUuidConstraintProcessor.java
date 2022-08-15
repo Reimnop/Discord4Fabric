@@ -7,31 +7,36 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public class StringEqualsConstraintProcessor implements ConstraintProcessor {
-    private final String valueA;
-    private String valueB = null;
+public class MinecraftUuidConstraintProcessor implements  ConstraintProcessor {
+    private final UUID valueA;
+    private UUID valueB = null;
 
-    public StringEqualsConstraintProcessor(String valueA) {
-        this.valueA = valueA;
+    public MinecraftUuidConstraintProcessor(UUID uuid) {
+        valueA = uuid;
     }
 
     @Override
     public void loadArguments(List<String> arguments) {
         if (arguments.size() == 0) {
-            Discord4Fabric.LOGGER.warn("Too few arguments for string comparison constraint!");
+            Discord4Fabric.LOGGER.warn("Too few arguments for minecraft uuid constraint!");
             return;
         }
         if (arguments.size() > 1) {
-            Discord4Fabric.LOGGER.warn("Too many arguments for string comparison constraint!");
+            Discord4Fabric.LOGGER.warn("Too many arguments for minecraft uuid constraint!");
             return;
         }
-        valueB = arguments.get(0);
+        try {
+            valueB = UUID.fromString(arguments.get(0));
+        } catch (IllegalArgumentException e) {
+            Discord4Fabric.LOGGER.warn("Not a valid UUID!");
+        }
     }
 
     @Override
     public boolean satisfied() {
-        return valueA.equalsIgnoreCase(valueB);
+        return valueA.equals(valueB);
     }
 
     @Nullable
