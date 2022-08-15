@@ -1,11 +1,10 @@
 package me.reimnop.d4f.customevents.constraints;
 
-import eu.pb4.placeholders.api.PlaceholderHandler;
+import eu.pb4.placeholders.PlaceholderHandler;
 import me.reimnop.d4f.Discord4Fabric;
 import net.dv8tion.jda.api.entities.Member;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,6 @@ public class LinkedAccountNickContainsConstraintProcessor implements ConstraintP
         return StringUtils.containsIgnoreCase(member.getEffectiveName(), value);
     }
 
-    @Nullable
     @Override
     public Map<Identifier, PlaceholderHandler> getHandlers() {
         return null;

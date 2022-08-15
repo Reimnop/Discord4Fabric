@@ -1,9 +1,8 @@
 package me.reimnop.d4f.customevents.constraints;
 
-import eu.pb4.placeholders.api.PlaceholderHandler;
+import eu.pb4.placeholders.PlaceholderHandler;
 import me.reimnop.d4f.Discord4Fabric;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,6 @@ public class MinecraftUuidConstraintProcessor implements  ConstraintProcessor {
         return valueA.equals(valueB);
     }
 
-    @Nullable
     @Override
     public Map<Identifier, PlaceholderHandler> getHandlers() {
         return null;

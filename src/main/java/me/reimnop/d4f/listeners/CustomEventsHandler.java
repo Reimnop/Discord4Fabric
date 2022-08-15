@@ -87,7 +87,7 @@ public final class CustomEventsHandler {
                     Discord4Fabric.id("discriminator"), ctx -> PlaceholderResult.value(user.getDiscriminator()),
                     Discord4Fabric.id("message"), ctx -> PlaceholderResult.value(message.getContentRaw())
             );
-            customEvents.raiseEvent(CustomEvents.DISCORD_MESSAGE, server, null, placeholders);
+            customEvents.raiseEvent(CustomEvents.DISCORD_MESSAGE, server, supportedConstraints, placeholders);
         });
 
         PlayerChatReceivedCallback.EVENT.register((player, message) -> {
