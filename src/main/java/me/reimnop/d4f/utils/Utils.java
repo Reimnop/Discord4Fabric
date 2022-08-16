@@ -50,7 +50,7 @@ public final class Utils {
     }
 
     public static String getAvatarUrl(ServerPlayerEntity player) {
-        if (Utils.isModLoaded("fabrictailor") && player instanceof TailoredPlayer tailoredPlayer) {
+        if (Utils.isModLoaded("fabrictailor") && player instanceof TailoredPlayer tailoredPlayer && tailoredPlayer.getSkinValue() != null) {
             String profileJsonStr = new String(Base64.getDecoder().decode(tailoredPlayer.getSkinValue()));
             JsonObject profileJson = new Gson().fromJson(profileJsonStr, JsonObject.class);
             String skinUrl = profileJson.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
