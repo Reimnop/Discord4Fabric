@@ -96,5 +96,13 @@ See here: https://placeholders.pb4.eu/user/default-placeholders/#server
 ### Note
 Channel topic update rate limit is absurdly high, please try not to set topic update interval to below 6000
 
+Setting either status or topic update interval to -1 disables it
+
+## Avatar services
+Change your avatar services to use something other than Crafatar/MCHeads with something else by changing the `avatar_url` and `avatar_url_texture_hash` config options
+
+- %s in `avatar_url` config will get replaced by the player's UUID
+- %s in `avatar_url_texture_hash` config will get replaced by the player's skin hash (only used for [FabricTailor](https://www.curseforge.com/minecraft/mc-mods/fabrictailor) compatibility)
+
 ## Custom events
 Custom events is an extremely flexible and extensible feature of this mod. It allows for custom behavior defined in JSON (sending a message when a player join, run commands when someone gets an advancement, etc). However it is quite complicated and hard to understand. You can find more information about it [here](CUSTOM_EVENTS.md)

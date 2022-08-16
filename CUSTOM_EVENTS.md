@@ -41,25 +41,101 @@ Comments are **not supported**
 }
 ```
 
+## Events
+- `player_join`: Triggers when a player joins the server
+- `player_leave`: Triggers when a player leaves the server
+- `server_start`: Triggers when the server starts (does not support any constraint)
+- `server_stop`: Triggers when the server stops (does not support any constraint)
+- `discord_message`: Triggers when a Discord message is sent in the configured channel (`%d4f:message%` placeholder is available for this event, returns the message content)
+- `minecraft_message`: Triggers when a Minecraft message is sent (`%d4f:message%` placeholder is available for this event, returns the message content)
+- `advancement`: Triggers when a player achieves an advancement (`%d4f:title%` placeholder is available for this event, returns the advancement title)
+
 ## Constraints
-### `linked_account`: Satisfied when the player has a linked Discord account
-This constraint adds the following placeholders:
+### `linked_account`
+Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+
+Check if the player has a linked Discord account 
+
+Available placeholders:
 - `%linked_account:id%`: The player's linked Discord account ID. Example: 349852642123448321
 - `%linked_account:fullname%`: Full name of user. Example: Reimnop#3147
 - `%linked_account:nickname%`: Nickname of user. Example: Reimnop
 - `%linked_account:discriminator%`: The 4-digit tag of the user. Example: 3147
 
-### `operator`: Satisfied when the player is a server operator
-This constraint does not add any placeholder
+### linked_account_nick('value')
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the linked account's nickname is `value` (case insensitive)
 
-## Events
-- `player_join`: Triggers when a player joins the server (supports `linked_account` and `operator` constraints)
-- `player_leave`: Triggers when a player leaves the server (supports `linked_account` and `operator` constraints)
-- `server_start`: Triggers when the server starts (does not support any constraint)
-- `server_stop`: Triggers when the server stops (does not support any constraint)
-- `discord_message`: Triggers when a Discord message is sent in the configured channel (does not support any constraint; the `%d4f:message%` placeholder is available for this event, it returns the message content)
-- `minecraft_message`: Triggers when a Minecraft message is sent (supports `linked_account` and `operator` constraints; the `%d4f:message%` placeholder is available for this event, it returns the message content)
-- `advancement`: Triggers when a player achieves an advancement (supports `linked_account` and `operator` constraints; the `%d4f:title%` placeholder is available for this event, it returns the advancement title)
+### linked_account_nick_contains('value')
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the linked account's nickname contains `value` (case insensitive)
+
+### linked_account_nick_contains('role id')
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the linked account has role with id `role id`
+
+### mc_uuid('uuid')
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the player's UUID is `uuid`
+
+### mc_name('value')
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the player's name is `value` (case insensitive)
+
+### mc_name_contains('value')
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the player's name contains `value` (case insensitive)
+ 
+### mc_message('value')
+> Supported on `minecraft_message`
+> 
+> Check if the player's message is `value` (case insensitive)
+
+### mc_message_contains('value')
+> Supported on `minecraft_message`
+> 
+> Check if the player's message contains `value` (case insensitive)
+
+### discord_id('id')
+> Supported on `discord_message`
+> 
+> Check if the user's Discord ID is `id`
+
+### discord_name('value')
+> Supported on `discord_message`
+> 
+> Check if the user's Discord nickname is `value` (case insensitive)
+
+### discord_name_contains('value')
+> Supported on `discord_message`
+> 
+> Check if the user's Discord nickname contains `value` (case insensitive)
+
+### discord_message('value')
+> Supported on `discord_message`
+> 
+> Check if the user's Discord message is `value` (case insensitive)
+
+### discord_message_contains('value')
+> Supported on `discord_message`
+> 
+> Check if the user's Discord message contains `value` (case insensitive)
+
+### advancement_name('value')
+> Supported on `advancement`
+> 
+> Check if the advancement's name is `value` (case insensitive)
+
+### advancement_name_contains('value')
+> Supported on `advancement`
+> 
+> Check if the advancement's name contains `value` (case insensitive)
 
 ## Actions
 ### `run_command`: Runs a Minecraft command as Console
