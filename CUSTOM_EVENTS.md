@@ -51,7 +51,7 @@ Comments are **not supported**
 - `advancement`: Triggers when a player achieves an advancement (`%d4f:title%` placeholder is available for this event, returns the advancement title)
 
 ## Constraints
-### `linked_account`
+### linked_account
 > Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
 > 
 > Check if the player has a linked Discord account 
@@ -76,6 +76,11 @@ Comments are **not supported**
 > Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
 > 
 > Check if the linked account has role with id `role id`
+
+### operator
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the player is an operator (permission level 4)
 
 ### mc_uuid('uuid')
 > Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
