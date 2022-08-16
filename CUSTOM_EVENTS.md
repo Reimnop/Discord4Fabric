@@ -235,4 +235,21 @@ Will send a message in-game with the content `Congratulations, <player name>!`
 }
 ```
 
+Responding to a specific message
+```js
+{
+  "discord_message": {
+    "requires": [
+      "discord_message('!hello')"
+    ],
+    "actions": [
+      {
+        "id": "send_discord_message",
+        "value": "Hey there!"
+      }
+    ]
+  }
+}
+```
+
 _The `%d4f:pig%` placeholder is available for all events and constraints and it returns a random Technoblade quote. This is my tribute to the legend. Fly high Technoblade, you will be missed._
