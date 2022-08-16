@@ -9,10 +9,15 @@
 </p>
 
 > Empower your Minecraft <-> Discord chat experience with features from [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)! ❤️
->
-> So customizable, versatile and powerful features are now with you on your Fabric server!
 
 [![fabric api](https://i.imgur.com/Ol1Tcf8.png "Fabric API")](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+
+## Features
+
+- Advancement, death, join, leave, server start, server stop messages!
+- Webhook!
+- Everything is customizable!
+- Infinitely extensible thanks to Custom Events!
 
 ## Usage
 
