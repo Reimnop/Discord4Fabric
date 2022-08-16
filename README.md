@@ -8,9 +8,9 @@
   </a>
 </p>
 
-> A beautiful Discord bot client for Fabric inspired by [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)
-> 
-> All the features you love are now with you on your Fabric server!
+> Empower your Minecraft <-> Discord chat experience with features from [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)! ❤️
+>
+> So customizable, versatile and powerful features are now with you on your Fabric server!
 
 [![fabric api](https://i.imgur.com/Ol1Tcf8.png "Fabric API")](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 
