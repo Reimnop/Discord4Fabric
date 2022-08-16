@@ -15,12 +15,19 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
 
-    maven { url "https://maven.nucleoid.xyz/" }
+    maven { url "https://maven.nucleoid.xyz" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven {
         url "https://cursemaven.com"
         content {
             includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
         }
     }
 }
@@ -48,6 +55,7 @@ dependencies {
 
     // compat
     modCompileOnly "curse.maven:vanish-424123:${project.vanish_version}"
+    modCompileOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
 
     // extra deps
     include "org.json:json:20160212"

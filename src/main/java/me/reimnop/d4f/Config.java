@@ -49,6 +49,7 @@ public class Config {
     public Boolean forceOnlineUuid = false;
     public Boolean requiresLinkedAccount = false;
     public String avatarUrl = "https://crafatar.com/avatars/%s?overlay";
+    public String avatarUrlTextureHash = "https://mc-heads.net/avatar/%s"; // for fabrictailor compat
 
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
@@ -90,6 +91,7 @@ public class Config {
         jsonObject.addProperty("force_online_uuid", forceOnlineUuid);
         jsonObject.addProperty("requires_linked_account", requiresLinkedAccount);
         jsonObject.addProperty("avatar_url", avatarUrl);
+        jsonObject.addProperty("avatar_url_texture_hash", avatarUrlTextureHash);
 
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -144,6 +146,7 @@ public class Config {
         forceOnlineUuid = getBooleanOrDefault(obj, "force_online_uuid", forceOnlineUuid);
         requiresLinkedAccount = getBooleanOrDefault(obj, "requires_linked_account", requiresLinkedAccount);
         avatarUrl = getStringOrDefault(obj, "avatar_url", avatarUrl);
+        avatarUrlTextureHash = getStringOrDefault(obj, "avatar_url_texture_hash", avatarUrlTextureHash);
 
         reader.close();
     }
