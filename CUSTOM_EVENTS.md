@@ -52,15 +52,15 @@ Comments are **not supported**
 
 ## Constraints
 ### `linked_account`
-Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
-
-Check if the player has a linked Discord account 
-
-Available placeholders:
-- `%linked_account:id%`: The player's linked Discord account ID. Example: 349852642123448321
-- `%linked_account:fullname%`: Full name of user. Example: Reimnop#3147
-- `%linked_account:nickname%`: Nickname of user. Example: Reimnop
-- `%linked_account:discriminator%`: The 4-digit tag of the user. Example: 3147
+> Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
+> 
+> Check if the player has a linked Discord account 
+>
+> Available placeholders:
+> - `%linked_account:id%`: The player's linked Discord account ID. Example: 349852642123448321
+> - `%linked_account:fullname%`: Full name of user. Example: Reimnop#3147
+> - `%linked_account:nickname%`: Nickname of user. Example: Reimnop
+> - `%linked_account:discriminator%`: The 4-digit tag of the user. Example: 3147
 
 ### linked_account_nick('value')
 > Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
