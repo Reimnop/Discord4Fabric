@@ -1,5 +1,7 @@
 package me.reimnop.d4f.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import eu.pb4.placeholders.PlaceholderAPI;
 import eu.pb4.placeholders.PlaceholderHandler;
 import me.lucko.spark.api.Spark;
@@ -7,13 +9,19 @@ import me.lucko.spark.api.SparkProvider;
 import me.lucko.spark.api.statistic.StatisticWindow;
 import me.lucko.spark.api.statistic.types.DoubleStatistic;
 import me.reimnop.d4f.Discord4Fabric;
-import me.reimnop.d4f.Config;
+import me.reimnop.d4f.NameToUUIDConverter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.samo_lego.fabrictailor.casts.TailoredPlayer;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -21,12 +29,48 @@ import java.util.UUID;
 public final class Utils {
     private Utils() {}
 
+    private static final NameToUUIDConverter nameToUUIDConverter;
+
+    static {
+        nameToUUIDConverter = new NameToUUIDConverter();
+
+        File file = new File(Utils.getNameCachePath());
+
+        if (file.exists()) {
+            try {
+                nameToUUIDConverter.loadCache(file);
+            } catch (IOException e) {
+                Utils.logException(e);
+            }
+        }
+    }
+
     public static void logException(Exception e) {
         e.printStackTrace();
     }
 
+    public static String getAvatarUrl(ServerPlayerEntity player) {
+        if (Utils.isModLoaded("fabrictailor") && player instanceof TailoredPlayer tailoredPlayer) {
+            String profileJsonStr = new String(Base64.getDecoder().decode(tailoredPlayer.getSkinValue()));
+            JsonObject profileJson = new Gson().fromJson(profileJsonStr, JsonObject.class);
+            String skinUrl = profileJson.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
+            String[] splitSkinUrl = skinUrl.split("/");
+            return Utils.getAvatarUrlFromTextureHash(splitSkinUrl[splitSkinUrl.length - 1]);
+        }
+
+        UUID uuid = player.getUuid();
+        if (Discord4Fabric.CONFIG.forceOnlineUuid && !((MinecraftDedicatedServer) FabricLoader.getInstance().getGameInstance()).isOnlineMode()) {
+            uuid = nameToUUIDConverter.getUuid(player);
+        }
+        return Utils.getAvatarUrl(uuid);
+    }
+
     public static String getAvatarUrl(UUID uuid) {
         return String.format(Discord4Fabric.CONFIG.avatarUrl, uuid.toString());
+    }
+
+    public static String getAvatarUrlFromTextureHash(String hash) {
+        return String.format(Discord4Fabric.CONFIG.avatarUrlTextureHash, hash);
     }
 
     public static String getConfigPath() {

@@ -15,9 +15,6 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -27,10 +24,8 @@ import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class Discord {
     public final JDA jda;
@@ -41,21 +36,7 @@ public class Discord {
     private final Config config;
     private final Map<String, Emote> emotes = new HashMap<>();
 
-    private final NameToUUIDConverter nameToUUIDConverter;
-
     public Discord(Config config) throws LoginException, InterruptedException {
-        nameToUUIDConverter = new NameToUUIDConverter();
-
-        File file = new File(Utils.getNameCachePath());
-
-        if (file.exists()) {
-            try {
-                nameToUUIDConverter.loadCache(file);
-            } catch (IOException e) {
-                Utils.logException(e);
-            }
-        }
-
         this.config = config;
 
         // init jda
@@ -164,14 +145,9 @@ public class Discord {
     }
 
     public void sendPlayerMessage(ServerPlayerEntity sender, Text name, Text message) {
-        UUID uuid = sender.getUuid();
-        if (config.forceOnlineUuid && !((MinecraftDedicatedServer) FabricLoader.getInstance().getGameInstance()).isOnlineMode()) {
-            uuid = nameToUUIDConverter.getUuid(sender);
-        }
-
         if (webhookClient != null) {
             WebhookMessageBuilder wmb = new WebhookMessageBuilder()
-                    .setAvatarUrl(Utils.getAvatarUrl(uuid))
+                    .setAvatarUrl(Utils.getAvatarUrl(sender))
                     .setUsername(name.getString())
                     .setContent(message.getString())
                     .setAllowedMentions(new AllowedMentions()
@@ -196,13 +172,8 @@ public class Discord {
     }
 
     public void sendEmbedMessageUsingPlayerAvatar(ServerPlayerEntity sender, Color color, String message, String description) {
-        UUID uuid = sender.getUuid();
-        if (config.forceOnlineUuid && !((MinecraftDedicatedServer) FabricLoader.getInstance().getGameInstance()).isOnlineMode()) {
-            uuid = nameToUUIDConverter.getUuid(sender);
-        }
-
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setAuthor(message, null, Utils.getAvatarUrl(uuid))
+                .setAuthor(message, null, Utils.getAvatarUrl(sender))
                 .setDescription(description)
                 .setColor(color);
 

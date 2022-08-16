@@ -27,6 +27,7 @@ Click [here](USAGE.md)
 * GitHub: [@Reimnop](https://github.com/Reimnop)
 
 ## Credits
+
 Uses [Placeholder API](https://github.com/Patbox/TextPlaceholderAPI) by Patbox
 
-Thank you to [Crafatar](https://crafatar.com/) for providing avatars
+Thank you to [Crafatar](https://crafatar.com/) and [MCHeads](https://mc-heads.net) for providing avatars
