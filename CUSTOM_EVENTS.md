@@ -72,7 +72,7 @@ Comments are **not supported**
 > 
 > Check if the linked account's nickname contains `value` (case insensitive)
 
-### linked_account_nick_contains('role id')
+### linked_account_has_role('role id')
 > Supported on `player_join`, `player_leave`, `minecraft_message`, `advancement`
 > 
 > Check if the linked account has role with id `role id`
