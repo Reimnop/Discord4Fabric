@@ -8,6 +8,10 @@
   </a>
 </p>
 
+### Notice
+
+Development is massively slowing down due to in real life events that is happening to me. This project is not cancelled. 
+
 > Empower your Minecraft <-> Discord chat experience with features from [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)! ❤️
 
 [![fabric api](https://i.imgur.com/Ol1Tcf8.png "Fabric API")](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
