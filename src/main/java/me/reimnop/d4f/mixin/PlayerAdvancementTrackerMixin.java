@@ -16,7 +16,7 @@ public class PlayerAdvancementTrackerMixin {
 
     @Inject(method = "grantCriterion",
             at = @At(
-                target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/text/Text;Lnet/minecraft/util/registry/RegistryKey;)V",
+                target = "Lnet/minecraft/server/PlayerManager;broadcast(Lnet/minecraft/text/Text;Z)V",
                 value = "INVOKE"
             )
     )
