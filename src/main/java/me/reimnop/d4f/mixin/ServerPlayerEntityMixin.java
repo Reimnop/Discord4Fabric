@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class ServerPlayerEntityMixin {
     @Inject(method = "onDeath",
             at = @At(
-                target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;Lio/netty/util/concurrent/GenericFutureListener;)V",
+                target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;Lnet/minecraft/network/PacketCallbacks;)V",
                 value = "INVOKE",
                 ordinal = 0),
             locals = LocalCapture.CAPTURE_FAILSOFT
