@@ -32,17 +32,17 @@ Placeholders are a way to insert variables into customizable text messages
 Syntax: `%category:name%`
 
 ## Player join/leave
-`%df4:post_online%`: The amount of players online after the player has joined/left. Example: `42`
+`%d4f:post_online%`: The amount of players online after the player has joined/left. Example: `42`
 
 See here: https://placeholders.pb4.eu/user/default-placeholders/#player
 
 ## Player death
-`%df4:reason%`: Death reason with player name. Example: `Steve fell from a high place`
+`%d4f:reason%`: Death reason with player name. Example: `Steve fell from a high place`
 
 For more info: https://placeholders.pb4.eu/user/default-placeholders/#player
 
 ## Advancement
-`%df4:title%`: Advancement name. Example: `Serious Dedication`
+`%d4f:title%`: Advancement name. Example: `Serious Dedication`
 
 `%d4f:description%`: Advancement description. Example: `Use a Netherite Ingot to upgrade a Hoe, and then reevaluate your life choices`
 
