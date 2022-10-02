@@ -4,6 +4,7 @@ import com.vdurmont.emoji.EmojiParser;
 import eu.pb4.placeholders.*;
 import me.reimnop.d4f.*;
 import me.reimnop.d4f.console.ConsoleChannelHandler;
+import me.reimnop.d4f.duck.IStyleAccess;
 import me.reimnop.d4f.events.*;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.utils.Compatibility;
@@ -212,6 +213,14 @@ public final class MinecraftEventListeners {
             parsedString = EmojiParser.parseToAliases(parsedString);
 
             Text parsedMsg = TextParser.parse(parsedString);
+
+            // Remove all click events from all child (major security risk)
+            parsedMsg.visit((style, pos) -> {
+                // Dirty mixin hack to remove click event
+                // But I was too lazy to do it properly
+                ((IStyleAccess) style).setClickEvent(null);
+                return Optional.of(Style.EMPTY);
+            }, Style.EMPTY);
 
             Map<Identifier, PlaceholderHandler> placeholders = new HashMap<>(Map.of(
                     Discord4Fabric.id("fullname"), ctx -> PlaceholderResult.value(user.getAsTag()),

@@ -6,6 +6,7 @@
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "VanishCommandMixin",
-    "LanguageMixin"
+    "LanguageMixin",
+    "StyleMixin"
   ]
 }
