@@ -1,18 +1,2 @@
-- Added support for parameterized constraints for Custom Events
-- Added 15 constraints:
-    - `linked_account_nick('value')`: Check if the linked account's nickname is `value` (case insensitive)
-    - `linked_account_nick_contains('value')`: Check if the linked account's nickname contains `value` (case insensitive)
-    - `linked_account_nick_contains('role id')`: Check if the linked account has role with id `role id`
-    - `mc_uuid('uuid')`: Check if the player's UUID is `uuid`
-    - `mc_name('value')`: Check if the player's name is `value` (case insensitive)
-    - `mc_name_contains('value')`: Check if the player's name contains `value` (case insensitive)
-    - `mc_message('value')`: Check if the player's message is `value` (case insensitive)
-    - `mc_message_contains('value')`: Check if the player's message contains `value` (case insensitive)
-    - `discord_id('id')`: Check if the user's Discord ID is `id`
-    - `discord_name('value')`: Check if the user's Discord nickname is `value` (case insensitive)
-    - `discord_name_contains('value')`: Check if the user's Discord nickname contains `value` (case insensitive)
-    - `discord_message('value')`: Check if the user's Discord message is `value` (case insensitive)
-    - `discord_message_contains('value')`: Check if the user's Discord message contains `value` (case insensitive)
-    - `advancement_name('value')`: Check if the advancement's name is `value` (case insensitive)
-    - `advancement_name_contains('value')`: Check if the advancement's name contains `value` (case insensitive)
-- Added FabricTailor compatibility (will now show the FabricTailor avatar on Discord chat)
+- Fixed an issue where advancement and death messages aren't sent
+- URGENT: Fixed a critical security vulnerability with click events
