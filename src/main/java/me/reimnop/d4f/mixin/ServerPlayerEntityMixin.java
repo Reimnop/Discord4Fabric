@@ -1,6 +1,7 @@
 package me.reimnop.d4f.mixin;
 
 import me.reimnop.d4f.Config;
+import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.events.PlayerDeathCallback;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.message.MessageType;
@@ -16,7 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
-    private void blockChat(Config config,SentMessage message, boolean filterMaskEnabled, MessageType.Parameters params, CallbackInfo ci) {
+    private void blockChat(SentMessage message, boolean filterMaskEnabled, MessageType.Parameters params, CallbackInfo ci) {
+        Config config = Discord4Fabric.CONFIG;
         if (!config.sendMessagesToMinecraft) ci.cancel();
     }
     @Inject(method = "onDeath",
