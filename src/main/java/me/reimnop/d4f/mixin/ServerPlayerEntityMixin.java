@@ -16,10 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
-    private void blockChat(Config config, SentMessage message, boolean filterMaskEnabled, MessageType.Parameters params, CallbackInfo ci) {
-        if (!config.sendMessagesToMinecraft) {
-            ci.cancel();
-        }
+    private void blockChat(Config config,SentMessage message, boolean filterMaskEnabled, MessageType.Parameters params, CallbackInfo ci) {
+        if (!config.sendMessagesToMinecraft) ci.cancel();
     }
     @Inject(method = "onDeath",
             at = @At(
