@@ -18,7 +18,7 @@ public final class ModCommands {
     public static void init() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
-                    CommandManager.literal("discord4fabric")
+                    CommandManager.literal("discord")
                             .then(CommandManager.literal("link")
                                     .executes(context -> {
                                         ServerPlayerEntity serverPlayer = context.getSource().getPlayer();
