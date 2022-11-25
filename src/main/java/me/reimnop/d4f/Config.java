@@ -35,6 +35,7 @@ public class Config {
     public String advancementChallengeTitle = "%player:name% has completed the challenge [%d4f:title%]";
     public String advancementChallengeDescription = "%d4f:description%";
     public boolean sendMessagesToDiscord = true;
+    public boolean sendMessagesToMinecraft = true;
     public String discordToMinecraftMessage = "[%d4f:nickname% on Discord] %d4f:message%";
     public String discordToMinecraftWithReplyMessage = "[%d4f:nickname% on Discord (replying to %d4f:reply_nickname%)] %d4f:message%";
     public String discordName = "%player:name%";
@@ -78,6 +79,7 @@ public class Config {
         jsonObject.addProperty("advancement_challenge", advancementChallengeTitle);
         jsonObject.addProperty("advancement_challenge_desc", advancementChallengeDescription);
         jsonObject.addProperty("send_messages_to_discord", sendMessagesToDiscord);
+        jsonObject.addProperty("send_messages_to_minecraft", sendMessagesToMinecraft);
         jsonObject.addProperty("discord_to_mc", discordToMinecraftMessage);
         jsonObject.addProperty("discord_to_mc_reply", discordToMinecraftWithReplyMessage);
         jsonObject.addProperty("discord_name", discordName);
@@ -133,6 +135,7 @@ public class Config {
         advancementChallengeTitle = getStringOrDefault(obj, "advancement_challenge", advancementChallengeTitle);
         advancementChallengeDescription = getStringOrDefault(obj, "advancement_challenge_desc", advancementChallengeDescription);
         sendMessagesToDiscord = getBooleanOrDefault(obj, "send_messages_to_discord", sendMessagesToDiscord);
+        sendMessagesToMinecraft = getBooleanOrDefault(obj, "send_messages_to_minecraft", sendMessagesToMinecraft);
         discordToMinecraftMessage = getStringOrDefault(obj, "discord_to_mc", discordToMinecraftMessage);
         discordToMinecraftWithReplyMessage = getStringOrDefault(obj, "discord_to_mc_reply", discordToMinecraftWithReplyMessage);
         discordName = getStringOrDefault(obj, "discord_name", discordName);
