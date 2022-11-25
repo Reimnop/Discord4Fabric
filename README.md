@@ -10,7 +10,7 @@
 
 ### Notice
 
-Development is massively slowing down due to in real life events that is happening to me. This project is not cancelled. 
+Development is massively slowing down due to university preparations. It is expected to resume by July 2023. 
 
 > Empower your Minecraft <-> Discord chat experience with features from [DiscordSRV](https://www.spigotmc.org/resources/discordsrv.18494/)! ❤️
 
