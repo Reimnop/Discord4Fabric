@@ -67,9 +67,8 @@ public final class CustomEventsHandler {
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, placeholderContext, supportedConstraints);
         });
 
-        PlayerDeathCallback.EVENT.register((player, advancement) -> {
+        PlayerDeathCallback.EVENT.register((player, source, deathMessage) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
-            String advancementTitle = advancement.getDisplay().getTitle().getString();
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(deathMessage)
