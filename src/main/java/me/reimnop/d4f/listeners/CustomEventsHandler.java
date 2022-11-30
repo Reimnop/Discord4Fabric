@@ -81,7 +81,7 @@ public final class CustomEventsHandler {
                     ConstraintTypes.OPERATOR, () -> new OperatorConstraintProcessor(player),
                     ConstraintTypes.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
                     ConstraintTypes.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
-                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString()),
+                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_DEATH, placeholderContext, supportedConstraints, placeholders);
         });        
