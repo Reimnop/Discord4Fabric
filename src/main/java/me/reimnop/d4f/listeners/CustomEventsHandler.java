@@ -66,6 +66,26 @@ public final class CustomEventsHandler {
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, placeholderContext, supportedConstraints);
         });
 
+        PlayerDeathCallback.EVENT.register((player, advancement) -> {
+            PlaceholderContext placeholderContext = PlaceholderContext.of(player);
+            String advancementTitle = advancement.getDisplay().getTitle().getString();
+
+            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(deathMessage)
+            );
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintTypes.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintTypes.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString()),
+            );
+            customEvents.raiseEvent(CustomEvents.PLAYER_DEATH, placeholderContext, supportedConstraints, placeholders);
+        });        
+
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(server);
             customEvents.raiseEvent(CustomEvents.SERVER_START, placeholderContext, null);
