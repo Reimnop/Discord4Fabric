@@ -12,6 +12,7 @@ import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.CustomEvents;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
+import me.reimnop.d4f.events.PlayerDeathCallback;
 import me.reimnop.d4f.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
