@@ -44,7 +44,7 @@ Comments are **not supported**
 ## Events
 - `player_join`: Triggers when a player joins the server
 - `player_leave`: Triggers when a player leaves the server
-- `player_death`: Triggers when a player dies
+- `player_death`: Triggers when a player dies (`%d4f:message%` placeholder is available for this event, which returns the death message content)
 - `server_start`: Triggers when the server starts (does not support any constraint)
 - `server_stop`: Triggers when the server stops (does not support any constraint)
 - `discord_message`: Triggers when a Discord message is sent in the configured channel (`%d4f:message%` placeholder is available for this event, returns the message content)
