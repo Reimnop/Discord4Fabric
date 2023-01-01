@@ -178,7 +178,7 @@ public final class MinecraftEventListeners {
                             if (pingedPlayerUuid.isPresent()) {
                                 ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
                                 if (player != null) {
-                                    player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                    player.playSound(SoundEvents.BLOCK_BELL_USE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                                 }
                             }
 
@@ -289,7 +289,7 @@ public final class MinecraftEventListeners {
                                 if (pingedPlayerUuid.isPresent()) {
                                     ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
                                     if (player != null) {
-                                        player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                        player.playSound(SoundEvents.BLOCK_BELL_USE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                                     }
                                 }
 
