@@ -12,6 +12,7 @@ import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.customevents.CustomEvents;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.events.PlayerAdvancementCallback;
+import me.reimnop.d4f.events.PlayerDeathCallback;
 import me.reimnop.d4f.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -65,6 +66,25 @@ public final class CustomEventsHandler {
             );
             customEvents.raiseEvent(CustomEvents.PLAYER_LEAVE, placeholderContext, supportedConstraints);
         });
+
+        PlayerDeathCallback.EVENT.register((player, source, deathMessage) -> {
+            PlaceholderContext placeholderContext = PlaceholderContext.of(player);
+
+            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(deathMessage)
+            );
+            Map<String, ConstraintProcessorFactory> supportedConstraints = Map.of(
+                    ConstraintTypes.LINKED_ACCOUNT, () -> new LinkedAccountConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK, () -> new LinkedAccountNickConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_NICK_CONTAINS, () -> new LinkedAccountNickContainsConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.LINKED_ACCOUNT_HAS_ROLE, () -> new LinkedAccountHasRoleConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.OPERATOR, () -> new OperatorConstraintProcessor(player),
+                    ConstraintTypes.MC_UUID, () -> new MinecraftUuidConstraintProcessor(player.getUuid()),
+                    ConstraintTypes.MC_NAME, () -> new StringEqualsConstraintProcessor(player.getName().getString()),
+                    ConstraintTypes.MC_NAME_CONTAINS, () -> new StringContainsConstraintProcessor(player.getName().getString())
+            );
+            customEvents.raiseEvent(CustomEvents.PLAYER_DEATH, placeholderContext, supportedConstraints, placeholders);
+        });        
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(server);

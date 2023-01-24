@@ -54,6 +54,7 @@ public class CustomEvents {
 
     public static final String PLAYER_JOIN = "player_join";
     public static final String PLAYER_LEAVE = "player_leave";
+    public static final String PLAYER_DEATH = "player_death";
     public static final String SERVER_START = "server_start";
     public static final String SERVER_STOP = "server_stop";
     public static final String DISCORD_MESSAGE = "discord_message";
