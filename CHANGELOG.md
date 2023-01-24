@@ -1,2 +1,1 @@
-- Fixed an issue where advancement and death messages aren't sent
-- URGENT: Fixed a critical security vulnerability with click events
+- Updated to 1.19.3
