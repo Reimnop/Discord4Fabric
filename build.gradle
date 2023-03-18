@@ -53,7 +53,7 @@ dependencies {
 
     include implementation("me.lucko:spark-api:0.1-SNAPSHOT")
 
-    include modRuntimeOnly("fr.catcore:server-translations-api:${project.server_translations_version}")
+    include modRuntimeOnly("xyz.nucleoid:server-translations-api:${project.server_translations_version}")
 
     // compat
     modCompileOnly "curse.maven:vanish-424123:${project.vanish_version}"

@@ -23,7 +23,7 @@ public class ServerPlayerEntityMixin {
     }
     @Inject(method = "onDeath",
             at = @At(
-                target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;Lnet/minecraft/network/PacketCallbacks;)V",
+                target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/PacketCallbacks;)V",
                 value = "INVOKE",
                 ordinal = 0),
             locals = LocalCapture.CAPTURE_FAILSOFT
