@@ -143,6 +143,10 @@ public final class MinecraftEventListeners {
         });
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
+            if (user.isBot() && (!config.allowBotMessages || user.getIdLong() == discord.selfUser.getIdLong())) {
+                return;
+            }
+
             if (message.getChannel() instanceof PrivateChannel channel) {
                 String code = message.getContentRaw();
                 AccountLinking.LinkingResult result = accountLinking.tryLinkAccount(code, user.getIdLong());
@@ -157,10 +161,6 @@ public final class MinecraftEventListeners {
             // Oversight.
             // See: https://github.com/Reimnop/Discord4Fabric/issues/8
             if (message.getChannel().getIdLong() != config.channelId) {
-                return;
-            }
-
-            if (user.isBot() && (!config.allowBotMessages || user.getIdLong() == discord.selfUser.getIdLong())) {
                 return;
             }
 
