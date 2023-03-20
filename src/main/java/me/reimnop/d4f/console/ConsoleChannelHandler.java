@@ -39,7 +39,7 @@ public final class ConsoleChannelHandler {
         thread.start();
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
-            if (message.getChannel().getIdLong() != config.consoleChannelId) {
+            if (message.getChannel().getIdLong() != config.consoleChannelId || user.isBot()) {
                 return;
             }
 
