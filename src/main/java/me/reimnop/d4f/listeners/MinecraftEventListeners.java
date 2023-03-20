@@ -160,6 +160,10 @@ public final class MinecraftEventListeners {
                 return;
             }
 
+            if (user.isBot() && !config.allowBotMessages) {
+                return;
+            }
+
             MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 
             // Parse Discord pings

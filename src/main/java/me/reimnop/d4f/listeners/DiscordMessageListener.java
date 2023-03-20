@@ -9,10 +9,6 @@ public class DiscordMessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) {
-            return;
-        }
-
         DiscordMessageReceivedCallback.EVENT.invoker().onMessageReceived(event.getAuthor(), event.getMessage());
     }
 }
