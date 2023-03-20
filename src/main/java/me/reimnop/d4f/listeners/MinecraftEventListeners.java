@@ -160,7 +160,7 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            if (user.isBot() && !config.allowBotMessages) {
+            if (user.isBot() && (!config.allowBotMessages || user.getIdLong() == discord.selfUser.getIdLong())) {
                 return;
             }
 

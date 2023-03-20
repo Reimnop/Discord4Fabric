@@ -39,6 +39,8 @@ public class Discord {
     private final Config config;
     private final Map<String, Emote> emotes = new HashMap<>();
 
+    public final SelfUser selfUser;
+
     public Discord(Config config) throws LoginException, InterruptedException {
         this.config = config;
 
@@ -50,6 +52,8 @@ public class Discord {
         jda = builder.build();
         jda.addEventListener(new DiscordMessageListener());
         jda.awaitReady();
+
+        selfUser = jda.getSelfUser();
 
         // init webhook
         webhookClient = "".equals(config.webhookUrl) ? null : WebhookClient.withUrl(config.webhookUrl);
