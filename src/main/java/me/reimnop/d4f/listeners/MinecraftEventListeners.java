@@ -143,6 +143,10 @@ public final class MinecraftEventListeners {
         });
 
         DiscordMessageReceivedCallback.EVENT.register((user, message) -> {
+            if (user.isBot() && (!config.allowBotMessages || user.getIdLong() == discord.selfUser.getIdLong())) {
+                return;
+            }
+
             if (message.getChannel() instanceof PrivateChannel channel) {
                 String code = message.getContentRaw();
                 AccountLinking.LinkingResult result = accountLinking.tryLinkAccount(code, user.getIdLong());
