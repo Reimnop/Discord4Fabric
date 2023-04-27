@@ -58,10 +58,22 @@ public final class ConsoleChannelHandler {
             }
 
             String msg = event.getMessage().getFormattedMessage();
-            if (buffer.getLength() + msg.length() > 2000) {
-                buffer.flush();
-            }
-            buffer.writeLine(msg);
+            addMessage(msg);
         });
+    }
+
+    private static void addMessage(String msg) {
+        if (threadShouldStop) return;
+        if (msg.length() > 2000) {
+            String[] lines = msg.split("\n");
+            for (String line : lines) {
+                addMessage(line);
+            }
+            return;
+        }
+        if (buffer.getLength() + msg.length() > 2000) {
+            buffer.flush();
+        }
+        buffer.writeLine(msg);
     }
 }
