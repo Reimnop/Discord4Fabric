@@ -43,7 +43,7 @@ public final class ModCommands {
                                                         .append(Text.literal(" (click to copy)\nPlease DM the bot this linking code to finish the linking process")
                                                                 .formatted(Formatting.GRAY));
 
-                                                context.getSource().sendFeedback(text, false);
+                                                context.getSource().sendFeedback(() -> text, false);
                                             }
                                         }
                                         return 1;
@@ -60,7 +60,7 @@ public final class ModCommands {
                                                     return 1;
                                                 }
 
-                                                context.getSource().sendFeedback(Text.literal("Your account was successfully unlinked!"), false);
+                                                context.getSource().sendFeedback(() -> Text.literal("Your account was successfully unlinked!"), false);
                                             }
                                         }
                                         return 1;
@@ -70,7 +70,7 @@ public final class ModCommands {
                                     .executes(context -> {
                                         try {
                                             context.getSource().sendFeedback(
-                                                    Text.literal("Refreshing cache!"),
+                                                    () -> Text.literal("Refreshing cache!"),
                                                     false
                                             );
                                             Discord4Fabric.DISCORD.initCache();
@@ -88,13 +88,13 @@ public final class ModCommands {
                                             File configFile = new File(Utils.getConfigPath());
                                             if (configFile.exists()) {
                                                 context.getSource().sendFeedback(
-                                                        Text.literal("Reloading config!"),
+                                                        () -> Text.literal("Reloading config!"),
                                                         false
                                                 );
                                                 Discord4Fabric.CONFIG.readConfig(configFile);
                                             } else {
                                                 context.getSource().sendFeedback(
-                                                        Text.literal("Config file not found! Writing from memory"),
+                                                        () -> Text.literal("Config file not found! Writing from memory"),
                                                         false
                                                 );
                                                 Discord4Fabric.CONFIG.writeConfig(configFile);
@@ -113,13 +113,13 @@ public final class ModCommands {
                                             File file = new File(Utils.getCustomEventsPath());
                                             if (file.exists()) {
                                                 context.getSource().sendFeedback(
-                                                        Text.literal("Reloading custom events!"),
+                                                        () -> Text.literal("Reloading custom events!"),
                                                         false
                                                 );
                                                 Discord4Fabric.CUSTOM_EVENTS.read(file);
                                             } else {
                                                 context.getSource().sendFeedback(
-                                                        Text.literal("Custom events file not found!"),
+                                                        () -> Text.literal("Custom events file not found!"),
                                                         false
                                                 );
                                             }
@@ -136,7 +136,7 @@ public final class ModCommands {
                                         try {
                                             File configFile = new File(Utils.getConfigPath());
                                             context.getSource().sendFeedback(
-                                                    Text.literal("Updating config!"),
+                                                    () -> Text.literal("Updating config!"),
                                                     false
                                             );
                                             Discord4Fabric.CONFIG.writeConfig(configFile);
