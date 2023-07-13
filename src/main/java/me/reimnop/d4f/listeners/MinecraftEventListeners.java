@@ -11,16 +11,15 @@ import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.utils.Utils;
 import me.reimnop.d4f.utils.VariableTimer;
 import me.reimnop.d4f.utils.text.TextUtils;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -151,9 +150,15 @@ public final class MinecraftEventListeners {
                 String code = message.getContentRaw();
                 AccountLinking.LinkingResult result = accountLinking.tryLinkAccount(code, user.getIdLong());
                 switch (result) {
-                    case INVALID_CODE -> channel.sendMessage(new MessageBuilder().append("Invalid linking code!").build()).queue();
-                    case ACCOUNT_LINKED -> channel.sendMessage(new MessageBuilder().append("Your account was already linked!").build()).queue();
-                    case SUCCESS -> channel.sendMessage(new MessageBuilder().append("Your account was successfully linked!").build()).queue();
+                    case INVALID_CODE -> channel
+                            .sendMessage(MessageCreateData.fromContent("Invalid linking code!"))
+                            .queue();
+                    case ACCOUNT_LINKED -> channel
+                            .sendMessage(MessageCreateData.fromContent("Your account was already linked!"))
+                            .queue();
+                    case SUCCESS -> channel
+                            .sendMessage(MessageCreateData.fromContent("Your account was successfully linked!"))
+                            .queue();
                 }
                 return;
             }
@@ -219,7 +224,7 @@ public final class MinecraftEventListeners {
 
             // Remove all click events from all child (major security risk)
             parsedMsg.visit((style, pos) -> {
-                // Dirty mixin hack to remove click event
+                // TODO: Dirty mixin hack to remove click event
                 // But I was too lazy to do it properly
                 ((IStyleAccess) style).setClickEvent(null);
                 return Optional.of(Style.EMPTY);
@@ -312,9 +317,9 @@ public final class MinecraftEventListeners {
                     EMOTE_PATTERN,
                     match -> {
                         String emoteName = match.group("name");
-                        Emote emote = discord.findEmote(emoteName);
-                        if (emote != null) {
-                            return emote.getAsMention();
+                        Emoji emoji = discord.findEmojis(emoteName);
+                        if (emoji != null) {
+                            return emoji.getFormatted();
                         }
                         return match.group();
                     }

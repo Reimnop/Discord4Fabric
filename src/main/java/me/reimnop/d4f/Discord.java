@@ -3,8 +3,6 @@ package me.reimnop.d4f;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.AllowedMentions;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import eu.pb4.placeholders.api.*;
 import me.reimnop.d4f.exceptions.ChannelException;
 import me.reimnop.d4f.exceptions.GuildException;
@@ -12,21 +10,18 @@ import me.reimnop.d4f.listeners.DiscordMessageListener;
 import me.reimnop.d4f.utils.Utils;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.samo_lego.fabrictailor.casts.TailoredPlayer;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -37,7 +32,7 @@ public class Discord {
     private final WebhookClient webhookClient;
 
     private final Config config;
-    private final Map<String, Emote> emotes = new HashMap<>();
+    private final Map<String, Emoji> emojis = new HashMap<>();
 
     public final SelfUser selfUser;
 
@@ -47,7 +42,10 @@ public class Discord {
         // init jda
         JDABuilder builder = JDABuilder
                 .createDefault(config.token)
-                .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                .enableIntents(
+                        GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.DIRECT_MESSAGES,
+                        GatewayIntent.MESSAGE_CONTENT)
                 .setMemberCachePolicy(MemberCachePolicy.ALL);
         jda = builder.build();
         jda.addEventListener(new DiscordMessageListener());
@@ -63,9 +61,9 @@ public class Discord {
     public void initCache() throws GuildException {
         getGuild().loadMembers();
 
-        emotes.clear();
-        for (Emote emote : getGuild().getEmotes()) {
-            emotes.put(emote.getName(), emote);
+        emojis.clear();
+        for (Emoji emoji : getGuild().getEmojis()) {
+            emojis.put(emoji.getName(), emoji);
         }
     }
 
@@ -147,8 +145,8 @@ public class Discord {
     }
 
     @Nullable
-    public Emote findEmote(String name) {
-        return emotes.getOrDefault(name, null);
+    public Emoji findEmojis(String name) {
+        return emojis.getOrDefault(name, null);
     }
 
     public void sendPlayerMessage(ServerPlayerEntity sender, Text name, Text message) {
@@ -190,9 +188,7 @@ public class Discord {
     public void sendEmbedMessage(EmbedBuilder embedBuilder) {
         try {
             getTextChannel()
-                    .sendMessage(new MessageBuilder()
-                            .setEmbeds(embedBuilder.build())
-                            .build())
+                    .sendMessage(MessageCreateData.fromEmbeds(embedBuilder.build()))
                     .queue();
         } catch (Exception e) {
             Utils.logException(e);

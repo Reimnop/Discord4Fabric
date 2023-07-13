@@ -1,18 +1,16 @@
 package me.reimnop.d4f.customevents;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import me.reimnop.d4f.Discord4Fabric;
-import me.reimnop.d4f.customevents.constraints.ConstraintProcessor;
 import me.reimnop.d4f.customevents.constraints.ConstraintProcessorFactory;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;

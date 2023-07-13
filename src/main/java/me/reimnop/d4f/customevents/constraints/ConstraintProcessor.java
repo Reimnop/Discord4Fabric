@@ -2,8 +2,8 @@ package me.reimnop.d4f.customevents.constraints;
 
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 

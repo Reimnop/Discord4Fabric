@@ -6,8 +6,8 @@ import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.utils.Utils;
 import net.dv8tion.jda.api.entities.User;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
