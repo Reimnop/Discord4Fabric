@@ -60,14 +60,14 @@ dependencies {
     modCompileOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
 
     // extra deps
-    include "org.json:json:20160212"
+    include 'org.json:json:20230227'
     include "com.squareup.okio:okio:1.17.2"
     include "com.squareup.okhttp3:okhttp:3.13.0"
     include "org.apache.commons:commons-collections4:4.4"
     include "org.jetbrains.kotlin:kotlin-stdlib:1.6.21"
     include "com.neovisionaries:nv-websocket-client:2.14"
     include "net.sf.trove4j:trove4j:3.0.3"
-    include "com.fasterxml.jackson.core:jackson-databind:2.13.1"
+    include 'com.fasterxml.jackson.core:jackson-databind:2.13.4.1'
     include "com.fasterxml.jackson.core:jackson-annotations:2.13.1"
     include "com.fasterxml.jackson.core:jackson-core:2.13.1"
 }

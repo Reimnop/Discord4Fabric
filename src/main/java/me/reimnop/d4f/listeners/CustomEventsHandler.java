@@ -145,7 +145,7 @@ public final class CustomEventsHandler {
 
         PlayerAdvancementCallback.EVENT.register((player, advancement) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
-            String advancementTitle = advancement.getDisplay().getTitle().getString();
+            String advancementTitle = advancement.display().orElseThrow().getTitle().getString();
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancementTitle)

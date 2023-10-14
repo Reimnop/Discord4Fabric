@@ -49,11 +49,11 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            assert advancement.getDisplay() != null;
+            assert advancement.display().orElseThrow() != null;
 
             String titleStr = config.advancementTaskTitle;
             String descStr = config.advancementTaskDescription;
-            switch (advancement.getDisplay().getFrame()) {
+            switch (advancement.display().orElseThrow().getFrame()) {
                 case GOAL -> {
                     titleStr = config.advancementGoalTitle;
                     descStr = config.advancementGoalDescription;
@@ -69,8 +69,8 @@ public final class MinecraftEventListeners {
             }
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                    Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getTitle()),
-                    Discord4Fabric.id("description"), (ctx, arg) -> PlaceholderResult.value(advancement.getDisplay().getDescription())
+                    Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancement.display().orElseThrow().getTitle()),
+                    Discord4Fabric.id("description"), (ctx, arg) -> PlaceholderResult.value(advancement.display().orElseThrow().getDescription())
             );
 
             Text title = Placeholders.parseText(
@@ -169,7 +169,7 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
+            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance();
 
             // Parse Discord pings
             String parsedString = TextUtils.regexDynamicReplaceString(
