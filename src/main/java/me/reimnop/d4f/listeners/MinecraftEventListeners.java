@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -49,11 +50,15 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            assert advancement.display().orElseThrow() != null;
+            Optional<AdvancementDisplay> advancementDisplay = advancement.display();
+            if (advancementDisplay.isEmpty()) {
+                return;
+            }
+            AdvancementDisplay display = advancementDisplay.get();
 
             String titleStr = config.advancementTaskTitle;
             String descStr = config.advancementTaskDescription;
-            switch (advancement.display().orElseThrow().getFrame()) {
+            switch (display.getFrame()) {
                 case GOAL -> {
                     titleStr = config.advancementGoalTitle;
                     descStr = config.advancementGoalDescription;
@@ -69,8 +74,8 @@ public final class MinecraftEventListeners {
             }
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                    Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancement.display().orElseThrow().getTitle()),
-                    Discord4Fabric.id("description"), (ctx, arg) -> PlaceholderResult.value(advancement.display().orElseThrow().getDescription())
+                    Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(display.getTitle()),
+                    Discord4Fabric.id("description"), (ctx, arg) -> PlaceholderResult.value(display.getDescription())
             );
 
             Text title = Placeholders.parseText(
@@ -169,7 +174,7 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance();
+            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 
             // Parse Discord pings
             String parsedString = TextUtils.regexDynamicReplaceString(
@@ -226,7 +231,7 @@ public final class MinecraftEventListeners {
             parsedMsg.visit((style, pos) -> {
                 // TODO: Dirty mixin hack to remove click event
                 // But I was too lazy to do it properly
-                ((IStyleAccess) style).setClickEvent(null);
+                ((IStyleAccess) style).discord4Fabric$setClickEvent(null);
                 return Optional.of(Style.EMPTY);
             }, Style.EMPTY);
 

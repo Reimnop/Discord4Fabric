@@ -18,10 +18,12 @@ import net.dv8tion.jda.api.entities.Member;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
+import java.util.Optional;
 
 public final class CustomEventsHandler {
     private CustomEventsHandler() {}
@@ -145,7 +147,13 @@ public final class CustomEventsHandler {
 
         PlayerAdvancementCallback.EVENT.register((player, advancement) -> {
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
-            String advancementTitle = advancement.display().orElseThrow().getTitle().getString();
+            Optional<AdvancementDisplay> advancementDisplay = advancement.display();
+            String advancementTitle;
+            if (advancementDisplay.isPresent()) {
+                advancementTitle = advancementDisplay.get().getTitle().getString();
+            } else {
+                advancementTitle = "Unknown advancement";
+            }
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("title"), (ctx, arg) -> PlaceholderResult.value(advancementTitle)
