@@ -1,5 +1,2 @@
-- Updated to 1.20.1
-- Updated JDA
-- Added required gateway intents (GUILD_MEMBERS, DIRECT_MESSAGES, MESSAGE_CONTENT)
-  - You need to enable them in the Discord Developer Portal for your bot
-- Fixed a bug where it would fetch the user's username instead of display name
+- Updated to 1.20.2
+- Added setting `player_list_display_amount` (PR [#90](https://github.com/Reimnop/Discord4Fabric/pull/90))
