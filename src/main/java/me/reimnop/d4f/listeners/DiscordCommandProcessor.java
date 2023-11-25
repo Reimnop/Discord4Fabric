@@ -8,11 +8,13 @@ import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 
+
 import java.util.Map;
 
 public final class DiscordCommandProcessor {
     private DiscordCommandProcessor() {}
 
+    static int playerListDisplayAmount;
     private interface DiscordCommandHandler {
         void handle(MinecraftServer server);
     }
@@ -25,24 +27,35 @@ public final class DiscordCommandProcessor {
                 String[] playerNames = server.getPlayerNames();
 
                 StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder
-                        .append(playerNames.length)
-                        .append("/")
-                        .append(maxPlayers)
-                        .append(" players currently online:\n");
+                if(playerListDisplayAmount == 0){
+                    stringBuilder
+                            .append(playerNames.length)
+                            .append("/")
+                            .append(maxPlayers)
+                            .append(" players currently online");
+                } else {
+                    stringBuilder
+                            .append(playerNames.length)
+                            .append("/")
+                            .append(maxPlayers)
+                            .append(" players currently online:\n");
 
-                int playersToShow = Math.min(playerNames.length, 5);
-                for (int i = 0; i < playersToShow; i++) {
-                    stringBuilder
-                            .append(playerNames[i])
-                            .append(playersToShow - i == 1 ? "" : ", ");
+                    if (playerListDisplayAmount < 0 || playerListDisplayAmount > server.getMaxPlayerCount()) playerListDisplayAmount = server.getMaxPlayerCount();
+                    int playersToShow = Math.min(playerNames.length, playerListDisplayAmount);
+                    for (int i = 0; i < playersToShow; i++) {
+                        stringBuilder
+                                .append(playerNames[i])
+                                .append(playersToShow - i == 1 ? "" : ", ");
+                    }
+                    if (playerNames.length > playersToShow) {
+                        stringBuilder
+                                .append(" *and ")
+                                .append(playerNames.length - playersToShow)
+                                .append(" more*");
+                    }
+
                 }
-                if (playerNames.length > playersToShow) {
-                    stringBuilder
-                            .append(" *and ")
-                            .append(playerNames.length - playersToShow)
-                            .append(" more*");
-                }
+
                 Discord4Fabric.DISCORD.sendPlainMessage(stringBuilder.toString());
             }
     );
@@ -65,5 +78,8 @@ public final class DiscordCommandProcessor {
                 commandHandlers.get(cmd).handle((MinecraftServer) FabricLoader.getInstance().getGameInstance());
             }
         });
+
+        playerListDisplayAmount = config.playerListDisplayAmount;
+
     }
 }

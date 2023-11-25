@@ -53,6 +53,8 @@ public class Config {
     public String avatarUrlTextureHash = "https://mc-heads.net/avatar/%s"; // for fabrictailor compat
     public Boolean allowBotMessages = false;
 
+    public Integer playerListDisplayAmount = 5;
+
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("token", token);
@@ -96,6 +98,7 @@ public class Config {
         jsonObject.addProperty("avatar_url", avatarUrl);
         jsonObject.addProperty("avatar_url_texture_hash", avatarUrlTextureHash);
         jsonObject.addProperty("allow_bot_messages", allowBotMessages);
+        jsonObject.addProperty("playerlist_display_amount", playerListDisplayAmount);
 
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -153,6 +156,7 @@ public class Config {
         avatarUrl = getStringOrDefault(obj, "avatar_url", avatarUrl);
         avatarUrlTextureHash = getStringOrDefault(obj, "avatar_url_texture_hash", avatarUrlTextureHash);
         allowBotMessages = getBooleanOrDefault(obj, "allow_bot_messages", allowBotMessages);
+        playerListDisplayAmount = getIntOrDefault(obj, "playerlist_display_amount", playerListDisplayAmount);
 
         reader.close();
     }
