@@ -152,7 +152,7 @@ public class Discord {
     public void sendPlayerMessage(ServerPlayerEntity sender, Text name, Text message) {
         if (webhookClient != null) {
             WebhookMessageBuilder wmb = new WebhookMessageBuilder()
-                    .setAvatarUrl(sender != null ? Utils.getAvatarUrl(sender) : jda.getSelfUser().getAvatarUrl())
+                    .setAvatarUrl(Utils.getAvatarUrl(sender))
                     .setUsername(name.getString())
                     .setContent(message.getString())
                     .setAllowedMentions(new AllowedMentions()
@@ -162,22 +162,17 @@ public class Discord {
 
             webhookClient.send(wmb.build());
         } else {
-            if(sender != null) {
-                Map<Identifier, PlaceholderHandler> placeholders = Map.of(
-                        Discord4Fabric.id("name"), (ctx, arg) -> PlaceholderResult.value(name),
-                        Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message)
-                );
-                Text msg = Placeholders.parseText(
-                        TextParserUtils.formatText(config.webhookToPlainMessage),
-                        PlaceholderContext.of(sender),
-                        Placeholders.PLACEHOLDER_PATTERN,
-                        placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
-                );
-                sendPlainMessage(msg);
-            } else{
-                sendPlainMessage(String.format("%s: %s", name.getString(), message.getString()));
-            }
-
+            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+                    Discord4Fabric.id("name"), (ctx, arg) -> PlaceholderResult.value(name),
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message)
+            );
+            Text msg = Placeholders.parseText(
+                    TextParserUtils.formatText(config.webhookToPlainMessage),
+                    PlaceholderContext.of(sender),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+            sendPlainMessage(msg);
         }
     }
 

@@ -4,8 +4,7 @@
   "server": [
     "PlayerAdvancementTrackerMixin",
     "ServerPlayerEntityMixin",
-    "StyleMixin",
     "VanishCommandMixin",
-    "SayCommandMixin"
+    "StyleMixin"
   ]
 }

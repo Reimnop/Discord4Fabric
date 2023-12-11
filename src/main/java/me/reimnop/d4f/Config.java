@@ -52,8 +52,8 @@ public class Config {
     public String avatarUrl = "https://crafatar.com/avatars/%s?overlay";
     public String avatarUrlTextureHash = "https://mc-heads.net/avatar/%s"; // for fabrictailor compat
     public Boolean allowBotMessages = false;
+
     public Integer playerListDisplayAmount = 5;
-    public boolean broadcastSayCommand = true;
 
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
@@ -99,7 +99,6 @@ public class Config {
         jsonObject.addProperty("avatar_url_texture_hash", avatarUrlTextureHash);
         jsonObject.addProperty("allow_bot_messages", allowBotMessages);
         jsonObject.addProperty("playerlist_display_amount", playerListDisplayAmount);
-        jsonObject.addProperty("broadcast_say_command", broadcastSayCommand);
 
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -158,7 +157,6 @@ public class Config {
         avatarUrlTextureHash = getStringOrDefault(obj, "avatar_url_texture_hash", avatarUrlTextureHash);
         allowBotMessages = getBooleanOrDefault(obj, "allow_bot_messages", allowBotMessages);
         playerListDisplayAmount = getIntOrDefault(obj, "playerlist_display_amount", playerListDisplayAmount);
-        broadcastSayCommand = getBooleanOrDefault(obj, "broadcast_say_command", broadcastSayCommand);
 
         reader.close();
     }
