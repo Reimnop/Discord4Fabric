@@ -166,7 +166,7 @@ public class Discord {
                     Discord4Fabric.id("name"), (ctx, arg) -> PlaceholderResult.value(name),
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(message)
             );
-            Text msg = sender == null ? Text.literal(String.format("%s: %s", name, message)) : Placeholders.parseText(
+            Text msg = sender == null ? Text.literal(String.format("%s: %s", name.getString(), message.getString())) : Placeholders.parseText(
                     TextParserUtils.formatText(config.webhookToPlainMessage),
                     PlaceholderContext.of(sender),
                     Placeholders.PLACEHOLDER_PATTERN,
