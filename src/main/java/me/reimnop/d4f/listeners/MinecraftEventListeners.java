@@ -352,6 +352,12 @@ public final class MinecraftEventListeners {
             discord.sendPlayerMessage(sender, name, msg);
         });
 
+        OnSayCommandCallback.EVENT.register(((commandContext, message) -> {
+            if(config.broadcastSayCommand) {
+                discord.sendPlayerMessage(null, Text.literal("Server"), message.getContent());
+            }
+        }));
+
         PlayerConnectedCallback.EVENT.register((player, server, fromVanish) -> {
             if (config.requiresLinkedAccount && accountLinking.getLinkedAccount(player.getUuid()).isEmpty()) {
                 Discord4Fabric.kickForUnlinkedAccount(player);
