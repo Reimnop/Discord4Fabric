@@ -5,7 +5,6 @@
     "PlayerAdvancementTrackerMixin",
     "ServerPlayerEntityMixin",
     "StyleMixin",
-    "VanishCommandMixin",
-    "MessageBroadcastMixin"
+    "VanishCommandMixin"
   ]
 }

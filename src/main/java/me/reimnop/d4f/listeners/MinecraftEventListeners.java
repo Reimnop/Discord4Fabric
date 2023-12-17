@@ -352,7 +352,7 @@ public final class MinecraftEventListeners {
             discord.sendPlayerMessage(sender, name, msg);
         });
 
-        OnMessageBroadcastCallback.EVENT.register(((message, sender) -> {
+        ServerMessageEvents.COMMAND_MESSAGE.register(((message, source, typeKey) -> {
             if (!config.sendBroadcastedMessagesToDiscord) {
                 return;
             }
@@ -413,6 +413,8 @@ public final class MinecraftEventListeners {
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(finalContent)
             );
+
+            ServerPlayerEntity sender = source.getPlayer();
 
             Text msg = sender == null ? message.getContent() : Placeholders.parseText(
                     TextParserUtils.formatText(config.minecraftToDiscordMessage),
