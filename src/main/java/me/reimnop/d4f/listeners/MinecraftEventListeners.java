@@ -352,6 +352,88 @@ public final class MinecraftEventListeners {
             discord.sendPlayerMessage(sender, name, msg);
         });
 
+        ServerMessageEvents.COMMAND_MESSAGE.register(((message, source, typeKey) -> {
+            if (!config.sendBroadcastedMessagesToDiscord) {
+                return;
+            }
+
+            MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
+
+            String content = TextUtils.regexDynamicReplaceString(
+                    message.getContent().getString(),
+                    MINECRAFT_PING_PATTERN,
+                    match -> {
+                        String name = match.group("name");
+
+                        try {
+                            User user = discord.findUserByName(name);
+
+                            if (user == null) {
+                                ServerPlayerEntity pingedPlayer = server.getPlayerManager().getPlayer(name);
+                                if (pingedPlayer != null) {
+                                    Optional<Long> linkedId = accountLinking.getLinkedAccount(pingedPlayer.getUuid());
+                                    user = linkedId.map(discord::getUser).orElse(null);
+                                }
+                            }
+
+                            if (user != null) {
+                                // Play ping sound to pinged user if they have an account linked
+                                Optional<UUID> pingedPlayerUuid = accountLinking.getLinkedAccount(user.getIdLong());
+                                if (pingedPlayerUuid.isPresent()) {
+                                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
+                                    if (player != null) {
+                                        player.playSound(SoundEvents.BLOCK_BELL_USE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                    }
+                                }
+
+                                return user.getAsMention();
+                            }
+                        } catch (GuildException e) {
+                            Utils.logException(e);
+                        }
+                        return match.group();
+                    }
+            );
+
+            // Parse emojis
+            content = TextUtils.regexDynamicReplaceString(
+                    content,
+                    EMOTE_PATTERN,
+                    match -> {
+                        String emoteName = match.group("name");
+                        Emoji emoji = discord.findEmojis(emoteName);
+                        if (emoji != null) {
+                            return emoji.getFormatted();
+                        }
+                        return match.group();
+                    }
+            );
+
+            String finalContent = content;
+            Map<Identifier, PlaceholderHandler> placeholders = Map.of(
+                    Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(finalContent)
+            );
+
+            ServerPlayerEntity sender = source.getPlayer();
+
+            Text msg = sender == null ? message.getContent() : Placeholders.parseText(
+                    TextParserUtils.formatText(config.minecraftToDiscordMessage),
+                    PlaceholderContext.of(sender),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            Text name = sender == null ? Text.literal("Server") : Placeholders.parseText(
+                    TextParserUtils.formatText(config.discordName),
+                    PlaceholderContext.of(sender),
+                    Placeholders.PLACEHOLDER_PATTERN,
+                    placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
+            );
+
+            discord.sendPlayerMessage(sender, name, msg);
+
+        }));
+
         PlayerConnectedCallback.EVENT.register((player, server, fromVanish) -> {
             if (config.requiresLinkedAccount && accountLinking.getLinkedAccount(player.getUuid()).isEmpty()) {
                 Discord4Fabric.kickForUnlinkedAccount(player);
