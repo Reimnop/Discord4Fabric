@@ -1,7 +1,7 @@
 package me.reimnop.d4f.utils.text;
 
 import me.reimnop.d4f.utils.Utils;
-import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
@@ -49,7 +49,7 @@ public class LiteralTextSequence {
 
     private void recursivelyAppendList(List<LiteralText> list, Text text) {
         String string;
-        if (text.getContent() instanceof LiteralTextContent content) {
+        if (text.getContent() instanceof PlainTextContent content) {
             string = content.string();
         } else if (text.getContent() instanceof TranslatableTextContent content) {
             string = translateText(content.getKey());
