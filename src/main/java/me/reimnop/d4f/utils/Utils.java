@@ -19,6 +19,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.samo_lego.fabrictailor.casts.TailoredPlayer;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
@@ -129,6 +130,18 @@ public final class Utils {
             return user.getName();
         }
         return member.getEffectiveName();
+    }
+
+    public static String getColoredNicknameFromUser(User user) {
+        Member member = Discord4Fabric.DISCORD.getMember(user);
+        if (member == null) {
+            return user.getName();
+        }
+        Color color = member.getColor();
+        if (color == null) {
+            return member.getEffectiveName();
+        }
+        return "<c:" + "#"+Integer.toHexString(color.getRGB()).substring(2) + ">" + member.getEffectiveName() + "</c>";
     }
 
     public static boolean isModLoaded(String modid) {

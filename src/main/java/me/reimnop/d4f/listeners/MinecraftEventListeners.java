@@ -199,6 +199,7 @@ public final class MinecraftEventListeners {
                             Map<Identifier, PlaceholderHandler> pingPlaceholders = Map.of(
                                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(pingedUser.getAsTag()),
                                     Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(pingedUser)),
+                                    Discord4Fabric.id("colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user)),
                                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(pingedUser.getDiscriminator())
                             );
 
@@ -239,6 +240,7 @@ public final class MinecraftEventListeners {
             Map<Identifier, PlaceholderHandler> placeholders = new HashMap<>(Map.of(
                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(user.getAsTag()),
                     Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(user)),
+                    Discord4Fabric.id("colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user)),
                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(user.getDiscriminator()),
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(parsedMsg)
             ));
@@ -249,6 +251,7 @@ public final class MinecraftEventListeners {
                 placeholders.putAll(Map.of(
                         Discord4Fabric.id("reply_fullname"), (ctx, arg) -> PlaceholderResult.value(repliedUser.getAsTag()),
                         Discord4Fabric.id("reply_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(repliedUser)),
+                        Discord4Fabric.id("reply_colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user)),
                         Discord4Fabric.id("reply_discriminator"), (ctx, arg) -> PlaceholderResult.value(repliedUser.getDiscriminator())
                 ));
             }
