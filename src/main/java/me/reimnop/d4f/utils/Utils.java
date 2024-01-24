@@ -121,7 +121,7 @@ public final class Utils {
 
     // very appropriate function name
     private static double getShittyTps(MinecraftServer server) {
-        return Math.min(1000.0 / server.getTickTime(), 20.0);
+        return Math.min(1000.0 / server.getAverageTickTime(), 20.0);
     }
 
     public static String getNicknameFromUser(User user) {
