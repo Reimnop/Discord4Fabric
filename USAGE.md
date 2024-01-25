@@ -51,7 +51,8 @@ For more info: https://placeholders.pb4.eu/user/default-placeholders/#player
 ## Discord to Minecraft messages
 `%d4f:fullname%`: Full name of user. Example: `Reimnop#3147`
 
-`%d4f:nickname%`: Nickname of user. Example: `Reimnop`
+`%d4f:nickname%`: Nickname of user. Example: `Reimnop`<br>
+`%d4f:colored_nickname%`: Colored nickname of user using their discord role color.
 
 `%d4f:discriminator%`: The 4-digit tag of the user. Example: `3147`
 
@@ -60,7 +61,8 @@ For more info: https://placeholders.pb4.eu/user/default-placeholders/#player
 ### With reply
 `%d4f:reply_fullname%`: Full name of user being replied to. Example: `Reimnop#3147`
 
-`%d4f:reply_nickname%`: Nickname of user being replied to. Example: `Reimnop`
+`%d4f:reply_nickname%`: Nickname of user being replied to. Example: `Reimnop`<br>
+`%d4f:reply_colored_nickname%`: Colored nickname of user being replied to using their discord role color.
 
 `%d4f:reply_discriminator%`: The 4-digit tag of the user being replied to. Example: `3147`
 
