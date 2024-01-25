@@ -54,8 +54,9 @@ dependencies {
     include modRuntimeOnly("xyz.nucleoid:server-translations-api:${project.server_translations_version}")
 
     // compat
-    modCompileOnly "curse.maven:vanish-424123:${project.vanish_version}"
+    modCompileOnly "curse.maven:vanish-424123:${project.vanish_123456687548_version}"
     modCompileOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
+    modCompileOnly "maven.modrinth:vanish:${project.vanish_drexhd_version}"
 
     // extra deps
     include 'org.json:json:20230227'

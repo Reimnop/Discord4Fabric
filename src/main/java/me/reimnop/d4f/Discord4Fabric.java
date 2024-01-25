@@ -1,13 +1,17 @@
 package me.reimnop.d4f;
 
+import me.drex.vanish.api.VanishEvents;
 import me.reimnop.d4f.console.ConsoleChannelHandler;
 import me.reimnop.d4f.customevents.CustomEvents;
 import me.reimnop.d4f.customevents.actions.ModActions;
 import me.reimnop.d4f.commands.ModCommands;
+import me.reimnop.d4f.events.OnPlayerUnvanishCallback;
+import me.reimnop.d4f.events.OnPlayerVanishCallback;
 import me.reimnop.d4f.listeners.*;
 import me.reimnop.d4f.exceptions.GuildException;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -60,6 +64,7 @@ public class Discord4Fabric implements ModInitializer {
                 ModActions.init();
                 initCustomEvents();
                 ModCommands.init();
+                vanishDrexHDInit();
             }
         } catch (LoginException e) {
             LOGGER.error("Login Failed! Please update your config and restart the server");
@@ -128,6 +133,18 @@ public class Discord4Fabric implements ModInitializer {
             }
         } catch (IOException e) {
             Utils.logException(e);
+        }
+    }
+
+    private void vanishDrexHDInit() {
+        if (FabricLoader.getInstance().isModLoaded("melius-vanish")) {
+            VanishEvents.VANISH_EVENT.register((player, vanish) -> {
+                if(vanish) {
+                    OnPlayerVanishCallback.EVENT.invoker().onVanish(player);
+                } else {
+                    OnPlayerUnvanishCallback.EVENT.invoker().onUnvanish(player);
+                }
+            });
         }
     }
 }
