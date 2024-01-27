@@ -1,5 +1,6 @@
 package me.reimnop.d4f.listeners;
 
+import me.drex.vanish.api.VanishAPI;
 import me.reimnop.d4f.Config;
 import me.reimnop.d4f.Discord;
 import me.reimnop.d4f.Discord4Fabric;
@@ -7,8 +8,11 @@ import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 
+import java.util.Arrays;
 import java.util.Map;
 
 public final class DiscordCommandProcessor {
@@ -25,6 +29,8 @@ public final class DiscordCommandProcessor {
             "playerlist", server -> {
                 int maxPlayers = server.getMaxPlayerCount();
                 String[] playerNames = server.getPlayerNames();
+                playerNames = filterDrexHDVanishedPlayers(server, playerNames);
+
 
                 StringBuilder stringBuilder = new StringBuilder();
                 if(playerListDisplayAmount == 0){
@@ -81,5 +87,36 @@ public final class DiscordCommandProcessor {
 
         playerListDisplayAmount = config.playerListDisplayAmount;
 
+    }
+
+    /**
+     * Filters out players who have vanished using <a href="https://github.com/DrexHD/Vanish">DrexHD's Vanish mod</a>
+     * from the player list command.
+     *
+     * @param server The Minecraft server the players are on
+     * @param unfilteredNames An unfiltered array of player names {@linkplain PlayerManager#getPlayerNames() obtained
+     * from the player manager}.
+     * @return Returns a list of player names on the server, without the names of vanished players. If DrexHD's Vanish
+     * mod is not loaded, then returns the original unfiltered names.
+     */
+    private static String[] filterDrexHDVanishedPlayers(MinecraftServer server, String[] unfilteredNames) {
+
+        if (!FabricLoader.getInstance().isModLoaded("melius-vanish")) {
+            return unfilteredNames;
+        }
+
+        return Arrays.stream(unfilteredNames)
+                .filter(
+                        name -> {
+                            PlayerManager manager = server.getPlayerManager();
+                            ServerPlayerEntity player = manager.getPlayer(name);
+                            // player should never be null as the names are assumed to all be valid
+                            return player != null && !VanishAPI.isVanished(
+                                    server,
+                                    player.getUuid()
+                            );
+                        }
+                )
+                .toArray(String[]::new);
     }
 }
