@@ -1,2 +1,3 @@
-- Updated to 1.20.2
-- Added setting `player_list_display_amount` (PR [#90](https://github.com/Reimnop/Discord4Fabric/pull/90))
+- Updated to 1.20.4 (PR [#101](https://github.com/Reimnop/Discord4Fabric/pull/101))
+- Added setting `send_broadcasted_messages_to_discord` (PR [#98](https://github.com/Reimnop/Discord4Fabric/pull/98))
+- Implemented compat with [DrexHD's Vanish](https://github.com/DrexHD/Vanish) (PR [#104](https://github.com/Reimnop/Discord4Fabric/pull/104))
