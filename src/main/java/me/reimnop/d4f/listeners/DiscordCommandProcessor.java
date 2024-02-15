@@ -5,6 +5,7 @@ import me.reimnop.d4f.Config;
 import me.reimnop.d4f.Discord;
 import me.reimnop.d4f.Discord4Fabric;
 import me.reimnop.d4f.events.DiscordMessageReceivedCallback;
+import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.utils.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
@@ -101,7 +102,7 @@ public final class DiscordCommandProcessor {
      */
     private static String[] filterDrexHDVanishedPlayers(MinecraftServer server, String[] unfilteredNames) {
 
-        if (!FabricLoader.getInstance().isModLoaded("melius-vanish")) {
+        if (!Compatibility.isVanishModLoaded()) {
             return unfilteredNames;
         }
 
@@ -111,10 +112,7 @@ public final class DiscordCommandProcessor {
                             PlayerManager manager = server.getPlayerManager();
                             ServerPlayerEntity player = manager.getPlayer(name);
                             // player should never be null as the names are assumed to all be valid
-                            return player != null && !VanishAPI.isVanished(
-                                    server,
-                                    player.getUuid()
-                            );
+                            return player != null && Compatibility.isPlayerVanished(player);
                         }
                 )
                 .toArray(String[]::new);

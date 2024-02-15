@@ -49,6 +49,10 @@ public final class MinecraftEventListeners {
             if (!config.announceAdvancement) {
                 return;
             }
+            // Vanish compatibility
+            if(Compatibility.isPlayerVanished(playerEntity)) {
+                return;
+            }
 
             Optional<AdvancementDisplay> advancementDisplay = advancement.display();
             if (advancementDisplay.isEmpty()) {
@@ -508,6 +512,11 @@ public final class MinecraftEventListeners {
 
         PlayerDeathCallback.EVENT.register(((playerEntity, source, deathMessage) -> {
             if (!config.announcePlayerDeath) {
+                return;
+            }
+
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(playerEntity)) {
                 return;
             }
 

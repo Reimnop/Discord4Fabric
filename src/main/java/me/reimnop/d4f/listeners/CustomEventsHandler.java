@@ -70,6 +70,10 @@ public final class CustomEventsHandler {
         });
 
         PlayerDeathCallback.EVENT.register((player, source, deathMessage) -> {
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player)) {
+                return;
+            }
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
@@ -146,6 +150,10 @@ public final class CustomEventsHandler {
         });
 
         PlayerAdvancementCallback.EVENT.register((player, advancement) -> {
+            // Vanish compatibility
+            if (Compatibility.isPlayerVanished(player)) {
+                return;
+            }
             PlaceholderContext placeholderContext = PlaceholderContext.of(player);
             Optional<AdvancementDisplay> advancementDisplay = advancement.display();
             String advancementTitle;
