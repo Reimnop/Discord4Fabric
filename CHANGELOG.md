@@ -1,3 +1,3 @@
-- Updated to 1.20.4 (PR [#101](https://github.com/Reimnop/Discord4Fabric/pull/101))
-- Added setting `send_broadcasted_messages_to_discord` (PR [#98](https://github.com/Reimnop/Discord4Fabric/pull/98))
-- Implemented compat with [DrexHD's Vanish](https://github.com/DrexHD/Vanish) (PR [#104](https://github.com/Reimnop/Discord4Fabric/pull/104))
+- Minor code refactoring
+- Fix compat mixin error when compat mod is not installed (see [#55](https://github.com/Reimnop/Discord4Fabric/issues/55))
+- Updated dependencies to latest versions
