@@ -7,6 +7,7 @@
     "StyleMixin",
     "compat.vanish.VanishCommandMixin"
   ],
+  "plugin": "me.reimnop.d4f.Discord4FabricCompatMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   },
