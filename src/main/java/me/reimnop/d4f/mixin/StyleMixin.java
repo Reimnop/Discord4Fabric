@@ -15,7 +15,7 @@ public class StyleMixin implements IStyleAccess {
     @Mutable @Shadow @Final @Nullable ClickEvent clickEvent;
 
     @Override
-    public void discord4Fabric$setClickEvent(@Nullable ClickEvent clickEvent) {
+    public void Discord4Fabric$setClickEvent(@Nullable ClickEvent clickEvent) {
         this.clickEvent = clickEvent;
     }
 }

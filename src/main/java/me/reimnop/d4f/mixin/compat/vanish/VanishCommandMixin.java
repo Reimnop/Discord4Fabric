@@ -1,4 +1,4 @@
-package me.reimnop.d4f.mixin;
+package me.reimnop.d4f.mixin.compat.vanish;
 
 import eu.vanish.commands.VanishCommand;
 import eu.vanish.data.Settings;
@@ -25,7 +25,7 @@ public class VanishCommandMixin {
                     value = "INVOKE"
             )
     )
-    private static void vanish(ServerPlayerEntity vanishingPlayer, CallbackInfoReturnable<Integer> ci) {
+    private static void Discord4Fabric$vanish(ServerPlayerEntity vanishingPlayer, CallbackInfoReturnable<Integer> ci) {
         if (settings.showFakeLeaveMessage()) {
             OnPlayerVanishCallback.EVENT.invoker().onVanish(vanishingPlayer);
         }
@@ -39,7 +39,7 @@ public class VanishCommandMixin {
                     value = "INVOKE"
             )
     )
-    private static void unvanish(ServerPlayerEntity unvanishingPlayer, CallbackInfoReturnable<Integer> ci) {
+    private static void Discord4Fabric$unvanish(ServerPlayerEntity unvanishingPlayer, CallbackInfoReturnable<Integer> ci) {
         if (settings.showFakeJoinMessage()) {
             OnPlayerUnvanishCallback.EVENT.invoker().onUnvanish(unvanishingPlayer);
         }

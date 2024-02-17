@@ -23,7 +23,7 @@ public class PlayerAdvancementTrackerMixin {
                 value = "INVOKE"
             )
     )
-    private void grantCriterion(AdvancementEntry advancementEntry, AdvancementDisplay display, CallbackInfo ci) {
+    private void Discord4Fabric$grantCriterion(AdvancementEntry advancementEntry, AdvancementDisplay display, CallbackInfo ci) {
         PlayerAdvancementCallback.EVENT.invoker().onAdvancementGranted(owner, advancementEntry.value());
     }
 }

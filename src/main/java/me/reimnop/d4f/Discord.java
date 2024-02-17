@@ -36,7 +36,7 @@ public class Discord {
 
     public final SelfUser selfUser;
 
-    public Discord(Config config) throws LoginException, InterruptedException {
+    public Discord(Config config) throws InterruptedException {
         this.config = config;
 
         // init jda
@@ -133,15 +133,9 @@ public class Discord {
     }
 
     @Nullable
-    public User findUser(String tag) throws GuildException {
-        Member member = getGuild().getMemberByTag(tag);
-        return member != null ? member.getUser() : null;
-    }
-
-    @Nullable
     public User findUserByName(String name) throws GuildException {
         List<Member> members = getGuild().findMembers(x -> x.getEffectiveName().equals(name)).get();
-        return members.size() == 0 ? null : members.get(0).getUser();
+        return members.isEmpty() ? null : members.get(0).getUser();
     }
 
     @Nullable

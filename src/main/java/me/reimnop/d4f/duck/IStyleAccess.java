@@ -4,5 +4,5 @@ import net.minecraft.text.ClickEvent;
 import org.jetbrains.annotations.Nullable;
 
 public interface IStyleAccess {
-    void discord4Fabric$setClickEvent(@Nullable ClickEvent clickEvent);
+    void Discord4Fabric$setClickEvent(@Nullable ClickEvent clickEvent);
 }

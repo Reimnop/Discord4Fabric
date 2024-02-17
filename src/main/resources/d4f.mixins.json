@@ -5,6 +5,10 @@
     "PlayerAdvancementTrackerMixin",
     "ServerPlayerEntityMixin",
     "StyleMixin",
-    "VanishCommandMixin"
-  ]
+    "compat.vanish.VanishCommandMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "required": true
 }

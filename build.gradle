@@ -17,6 +17,7 @@ repositories {
 
     maven { url "https://maven.nucleoid.xyz" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://jitpack.io" }
     maven {
         url "https://cursemaven.com"
         content {
@@ -41,25 +42,36 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+    // Required mod dependencies
     include modImplementation("eu.pb4:placeholder-api:${project.placeholder_version}")
-
     include implementation("net.dv8tion:JDA:${project.jda_version}") {
         exclude module: "opus-java"
     }
+
+    // Player data api
+    modImplementation include("eu.pb4:player-data-api:${project.player_data_version}")
+
     include implementation("club.minnced:discord-webhooks:${project.webhook_version}")
     include implementation("com.vdurmont:emoji-java:5.1.1")
-
     include implementation("me.lucko:spark-api:0.1-SNAPSHOT")
 
+    // Technically optional, but you won't have translations without it
     include modRuntimeOnly("xyz.nucleoid:server-translations-api:${project.server_translations_version}")
 
-    // compat
+    // For compatibility with other mods
     modCompileOnly "curse.maven:vanish-424123:${project.vanish_123456687548_version}"
-    modCompileOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
     modCompileOnly "maven.modrinth:vanish:${project.vanish_drexhd_version}"
+    modCompileOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
 
-    // extra deps
-    include 'org.json:json:20230227'
+    // Have the compat mods run at runtime too, for debugging
+    // modRuntimeOnly "curse.maven:vanish-424123:${project.vanish_123456687548_version}"
+    modRuntimeOnly "maven.modrinth:vanish:${project.vanish_drexhd_version}"
+    modRuntimeOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
+    modRuntimeOnly "com.github.samolego.Config2Brigadier:config2brigadier-fabric:${project.config2brigadier_version}"
+    modRuntimeOnly "me.lucko:fabric-permissions-api:${project.fabric_permissions_version}"
+
+    // Required dependencies for Discord integration
+    include "org.json:json:20230227"
     include "com.squareup.okio:okio:1.17.2"
     include "com.squareup.okhttp3:okhttp:3.13.0"
     include "org.apache.commons:commons-collections4:4.4"

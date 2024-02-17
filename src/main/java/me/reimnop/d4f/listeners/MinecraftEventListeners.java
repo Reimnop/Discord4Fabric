@@ -236,7 +236,7 @@ public final class MinecraftEventListeners {
             parsedMsg.visit((style, pos) -> {
                 // TODO: Dirty mixin hack to remove click event
                 // But I was too lazy to do it properly
-                ((IStyleAccess) style).discord4Fabric$setClickEvent(null);
+                ((IStyleAccess) style).Discord4Fabric$setClickEvent(null);
                 return Optional.of(Style.EMPTY);
             }, Style.EMPTY);
 

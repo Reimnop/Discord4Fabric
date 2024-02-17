@@ -16,11 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {
-    @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
-    private void blockChat(SentMessage message, boolean filterMaskEnabled, MessageType.Parameters params, CallbackInfo ci) {
+    @Inject(method = "sendChatMessage",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void Discord4Fabric$blockChat(SentMessage message, boolean filterMaskEnabled, MessageType.Parameters params, CallbackInfo ci) {
         Config config = Discord4Fabric.CONFIG;
-        if (!config.sendMessagesToMinecraft) ci.cancel();
+        if (!config.sendMessagesToMinecraft)
+            ci.cancel();
     }
+
     @Inject(method = "onDeath",
             at = @At(
                 target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;send(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/PacketCallbacks;)V",
@@ -28,7 +32,7 @@ public class ServerPlayerEntityMixin {
                 ordinal = 0),
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
-    private void onDeath(DamageSource damageSource, CallbackInfo ci, boolean bl, Text text){
+    private void Discord4Fabric$onDeath(DamageSource damageSource, CallbackInfo ci, boolean bl, Text text){
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) (Object) this;
         PlayerDeathCallback.EVENT.invoker().onPlayerDeath(serverPlayerEntity, damageSource, text);
     }
