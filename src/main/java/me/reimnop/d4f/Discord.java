@@ -11,6 +11,8 @@ import me.reimnop.d4f.utils.Utils;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -83,8 +85,13 @@ public class Discord {
         return guild;
     }
 
-    private TextChannel getTextChannel() throws GuildException, ChannelException {
-        TextChannel channel = getGuild().getChannelById(TextChannel.class, config.channelId);
+    private MessageChannel getTextChannel() throws GuildException, ChannelException {
+        MessageChannel channel;
+        if (config.useThread) {
+            channel = getGuild().getChannelById(ThreadChannel.class, config.channelId);
+        } else {
+            channel = getGuild().getChannelById(TextChannel.class, config.channelId);
+        }
         if (channel == null) {
             throw new ChannelException(config.channelId);
         }
@@ -154,7 +161,11 @@ public class Discord {
                             .withParseRoles(false)
                             .withParseUsers(true));
 
-            webhookClient.send(wmb.build());
+            if (config.useThread) {
+                webhookClient.onThread(config.channelId).send(wmb.build());
+            } else {
+                webhookClient.send(wmb.build());
+            }
         } else {
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("name"), (ctx, arg) -> PlaceholderResult.value(name),
@@ -205,10 +216,12 @@ public class Discord {
 
     public void setChannelTopic(Text topic) {
         try {
-            getTextChannel()
-                    .getManager()
+            var channel = getTextChannel();
+            if (channel instanceof TextChannel textChannel) {
+                textChannel.getManager()
                     .setTopic(topic.getString())
                     .queue();
+            }
         } catch (Exception e) {
             Utils.logException(e);
         }
