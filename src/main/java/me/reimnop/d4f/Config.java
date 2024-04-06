@@ -12,6 +12,7 @@ import java.io.IOException;
 public class Config {
     public String token = "";
     public String webhookUrl = "";
+    public Boolean useThread = false;
     public Long guildId = 0L;
     public Long channelId = 0L;
     public Long consoleGuildId = 0L;
@@ -59,6 +60,7 @@ public class Config {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("token", token);
         jsonObject.addProperty("webhook_url", webhookUrl);
+        jsonObject.addProperty("use_thread", useThread);
         jsonObject.addProperty("guild_id", guildId);
         jsonObject.addProperty("channel_id", channelId);
         jsonObject.addProperty("console_guild_id", consoleGuildId);
@@ -118,6 +120,7 @@ public class Config {
 
         token = getStringOrDefault(obj, "token", token);
         webhookUrl = getStringOrDefault(obj, "webhook_url", webhookUrl);
+        useThread = getBooleanOrDefault(obj, "use_thread", useThread);
         guildId = getLongOrDefault(obj, "guild_id", guildId);
         channelId = getLongOrDefault(obj, "channel_id", channelId);
         consoleGuildId = getLongOrDefault(obj, "console_guild_id", consoleGuildId);
