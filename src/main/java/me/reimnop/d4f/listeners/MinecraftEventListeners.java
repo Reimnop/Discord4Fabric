@@ -21,9 +21,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.AdvancementDisplay;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -196,7 +199,7 @@ public final class MinecraftEventListeners {
                             if (pingedPlayerUuid.isPresent()) {
                                 ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
                                 if (player != null) {
-                                    player.playSound(SoundEvents.BLOCK_BELL_USE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                    player.playSound(SoundEvents.BLOCK_BELL_USE);
                                 }
                             }
 
@@ -310,7 +313,7 @@ public final class MinecraftEventListeners {
                                 if (pingedPlayerUuid.isPresent()) {
                                     ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
                                     if (player != null) {
-                                        player.playSound(SoundEvents.BLOCK_BELL_USE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                        player.playSound(SoundEvents.BLOCK_BELL_USE);
                                     }
                                 }
 
@@ -389,7 +392,7 @@ public final class MinecraftEventListeners {
                                 if (pingedPlayerUuid.isPresent()) {
                                     ServerPlayerEntity player = server.getPlayerManager().getPlayer(pingedPlayerUuid.get());
                                     if (player != null) {
-                                        player.playSound(SoundEvents.BLOCK_BELL_USE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                                        player.playSound(SoundEvents.BLOCK_BELL_USE);
                                     }
                                 }
 
