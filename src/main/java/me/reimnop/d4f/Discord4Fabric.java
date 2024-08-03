@@ -37,7 +37,7 @@ public class Discord4Fabric implements ModInitializer {
     public static CustomEvents CUSTOM_EVENTS;
 
     public static Identifier id(String path) {
-        return new Identifier(MODID, path);
+        return Identifier.of(MODID, path);
     }
 
     public static void kickForUnlinkedAccount(ServerPlayerEntity player) {
