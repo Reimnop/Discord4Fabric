@@ -112,7 +112,7 @@ public final class DiscordCommandProcessor {
                             PlayerManager manager = server.getPlayerManager();
                             ServerPlayerEntity player = manager.getPlayer(name);
                             // player should never be null as the names are assumed to all be valid
-                            return player != null && Compatibility.isPlayerVanished(player);
+                            return player != null && !Compatibility.isPlayerVanished(player);
                         }
                 )
                 .toArray(String[]::new);
