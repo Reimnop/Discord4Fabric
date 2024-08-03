@@ -1,3 +1,1 @@
-- Minor code refactoring
-- Fix compat mixin error when compat mod is not installed (see [#55](https://github.com/Reimnop/Discord4Fabric/issues/55))
-- Updated dependencies to latest versions
+- Update to 1.21 ([PR #113](https://github.com/Reimnop/Discord4Fabric/pull/113))
