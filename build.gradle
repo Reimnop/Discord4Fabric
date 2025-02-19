@@ -67,7 +67,7 @@ dependencies {
     // modRuntimeOnly "curse.maven:vanish-424123:${project.vanish_123456687548_version}"
     modRuntimeOnly "maven.modrinth:vanish:${project.vanish_drexhd_version}"
     modRuntimeOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
-    modRuntimeOnly "com.github.samolego.Config2Brigadier:config2brigadier-fabric:${project.config2brigadier_version}"
+    modRuntimeOnly "com.github.samolego:Config2Brigadier:${project.config2brigadier_version}"
     modRuntimeOnly "me.lucko:fabric-permissions-api:${project.fabric_permissions_version}"
 
     // Required dependencies for Discord integration
