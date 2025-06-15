@@ -38,8 +38,8 @@ public final class ModCommands {
                                                         .append(Text.literal(code)
                                                                 .setStyle(Style.EMPTY
                                                                         .withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
-                                                                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, code))
-                                                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Copy to clipboard")))))
+                                                                        .withClickEvent(new ClickEvent.CopyToClipboard(code))
+                                                                        .withHoverEvent(new HoverEvent.ShowText(Text.literal("Copy to clipboard")))))
                                                         .append(Text.literal(" (click to copy)\nPlease DM the bot this linking code to finish the linking process")
                                                                 .formatted(Formatting.GRAY));
 

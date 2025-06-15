@@ -7,7 +7,6 @@ import me.reimnop.d4f.console.ConsoleChannelHandler;
 import me.reimnop.d4f.duck.IStyleAccess;
 import me.reimnop.d4f.events.*;
 import me.reimnop.d4f.exceptions.GuildException;
-import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.utils.Utils;
 import me.reimnop.d4f.utils.VariableTimer;
 import me.reimnop.d4f.utils.text.TextUtils;
@@ -29,6 +28,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -48,10 +48,7 @@ public final class MinecraftEventListeners {
             if (!config.announceAdvancement) {
                 return;
             }
-            // Vanish compatibility
-            if(Compatibility.isPlayerVanished(playerEntity)) {
-                return;
-            }
+
 
             Optional<AdvancementDisplay> advancementDisplay = advancement.display();
             if (advancementDisplay.isEmpty()) {
@@ -271,8 +268,8 @@ public final class MinecraftEventListeners {
                 msg.append(Text.literal("[att]")
                         .setStyle(Style.EMPTY
                                 .withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.getUrl()))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Open URL"))))
+                                .withClickEvent(new ClickEvent.OpenUrl(URI.create(attachment.getUrl())))
+                                .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open URL"))))
                 );
             }
 
@@ -450,10 +447,7 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            // Vanish compatibility
-            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
-                return;
-            }
+
 
             // Requested by https://github.com/Reimnop/Discord4Fabric/issues/15
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
@@ -482,10 +476,7 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            // Vanish compatibility
-            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
-                return;
-            }
+
 
             // Requested by https://github.com/Reimnop/Discord4Fabric/issues/15
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
@@ -514,10 +505,6 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            // Vanish compatibility
-            if (Compatibility.isPlayerVanished(playerEntity)) {
-                return;
-            }
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("reason"), (ctx, arg) -> PlaceholderResult.value(deathMessage)
