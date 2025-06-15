@@ -7,7 +7,7 @@ import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 
 public class RunCommandAction implements Action {
     @Override
-    public void runAction(JsonElement value, ActionContext context) {
+    public void runAction(JsonElement value, ActionContext context, int num) {
         MinecraftDedicatedServer server = (MinecraftDedicatedServer) FabricLoader.getInstance().getGameInstance();
         String cmd = context.parsePlaceholder(value.getAsString()).getString();
         server.enqueueCommand(cmd, server.getCommandSource());

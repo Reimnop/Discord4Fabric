@@ -1,1 +1,1 @@
-- Update to 1.21 ([PR #113](https://github.com/Reimnop/Discord4Fabric/pull/113))
+- Multi Servers by Lynx!

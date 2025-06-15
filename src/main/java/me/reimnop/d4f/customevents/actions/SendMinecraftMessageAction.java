@@ -8,7 +8,7 @@ import net.minecraft.server.MinecraftServer;
 
 public class SendMinecraftMessageAction implements Action {
     @Override
-    public void runAction(JsonElement value, ActionContext context) {
+    public void runAction(JsonElement value, ActionContext context, int num) {
         MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
         server.getPlayerManager().broadcast(context.parsePlaceholder(value.getAsString()), false);
     }

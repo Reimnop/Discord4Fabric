@@ -2,15 +2,11 @@ package me.reimnop.d4f.listeners;
 
 import com.vdurmont.emoji.EmojiParser;
 import eu.pb4.placeholders.api.*;
-import me.reimnop.d4f.AccountLinking;
-import me.reimnop.d4f.Config;
-import me.reimnop.d4f.Discord;
-import me.reimnop.d4f.Discord4Fabric;
+import me.reimnop.d4f.*;
 import me.reimnop.d4f.console.ConsoleChannelHandler;
 import me.reimnop.d4f.duck.IStyleAccess;
 import me.reimnop.d4f.events.*;
 import me.reimnop.d4f.exceptions.GuildException;
-import me.reimnop.d4f.utils.Compatibility;
 import me.reimnop.d4f.utils.Utils;
 import me.reimnop.d4f.utils.VariableTimer;
 import me.reimnop.d4f.utils.text.TextUtils;
@@ -32,6 +28,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -46,15 +43,12 @@ public final class MinecraftEventListeners {
     private static final Pattern EMOTE_PATTERN = Pattern.compile(":(?<name>[^\\n ]+?):");
     private static final Pattern RAW_EMOTE_PATTERN = Pattern.compile("<a?:(?<name>.+?):\\d+>");
 
-    public static void init(Discord discord, AccountLinking accountLinking, Config config) {
+    public static void init(Discord discord, AccountLinking accountLinking, Config config, Storage storage, int num) {
         PlayerAdvancementCallback.EVENT.register((playerEntity, advancement) -> {
             if (!config.announceAdvancement) {
                 return;
             }
-            // Vanish compatibility
-            if(Compatibility.isPlayerVanished(playerEntity)) {
-                return;
-            }
+
 
             Optional<AdvancementDisplay> advancementDisplay = advancement.display();
             if (advancementDisplay.isEmpty()) {
@@ -98,7 +92,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.yellow, title.getString(), desc.getString());
+            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.yellow, title.getString(), desc.getString(), num);
         });
 
         VariableTimer<MinecraftServer> statusTimer = new VariableTimer<>(
@@ -119,7 +113,7 @@ public final class MinecraftEventListeners {
                             TextParserUtils.formatText(config.topic),
                             PlaceholderContext.of(server)
                     );
-                    discord.setChannelTopic(status);
+                    discord.setChannelTopic(status, num);
                 });
         ServerTickEvents.END_SERVER_TICK.register(topicTimer::tick);
 
@@ -132,7 +126,7 @@ public final class MinecraftEventListeners {
                     TextParserUtils.formatText(config.serverStartMessage),
                     PlaceholderContext.of(server)
             );
-            discord.sendPlainMessage(message);
+            discord.sendPlainMessage(message, num);
         });
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
@@ -144,7 +138,7 @@ public final class MinecraftEventListeners {
                     TextParserUtils.formatText(config.serverStopMessage),
                     PlaceholderContext.of(server)
             );
-            discord.sendPlainMessage(message);
+            discord.sendPlainMessage(message, num);
         });
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
@@ -176,7 +170,7 @@ public final class MinecraftEventListeners {
 
             // Oversight.
             // See: https://github.com/Reimnop/Discord4Fabric/issues/8
-            if (message.getChannel().getIdLong() != config.channelId) {
+            if (message.getChannel().getIdLong() != storage.channelId[num]) {
                 return;
             }
 
@@ -204,8 +198,8 @@ public final class MinecraftEventListeners {
 
                             Map<Identifier, PlaceholderHandler> pingPlaceholders = Map.of(
                                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(pingedUser.getAsTag()),
-                                    Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(pingedUser)),
-                                    Discord4Fabric.id("colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user)),
+                                    Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(pingedUser, num)),
+                                    Discord4Fabric.id("colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user, num)),
                                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(pingedUser.getDiscriminator())
                             );
 
@@ -245,8 +239,8 @@ public final class MinecraftEventListeners {
 
             Map<Identifier, PlaceholderHandler> placeholders = new HashMap<>(Map.of(
                     Discord4Fabric.id("fullname"), (ctx, arg) -> PlaceholderResult.value(user.getAsTag()),
-                    Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(user)),
-                    Discord4Fabric.id("colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user)),
+                    Discord4Fabric.id("nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(user, num)),
+                    Discord4Fabric.id("colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user, num)),
                     Discord4Fabric.id("discriminator"), (ctx, arg) -> PlaceholderResult.value(user.getDiscriminator()),
                     Discord4Fabric.id("message"), (ctx, arg) -> PlaceholderResult.value(parsedMsg)
             ));
@@ -256,8 +250,8 @@ public final class MinecraftEventListeners {
                 User repliedUser = repliedMessage.getAuthor();
                 placeholders.putAll(Map.of(
                         Discord4Fabric.id("reply_fullname"), (ctx, arg) -> PlaceholderResult.value(repliedUser.getAsTag()),
-                        Discord4Fabric.id("reply_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(repliedUser)),
-                        Discord4Fabric.id("reply_colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user)),
+                        Discord4Fabric.id("reply_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getNicknameFromUser(repliedUser, num)),
+                        Discord4Fabric.id("reply_colored_nickname"), (ctx, arg) -> PlaceholderResult.value(Utils.getColoredNicknameFromUser(user, num)),
                         Discord4Fabric.id("reply_discriminator"), (ctx, arg) -> PlaceholderResult.value(repliedUser.getDiscriminator())
                 ));
             }
@@ -274,8 +268,8 @@ public final class MinecraftEventListeners {
                 msg.append(Text.literal("[att]")
                         .setStyle(Style.EMPTY
                                 .withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.getUrl()))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Open URL"))))
+                                .withClickEvent(new ClickEvent.OpenUrl(URI.create(attachment.getUrl())))
+                                .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open URL"))))
                 );
             }
 
@@ -296,7 +290,7 @@ public final class MinecraftEventListeners {
                         String name = match.group("name");
 
                         try {
-                            User user = discord.findUserByName(name);
+                            User user = discord.findUserByName(name, num);
 
                             if (user == null) {
                                 ServerPlayerEntity pingedPlayer = server.getPlayerManager().getPlayer(name);
@@ -358,7 +352,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendPlayerMessage(sender, name, msg);
+            discord.sendPlayerMessage(sender, name, msg, num);
         });
 
         ServerMessageEvents.COMMAND_MESSAGE.register(((message, source, typeKey) -> {
@@ -375,7 +369,7 @@ public final class MinecraftEventListeners {
                         String name = match.group("name");
 
                         try {
-                            User user = discord.findUserByName(name);
+                            User user = discord.findUserByName(name, num);
 
                             if (user == null) {
                                 ServerPlayerEntity pingedPlayer = server.getPlayerManager().getPlayer(name);
@@ -439,7 +433,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendPlayerMessage(sender, name, msg);
+            discord.sendPlayerMessage(sender, name, msg, num);
 
         }));
 
@@ -453,10 +447,7 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            // Vanish compatibility
-            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
-                return;
-            }
+
 
             // Requested by https://github.com/Reimnop/Discord4Fabric/issues/15
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
@@ -477,7 +468,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(player, Color.green, msg.getString(), desc.getString());
+            discord.sendEmbedMessageUsingPlayerAvatar(player, Color.green, msg.getString(), desc.getString(), num);
         });
 
         PlayerDisconnectedCallback.EVENT.register((player, server, fromVanish) -> {
@@ -485,10 +476,7 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            // Vanish compatibility
-            if (Compatibility.isPlayerVanished(player) && !fromVanish) {
-                return;
-            }
+
 
             // Requested by https://github.com/Reimnop/Discord4Fabric/issues/15
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
@@ -509,7 +497,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(player, Color.red, msg.getString(), desc.getString());
+            discord.sendEmbedMessageUsingPlayerAvatar(player, Color.red, msg.getString(), desc.getString(), num);
         });
 
         PlayerDeathCallback.EVENT.register(((playerEntity, source, deathMessage) -> {
@@ -517,10 +505,6 @@ public final class MinecraftEventListeners {
                 return;
             }
 
-            // Vanish compatibility
-            if (Compatibility.isPlayerVanished(playerEntity)) {
-                return;
-            }
 
             Map<Identifier, PlaceholderHandler> placeholders = Map.of(
                     Discord4Fabric.id("reason"), (ctx, arg) -> PlaceholderResult.value(deathMessage)
@@ -540,7 +524,7 @@ public final class MinecraftEventListeners {
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
 
-            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.black, msg.getString(), desc.getString());
+            discord.sendEmbedMessageUsingPlayerAvatar(playerEntity, Color.black, msg.getString(), desc.getString(), num);
         }));
     }
 }

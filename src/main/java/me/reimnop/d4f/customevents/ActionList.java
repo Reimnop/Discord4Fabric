@@ -37,9 +37,9 @@ public class ActionList {
         }
     }
 
-    public void runActions(ActionContext context) {
+    public void runActions(ActionContext context, int num) {
         for (ActionValuePair pair : actions) {
-            pair.action.runAction(pair.value, context);
+            pair.action.runAction(pair.value, context, num);
         }
     }
 }

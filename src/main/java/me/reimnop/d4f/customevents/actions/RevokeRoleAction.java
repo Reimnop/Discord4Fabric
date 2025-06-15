@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.User;
 
 public class RevokeRoleAction implements Action {
     @Override
-    public void runAction(JsonElement value, ActionContext context) {
+    public void runAction(JsonElement value, ActionContext context, int num) {
         if (!(value instanceof JsonObject jsonObject)) {
             Discord4Fabric.LOGGER.error("Invalid revoke_role value format (should be object)");
             return;
@@ -28,7 +28,7 @@ public class RevokeRoleAction implements Action {
         }
 
         try {
-            Guild guild = Discord4Fabric.DISCORD.getGuild();
+            Guild guild = Discord4Fabric.DISCORD.getGuild(num);
             Role role = guild.getRoleById(Long.parseLong(roleIdStr));
             if (role == null) {
                 Discord4Fabric.LOGGER.error("The revoke_role action could not find the role specified");

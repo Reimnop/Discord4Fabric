@@ -34,14 +34,14 @@ public class Discord {
     private final WebhookClient webhookClient;
 
     private final Config config;
+    private final Storage storage;
     private final Map<String, Emoji> emojis = new HashMap<>();
 
     public final SelfUser selfUser;
 
-    public Discord(Config config) throws InterruptedException {
+    public Discord(Config config, int num, Storage storage) throws InterruptedException {
         this.config = config;
-
-        // init jda
+        this.storage = storage;
         JDABuilder builder = JDABuilder
                 .createDefault(config.token)
                 .enableIntents(
@@ -50,21 +50,23 @@ public class Discord {
                         GatewayIntent.MESSAGE_CONTENT)
                 .setMemberCachePolicy(MemberCachePolicy.ALL);
         jda = builder.build();
+        // init jda
+        //if(num == 0) {
         jda.addEventListener(new DiscordMessageListener());
+
+        //}
         jda.awaitReady();
-
         selfUser = jda.getSelfUser();
-
         // init webhook
-        webhookClient = "".equals(config.webhookUrl) ? null : WebhookClient.withUrl(config.webhookUrl);
+        webhookClient = "".equals(storage.webhookUrl[num]) ? null : WebhookClient.withUrl(storage.webhookUrl[num]);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void initCache() throws GuildException {
-        getGuild().loadMembers();
+    public void initCache(int num) throws GuildException {
+        getGuild(num).loadMembers();
 
         emojis.clear();
-        for (Emoji emoji : getGuild().getEmojis()) {
+        for (Emoji emoji : getGuild(num).getEmojis()) {
             emojis.put(emoji.getName(), emoji);
         }
     }
@@ -77,23 +79,23 @@ public class Discord {
         }
     }
 
-    public Guild getGuild() throws GuildException {
-        Guild guild = jda.getGuildById(config.guildId);
+    public Guild getGuild(int num) throws GuildException {
+        Guild guild = jda.getGuildById(storage.guildId[num]);
         if (guild == null) {
-            throw new GuildException(config.guildId);
+            throw new GuildException(storage.guildId[num]);
         }
         return guild;
     }
 
-    private MessageChannel getTextChannel() throws GuildException, ChannelException {
+    private MessageChannel getTextChannel(int num) throws GuildException, ChannelException {
         MessageChannel channel;
         if (config.useThread) {
-            channel = getGuild().getChannelById(ThreadChannel.class, config.channelId);
+            channel = getGuild(num).getChannelById(ThreadChannel.class, storage.channelId[num]);
         } else {
-            channel = getGuild().getChannelById(TextChannel.class, config.channelId);
+            channel = getGuild(num).getChannelById(TextChannel.class, storage.channelId[num]);
         }
         if (channel == null) {
-            throw new ChannelException(config.channelId);
+            throw new ChannelException(storage.channelId[num]);
         }
         return channel;
     }
@@ -120,9 +122,9 @@ public class Discord {
     }
 
     @Nullable
-    public Member getMember(User user) {
+    public Member getMember(User user, int num) {
         try {
-            return getGuild().getMember(user);
+            return getGuild(num).getMember(user);
         } catch (GuildException e) {
             Utils.logException(e);
         }
@@ -130,9 +132,9 @@ public class Discord {
     }
 
     @Nullable
-    public Member getMember(Long id) {
+    public Member getMember(Long id, int num) {
         try {
-            return getGuild().getMemberById(id);
+            return getGuild(num).getMemberById(id);
         } catch (GuildException e) {
             Utils.logException(e);
         }
@@ -140,8 +142,8 @@ public class Discord {
     }
 
     @Nullable
-    public User findUserByName(String name) throws GuildException {
-        List<Member> members = getGuild().findMembers(x -> x.getEffectiveName().equals(name)).get();
+    public User findUserByName(String name, int num) throws GuildException {
+        List<Member> members = getGuild(num).findMembers(x -> x.getEffectiveName().equals(name)).get();
         return members.isEmpty() ? null : members.get(0).getUser();
     }
 
@@ -150,7 +152,7 @@ public class Discord {
         return emojis.getOrDefault(name, null);
     }
 
-    public void sendPlayerMessage(ServerPlayerEntity sender, Text name, Text message) {
+    public void sendPlayerMessage(ServerPlayerEntity sender, Text name, Text message, int num) {
         if (webhookClient != null) {
             WebhookMessageBuilder wmb = new WebhookMessageBuilder()
                     .setAvatarUrl(sender != null ? Utils.getAvatarUrl(sender) : jda.getSelfUser().getAvatarUrl())
@@ -162,7 +164,7 @@ public class Discord {
                             .withParseUsers(true));
 
             if (config.useThread) {
-                webhookClient.onThread(config.channelId).send(wmb.build());
+                webhookClient.onThread(storage.channelId[num]).send(wmb.build());
             } else {
                 webhookClient.send(wmb.build());
             }
@@ -177,22 +179,22 @@ public class Discord {
                     Placeholders.PLACEHOLDER_PATTERN,
                     placeholder -> Utils.getPlaceholderHandler(placeholder, placeholders)
             );
-            sendPlainMessage(msg);
+            sendPlainMessage(msg, num);
         }
     }
 
-    public void sendEmbedMessageUsingPlayerAvatar(ServerPlayerEntity sender, Color color, String message, String description) {
+    public void sendEmbedMessageUsingPlayerAvatar(ServerPlayerEntity sender, Color color, String message, String description, int num) {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setAuthor(message, null, Utils.getAvatarUrl(sender))
                 .setDescription(description)
                 .setColor(color);
 
-        sendEmbedMessage(embedBuilder);
+        sendEmbedMessage(embedBuilder,num);
     }
 
-    public void sendEmbedMessage(EmbedBuilder embedBuilder) {
+    public void sendEmbedMessage(EmbedBuilder embedBuilder, int num) {
         try {
-            getTextChannel()
+            getTextChannel(num)
                     .sendMessage(MessageCreateData.fromEmbeds(embedBuilder.build()))
                     .queue();
         } catch (Exception e) {
@@ -200,9 +202,9 @@ public class Discord {
         }
     }
 
-    public void sendPlainMessage(String message) {
+    public void sendPlainMessage(String message, int num) {
         try {
-            getTextChannel()
+            getTextChannel(num)
                     .sendMessage(message)
                     .queue();
         } catch (Exception e) {
@@ -210,13 +212,13 @@ public class Discord {
         }
     }
 
-    public void sendPlainMessage(Text message) {
-        sendPlainMessage(message.getString());
+    public void sendPlainMessage(Text message, int num) {
+        sendPlainMessage(message.getString(), num);
     }
 
-    public void setChannelTopic(Text topic) {
+    public void setChannelTopic(Text topic, int num) {
         try {
-            var channel = getTextChannel();
+            var channel = getTextChannel(num);
             if (channel instanceof TextChannel textChannel) {
                 textChannel.getManager()
                     .setTopic(topic.getString())

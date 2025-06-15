@@ -32,9 +32,11 @@ public class Discord4Fabric implements ModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
     public static final Config CONFIG = new Config();
+    public static final Storage STORAGE = new Storage();
     public static Discord DISCORD;
     public static AccountLinking ACCOUNT_LINKING;
     public static CustomEvents CUSTOM_EVENTS;
+    public static int num = 0;
 
     public static Identifier id(String path) {
         return Identifier.of(MODID, path);
@@ -57,13 +59,20 @@ public class Discord4Fabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
+
         try {
+            File file = new File(Utils.getConfigPath());
+            if(file.exists()){
+                CONFIG.readConfig(file);
+                num = CONFIG.numServers;
+            }
             if (tryInitConfig()) {
+
                 initDiscord();
                 EventRedirect.init();
                 ModActions.init();
                 initCustomEvents();
-                ModCommands.init();
+                ModCommands.init(num);
                 vanishDrexHDInit();
             }
         } catch (LoginException e) {
@@ -75,8 +84,15 @@ public class Discord4Fabric implements ModInitializer {
 
     private boolean tryInitConfig() throws IOException {
         File file = new File(Utils.getConfigPath());
+        File file2 = new File(Utils.getStoragePath());
+        if(!file2.exists()){
+            STORAGE.initLength(num);
+            STORAGE.writeStorage(file2, num);
+        }
         if (!file.exists()) {
             CONFIG.writeConfig(file);
+
+
             LOGGER.error(
                     String.format(
                             "Config not found! Generated template at %s",
@@ -88,6 +104,7 @@ public class Discord4Fabric implements ModInitializer {
         }
 
         CONFIG.readConfig(file);
+        STORAGE.readStorage(file2, num);
         return true;
     }
 
@@ -98,10 +115,12 @@ public class Discord4Fabric implements ModInitializer {
         if (file.exists()) {
             ACCOUNT_LINKING.read(file);
         }
-
-        DISCORD = new Discord(CONFIG);
-        DISCORD.initCache();
-
+        for(int i = 0; i < CONFIG.numServers; i++) {
+            DISCORD = new Discord(CONFIG, i, STORAGE);
+            DISCORD.initCache(i);
+            MinecraftEventListeners.init(DISCORD, ACCOUNT_LINKING, CONFIG, STORAGE, i);
+            DiscordCommandProcessor.init(CONFIG, STORAGE, i);
+        }
         // init console
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         ConsoleMessageListener consoleMessageListener = new ConsoleMessageListener();
@@ -109,15 +128,14 @@ public class Discord4Fabric implements ModInitializer {
         ctx.getRootLogger().addAppender(consoleMessageListener);
         ctx.updateLoggers();
 
-        MinecraftEventListeners.init(DISCORD, ACCOUNT_LINKING, CONFIG);
-        DiscordCommandProcessor.init(CONFIG);
+
         ConsoleChannelHandler.init(CONFIG, DISCORD);
     }
 
     private void initCustomEvents() {
         CUSTOM_EVENTS = new CustomEvents();
-        CustomEventsHandler.init(CONFIG, CUSTOM_EVENTS);
-
+        CustomEventsHandler.init(CONFIG, CUSTOM_EVENTS, STORAGE,0);
+        CustomEventsHandler.init(CONFIG, CUSTOM_EVENTS, STORAGE,1);
         try {
             File file = new File(Utils.getCustomEventsPath());
             if (file.exists()) {

@@ -76,7 +76,9 @@ public final class Utils {
     public static String getConfigPath() {
         return FabricLoader.getInstance().getConfigDir() + "/discord4fabric.json";
     }
-
+    public static String getStoragePath() {
+        return FabricLoader.getInstance().getConfigDir() + "/d4fservers.json";
+    }
     public static String getUserdataPath() {
         return FabricLoader.getInstance().getConfigDir() + "/d4f_userdata.json";
     }
@@ -94,7 +96,7 @@ public final class Utils {
     }
 
     public static String getNameCachePath() {
-        return FabricLoader.getInstance().getConfigDir() + "/d4f_name_cache.json";
+        return FabricLoader.getInstance().getConfigDir() + "/discord/d4f_name_cache.json";
     }
 
     public static String getTpsAsString() {
@@ -124,16 +126,16 @@ public final class Utils {
         return Math.min(1000.0 / server.getAverageTickTime(), 20.0);
     }
 
-    public static String getNicknameFromUser(User user) {
-        Member member = Discord4Fabric.DISCORD.getMember(user);
+    public static String getNicknameFromUser(User user, int num) {
+        Member member = Discord4Fabric.DISCORD.getMember(user, num);
         if (member == null) {
             return user.getName();
         }
         return member.getEffectiveName();
     }
 
-    public static String getColoredNicknameFromUser(User user) {
-        Member member = Discord4Fabric.DISCORD.getMember(user);
+    public static String getColoredNicknameFromUser(User user, int num) {
+        Member member = Discord4Fabric.DISCORD.getMember(user, num);
         if (member == null) {
             return user.getName();
         }

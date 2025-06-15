@@ -10,11 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Config {
+    public int numServers = 1;
     public String token = "";
-    public String webhookUrl = "";
     public Boolean useThread = false;
-    public Long guildId = 0L;
-    public Long channelId = 0L;
     public Long consoleGuildId = 0L;
     public Long consoleChannelId = 0L;
     public Boolean announceServerStartStop = true;
@@ -51,18 +49,19 @@ public class Config {
     public String topic = "Total player: %server:online%/%server:max_players% | Server TPS: %server:tps%";
     public Boolean forceOnlineUuid = false;
     public Boolean requiresLinkedAccount = false;
-    public String avatarUrl = "https://crafatar.com/avatars/%s?overlay";
+    public String avatarUrl = "https://mc-heads.net/avatar/%s";
     public String avatarUrlTextureHash = "https://mc-heads.net/avatar/%s"; // for fabrictailor compat
     public Boolean allowBotMessages = false;
     public Integer playerListDisplayAmount = 5;
 
     public void writeConfig(File file) throws IOException {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("number_of_servers", numServers);
         jsonObject.addProperty("token", token);
-        jsonObject.addProperty("webhook_url", webhookUrl);
+        //jsonObject.addProperty("webhook_url", webhookUrl[num]);
         jsonObject.addProperty("use_thread", useThread);
-        jsonObject.addProperty("guild_id", guildId);
-        jsonObject.addProperty("channel_id", channelId);
+        //jsonObject.addProperty("guild_id", guildId[num]);
+        //jsonObject.addProperty("channel_id", channelId[num]);
         jsonObject.addProperty("console_guild_id", consoleGuildId);
         jsonObject.addProperty("console_channel_id", consoleChannelId);
         jsonObject.addProperty("announce_server_start_stop", announceServerStartStop);
@@ -117,12 +116,12 @@ public class Config {
 
         Gson gson = new Gson();
         JsonObject obj = gson.fromJson(reader, JsonObject.class);
-
+        numServers = getIntOrDefault(obj,"number_of_servers", numServers);
         token = getStringOrDefault(obj, "token", token);
-        webhookUrl = getStringOrDefault(obj, "webhook_url", webhookUrl);
+        //webhookUrl[num] = getStringOrDefault(obj, "webhook_url", webhookUrl[num]);
         useThread = getBooleanOrDefault(obj, "use_thread", useThread);
-        guildId = getLongOrDefault(obj, "guild_id", guildId);
-        channelId = getLongOrDefault(obj, "channel_id", channelId);
+        //guildId[num] = getLongOrDefault(obj, "guild_id", guildId[num]);
+        //channelId[num] = getLongOrDefault(obj, "channel_id", channelId[num]);
         consoleGuildId = getLongOrDefault(obj, "console_guild_id", consoleGuildId);
         consoleChannelId = getLongOrDefault(obj, "console_channel_id", consoleChannelId);
         announceServerStartStop = getBooleanOrDefault(obj, "announce_server_start_stop", announceServerStartStop);

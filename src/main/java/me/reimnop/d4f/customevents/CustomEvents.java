@@ -26,7 +26,7 @@ public class CustomEvents {
             actions = new ActionList(jsonObject.get("actions").getAsJsonArray());
         }
 
-        public void execute(PlaceholderContext placeholderContext, Map<Identifier, PlaceholderHandler> placeholderHandlers) {
+        public void execute(PlaceholderContext placeholderContext, Map<Identifier, PlaceholderHandler> placeholderHandlers, int num) {
             // check constraints
             for (Constraint constraint : constraints.constraints) {
                 if (!constraint.satisfied()) {
@@ -46,7 +46,7 @@ public class CustomEvents {
             }
 
             ActionContext context = new ActionContext(placeholderContext, placeholderHandlers);
-            actions.runActions(context);
+            actions.runActions(context, num);
         }
     }
 
@@ -95,9 +95,9 @@ public class CustomEvents {
 
     public void raiseEvent(
             String id,
-            PlaceholderContext placeholderContext,
+            PlaceholderContext placeholderContext, int num,
             @Nullable Map<String, ConstraintProcessorFactory> supportedConstraints,
-            @Nullable Map<Identifier, PlaceholderHandler> externalHandlers) {
+            @Nullable Map<Identifier, PlaceholderHandler> externalHandlers){
 
         if (!eventNameToEventJsons.containsKey(id)) {
             return;
@@ -116,11 +116,11 @@ public class CustomEvents {
 
         for (JsonObject eventJson : eventNameToEventJsons.get(id)) {
             ExecutableEvent executableEvent = new ExecutableEvent(supportedConstraints, eventJson);
-            executableEvent.execute(placeholderContext, placeholderHandlers);
+            executableEvent.execute(placeholderContext, placeholderHandlers, num);
         }
     }
 
-    public void raiseEvent(String id, PlaceholderContext placeholderContext, @Nullable Map<String, ConstraintProcessorFactory> supportedConstraints) {
-        raiseEvent(id, placeholderContext, supportedConstraints, null);
+    public void raiseEvent(String id, PlaceholderContext placeholderContext, @Nullable Map<String, ConstraintProcessorFactory> supportedConstraints, int num) {
+        raiseEvent(id, placeholderContext, num,supportedConstraints, null);
     }
 }

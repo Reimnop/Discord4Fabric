@@ -1,11 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "d4f",
+  "id": "d4fmulti",
   "version": "${version}",
-  "name": "Discord4Fabric",
-  "description": "A beautiful Discord bot client for Fabric",
+  "name": "Discord4FabricCursedMulti",
+  "description": "A beautiful Discord bot client for Fabric (Now with multiple servers)",
   "authors": [
-    "Reimnop"
+    "Reimnop",
+    "ly-nxs"
   ],
   "contact": {
     "website": "reimnop.com"

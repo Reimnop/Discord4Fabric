@@ -26,7 +26,7 @@ public class LinkedAccountConstraintProcessor implements ConstraintProcessor {
             User user = Discord4Fabric.DISCORD.getUser(id);
             if (user != null) {
                 fullname = user.getAsTag();
-                nickname = Utils.getNicknameFromUser(user);
+                nickname = Utils.getNicknameFromUser(user, 0);
                 discriminator = user.getDiscriminator();
             } else {
                 fullname = "null";

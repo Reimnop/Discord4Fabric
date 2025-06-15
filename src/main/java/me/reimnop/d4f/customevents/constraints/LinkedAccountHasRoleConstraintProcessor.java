@@ -46,7 +46,7 @@ public class LinkedAccountHasRoleConstraintProcessor implements ConstraintProces
             return false;
         }
 
-        Member member = Discord4Fabric.DISCORD.getMember(discordProfile.get().id);
+        Member member = Discord4Fabric.DISCORD.getMember(discordProfile.get().id, 0);
         if (member == null) {
             return false;
         }

@@ -42,7 +42,7 @@ public class LinkedAccountNickContainsConstraintProcessor implements ConstraintP
             return false;
         }
 
-        Member member = Discord4Fabric.DISCORD.getMember(discordProfile.get().id);
+        Member member = Discord4Fabric.DISCORD.getMember(discordProfile.get().id, 0);
         if (member == null) {
             return false;
         }

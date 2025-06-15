@@ -1,5 +1,5 @@
 plugins {
-    id "fabric-loom" version "1.7-SNAPSHOT"
+    id "fabric-loom" version "1.10-SNAPSHOT"
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -64,23 +64,20 @@ dependencies {
     modCompileOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
 
     // Have the compat mods run at runtime too, for debugging
-    // modRuntimeOnly "curse.maven:vanish-424123:${project.vanish_123456687548_version}"
     modRuntimeOnly "maven.modrinth:vanish:${project.vanish_drexhd_version}"
-    modRuntimeOnly "maven.modrinth:fabrictailor:${project.fabrictailor_version}"
-    modRuntimeOnly "com.github.samolego.Config2Brigadier:config2brigadier-fabric:${project.config2brigadier_version}"
     modRuntimeOnly "me.lucko:fabric-permissions-api:${project.fabric_permissions_version}"
 
     // Required dependencies for Discord integration
-    include "org.json:json:20230227"
-    include "com.squareup.okio:okio:1.17.2"
-    include "com.squareup.okhttp3:okhttp:3.13.0"
+    include 'org.json:json:20231013'
+    include 'com.squareup.okio:okio:3.4.0'
+    include 'com.squareup.okhttp3:okhttp:4.9.2'
     include "org.apache.commons:commons-collections4:4.4"
     include "org.jetbrains.kotlin:kotlin-stdlib:1.6.21"
     include "com.neovisionaries:nv-websocket-client:2.14"
     include "net.sf.trove4j:trove4j:3.0.3"
     include 'com.fasterxml.jackson.core:jackson-databind:2.13.4.1'
     include "com.fasterxml.jackson.core:jackson-annotations:2.13.1"
-    include "com.fasterxml.jackson.core:jackson-core:2.13.1"
+    include 'com.fasterxml.jackson.core:jackson-core:2.15.0-rc1'
 }
 
 processResources {
@@ -153,7 +150,7 @@ modrinth {
         return
     }
 
-    projectId = "discord4fabric"
+    projectId = "discord4fabricMulti"
     versionNumber = "${project.mod_version}-${project.minecraft_version}"
     versionType = "release"
     uploadFile = remapJar

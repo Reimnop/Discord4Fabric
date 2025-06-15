@@ -18,7 +18,7 @@ import java.io.File;
 public final class ModCommands {
     private ModCommands() {}
 
-    public static void init() {
+    public static void init(int num) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             final LiteralCommandNode<ServerCommandSource> node = dispatcher.register(
                     CommandManager.literal("discord4fabric")
@@ -38,8 +38,8 @@ public final class ModCommands {
                                                         .append(Text.literal(code)
                                                                 .setStyle(Style.EMPTY
                                                                         .withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
-                                                                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, code))
-                                                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Copy to clipboard")))))
+                                                                        .withClickEvent(new ClickEvent.CopyToClipboard(code))
+                                                                        .withHoverEvent(new HoverEvent.ShowText(Text.literal("Copy to clipboard")))))
                                                         .append(Text.literal(" (click to copy)\nPlease DM the bot this linking code to finish the linking process")
                                                                 .formatted(Formatting.GRAY));
 
@@ -73,7 +73,7 @@ public final class ModCommands {
                                                     () -> Text.literal("Refreshing cache!"),
                                                     false
                                             );
-                                            Discord4Fabric.DISCORD.initCache();
+                                            Discord4Fabric.DISCORD.initCache(num);
                                             return 1;
                                         } catch (GuildException e) {
                                             context.getSource().sendError(Text.literal("An unexpected error occurred! Check logs for more details"));

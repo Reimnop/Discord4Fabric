@@ -6,7 +6,7 @@ import me.reimnop.d4f.customevents.ActionContext;
 
 public class SendDiscordMessageAction implements Action {
     @Override
-    public void runAction(JsonElement value, ActionContext context) {
-        Discord4Fabric.DISCORD.sendPlainMessage(context.parsePlaceholder(value.getAsString()));
+    public void runAction(JsonElement value, ActionContext context, int num) {
+        Discord4Fabric.DISCORD.sendPlainMessage(context.parsePlaceholder(value.getAsString()), num);
     }
 }
